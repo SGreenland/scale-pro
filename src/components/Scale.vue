@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onUpdated } from "vue";
-import type { ComputedRef, Ref } from "vue";
+import type { ComputedRef } from "vue";
 import { Note } from "../types";
 import scaleManipulator from "../utils/scaleManipulator";
 
@@ -37,7 +37,6 @@ const { reverseScale } = scaleManipulator();
 const notesAreReady = ref(false);
 
 onUpdated(() => {
-    console.log(props.scaleToDisplay);
     notesAreReady.value = true;
 });
 
@@ -54,7 +53,7 @@ const props = defineProps<{
   tempo: string;
 }>();
 
-const note: Ref<any[]> = ref([]);
+const note = ref<any[]>([]);
 const audioIsPlaying = ref(false);
 
 const animationInterval = computed(() => 60000 / +props.tempo);
