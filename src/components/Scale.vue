@@ -23,9 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import type { Note } from "../types";
 import { Howl } from "howler";
+import { debounce } from "lodash";
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -46,18 +47,45 @@ const audioElements = ref<Howl[]>();
 
 const animationInterval = computed(() => 60000 / +props.tempo);
 
-const playNote = (index: number) => {
-  const noteElement = notes.value[index];
-  if (noteElement) {
-    noteElement.style.animation = `bounce ${animationInterval.value}ms ease-out`;
-    setTimeout(() => {
-      noteElement.style.animation = "";
-    }, animationInterval.value);
-  }
+const audioWorker = ref<Worker | null>(null);
 
+onMounted(() => {
+  // Use new URL syntax to import the worker
+  audioWorker.value = new Worker(new URL('../utils/audioWorker.js', import.meta.url));
+  audioWorker.value.onmessage = (event) => {
+    const data = event.data;
+
+    if (data.type === 'playNote') {
+      playNoteDebounced(data.index);
+    } else if (data.type === 'done') {
+      audioIsPlaying.value = false;
+    }
+  };
+});
+
+onBeforeUnmount(() => {
+  if (audioWorker.value) {
+    audioWorker.value.terminate();
+  }
+});
+
+const playNote = (index: number) => {
   const audio = audioElements.value![index];
   audio.play();
+  // slight crossfade to avoid clipping
+  audio.fade(1, 0, animationInterval.value * 2);
+  const noteElement = notes.value[index];
+  if (noteElement) {
+    requestAnimationFrame(() => {
+      noteElement.style.animation = `bounce ${animationInterval.value}ms ease-out`;
+      setTimeout(() => {
+        noteElement.style.animation = "";
+      }, animationInterval.value);
+    });
+  }
 };
+
+const playNoteDebounced = debounce(playNote, 50);
 
 const preloadAudio = () => {
   //howler implementation
@@ -74,34 +102,19 @@ const preloadAudio = () => {
 
 watch(() => props.scaleToDisplay, preloadAudio, { deep: true, immediate: true });
 
-let timeoutIds: number[] = [];
-
 const toggleAudio = (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {
   if (!audioIsPlaying.value) {
     audioIsPlaying.value = true;
-    let currentIndex = 0;
 
-    const playSequence = () => {
-      if (currentIndex < props.scaleToDisplay.length) {
-        playNote(currentIndex);
-        currentIndex++;
-      } else if (isForwardsAndBackwards && currentIndex < props.scaleToDisplay.length * 2 - 1) {
-        const reversedIndex = currentIndex - props.scaleToDisplay.length;
-        playNote(props.scaleToDisplay.length - 2 - reversedIndex);
-        currentIndex++;
-      } else if (shouldLoop) {
-        currentIndex = 0;
-      } else {
-        audioIsPlaying.value = false;
-        return;
-      }
-
-      timeoutIds.push(setTimeout(playSequence, animationInterval.value));
-    };
-
-    playSequence();
+    audioWorker.value?.postMessage({
+      type: 'start',
+      isForwardsAndBackwards,
+      shouldLoop,
+      scaleLength: props.scaleToDisplay.length,
+      animationInterval: animationInterval.value,
+    });
   } else {
-    timeoutIds.forEach(clearTimeout);
+    audioWorker.value?.postMessage({ type: 'stop' });
     audioIsPlaying.value = false;
   }
 };
