@@ -4,8 +4,7 @@ import Scale from "./components/Scale.vue";
 import TempoSelect from "./components/TempoSelect.vue";
 import AudioControls from "./components/AudioControls.vue";
 
-import { watch, ref } from "vue";
-
+import { ref } from "vue";
 import { Note } from "./types";
 
 const scaleConfig = ref({
@@ -20,35 +19,12 @@ const scaleComponent = ref({
 const notesAreLoading = ref(false);
 const tempo = ref("120");
 
-function handleToggleAudio(isForwardsAndBackwards: boolean, shouldLoop: boolean) {
+function handleToggleAudio(
+  isForwardsAndBackwards: boolean,
+  shouldLoop: boolean
+) {
   scaleComponent.value?.toggleAudio(isForwardsAndBackwards, shouldLoop);
 }
-
-// Preload audio files
-const preloadAudio = () => {
-  notesAreLoading.value = true;
-  const promises = scaleConfig.value.scaleToDisplay.map((note) => {
-    return new Promise<void>((resolve) => {
-      const audio = new Audio(note.audioSrc);
-      audio.preload = "auto";
-      audio.oncanplaythrough = () => resolve();
-      audio.load();
-    });
-  });
-
-  Promise.all(promises).then(() => {
-    notesAreLoading.value = false;
-  });
-};
-
-// load notes for scale when any config changes
-watch(
-  [tempo, () => scaleConfig.value.scaleToDisplay],
-  () => {
-    preloadAudio();
-  },
-  { deep: true, immediate: true }
-);
 </script>
 
 <template>

@@ -23,8 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import type { Note } from "../types";
+
+const notesAreReady = ref(false);
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -41,12 +43,11 @@ const props = defineProps<{
 
 const notes = ref<HTMLDivElement[]>([]);
 const audioIsPlaying = ref(false);
-const audioElements = ref<HTMLAudioElement[]>([]);
+const audioElements = ref<HTMLAudioElement[]>();
 
 const animationInterval = computed(() => 60000 / +props.tempo);
 
 const playNote = (index: number) => {
-  // Add animation to note
   const noteElement = notes.value[index];
   if (noteElement) {
     noteElement.style.animation = `bounce ${animationInterval.value}ms ease-out`;
@@ -55,33 +56,37 @@ const playNote = (index: number) => {
     }, animationInterval.value);
   }
 
-  const audio = audioElements.value[index];
-  audio.currentTime = 0; // Ensure the audio plays from the start
+  const audio = audioElements.value![index];
+  audio.currentTime = 0;
   audio.play();
 };
 
 const preloadAudio = () => {
-  audioElements.value = props.scaleToDisplay.map(note => {
-    const audio = new Audio(note.audioSrc);
-    audio.preload = "auto";
-    return audio;
+  const promises = props.scaleToDisplay.map(note => {
+    return new Promise<HTMLAudioElement>((resolve) => {
+      const audio = new Audio(note.audioSrc);
+      audio.preload = "auto";
+      audio.oncanplaythrough = () => resolve(audio);
+      audio.load();
+    });
+  });
+
+  Promise.all(promises).then((loadedAudios) => {
+    audioElements.value = loadedAudios;
+    notesAreReady.value = true;
   });
 };
 
-onMounted(() => {
-  nextTick(preloadAudio);
-});
+watch(() => props.scaleToDisplay, preloadAudio, { deep: true, immediate: true });
 
-watch(() => props.scaleToDisplay, preloadAudio, { deep: true });
-
-let intervalId: number | undefined;
+let timeoutIds: number[] = [];
 
 const toggleAudio = (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {
   if (!audioIsPlaying.value) {
     audioIsPlaying.value = true;
     let currentIndex = 0;
 
-    intervalId = setInterval(() => {
+    const playSequence = () => {
       if (currentIndex < props.scaleToDisplay.length) {
         playNote(currentIndex);
         currentIndex++;
@@ -92,12 +97,16 @@ const toggleAudio = (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {
       } else if (shouldLoop) {
         currentIndex = 0;
       } else {
-        clearInterval(intervalId);
         audioIsPlaying.value = false;
+        return;
       }
-    }, animationInterval.value);
+
+      timeoutIds.push(setTimeout(playSequence, animationInterval.value));
+    };
+
+    playSequence();
   } else {
-    clearInterval(intervalId);
+    timeoutIds.forEach(clearTimeout);
     audioIsPlaying.value = false;
   }
 };
