@@ -60,14 +60,14 @@ const animationInterval = computed(() => 60000 / +props.tempo);
 
 const playNote = (audioSrc: string, index: number) => {
   // add animation to note
-  notes.value?.findIndex((el, i) => {
-    if (i === index) {
-      el.style.animation = `bounce ${animationInterval.value}ms ease-out`;
-      setTimeout(() => {
-        el.style.animation = "";
-      }, animationInterval.value);
-    }
-  });
+  // notes.value?.findIndex((el, i) => {
+  //   if (i === index) {
+  //     el.style.animation = `bounce ${animationInterval.value}ms ease-out`;
+  //     setTimeout(() => {
+  //       el.style.animation = "";
+  //     }, animationInterval.value);
+  //   }
+  // });
   const audio = new Audio(audioSrc);
   audio.play();
 };
