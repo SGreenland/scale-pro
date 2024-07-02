@@ -75,6 +75,7 @@ const scaleNames = Object.keys(scales);
 const selectedNote: Ref<string> = ref("C4");
 const selectedScaleType: Ref<keyof Scales> = ref("Major");
 // roote notes can only be up to C6
+// @ts-ignore
 const rootNotes = notes.filter((note, index) => index <= 48);
 // const templates = [''];
 const scaleToDisplay: Ref<Note[]> = ref(

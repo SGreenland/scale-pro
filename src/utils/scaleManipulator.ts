@@ -20,6 +20,7 @@ export default function scaleManipulator() {
     }
 
     function reverseScale(scale: Note[]) {
+        // @ts-ignore
         return scale.map((note: Note, i: number) => {
             return scale[scale.length - 1 - i];
         });

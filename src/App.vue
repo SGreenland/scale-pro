@@ -13,6 +13,7 @@ const scaleConfig = ref({
   originalOrder: [] as string[],
 });
 const scaleComponent = ref({
+  // @ts-ignore
   toggleAudio: (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {},
   audioIsPlaying: false,
 });

@@ -17,14 +17,14 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
-const props = defineProps({
-    labels: Array,
-    disabled: Boolean,
-});
+defineProps<{
+    labels?: string[];
+    disabled?: boolean;
+}>();
 
-const model = defineModel();
+const model = defineModel<string>();
 
 
 </script>
