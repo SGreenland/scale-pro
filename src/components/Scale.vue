@@ -10,7 +10,7 @@
       v-if="notesAreReady"
       v-for="(note, index) in scaleToDisplay"
       :key="index"
-      ref="note"
+      ref="notes"
       @click="!audioIsPlaying && playNote(note.audioSrc, index)"
       class="p-2 bg-blue-100 rounded-lg w-full h-full flex items-center justify-center cursor-pointer"
       :style="{
@@ -53,14 +53,14 @@ const props = defineProps<{
   tempo: string;
 }>();
 
-const note = ref<any[]>([]);
+const notes = ref<any[]>();
 const audioIsPlaying = ref(false);
 
 const animationInterval = computed(() => 60000 / +props.tempo);
 
 const playNote = (audioSrc: string, index: number) => {
   // add animation to note
-  note.value!.findIndex((el, i) => {
+  notes.value?.findIndex((el, i) => {
     if (i === index) {
       el.style.animation = `bounce ${animationInterval.value}ms ease-out`;
       setTimeout(() => {
