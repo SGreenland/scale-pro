@@ -7,6 +7,7 @@
     }"
   >
     <div
+      v-if="notesAreReady"
       v-for="(note, index) in scaleToDisplay"
       :key="index"
       ref="note"
@@ -26,12 +27,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, nextTick } from "vue";
 import type { ComputedRef, Ref } from "vue";
 import { Note } from "../types";
 import scaleManipulator from "../utils/scaleManipulator";
 
 const { reverseScale } = scaleManipulator();
+
+const notesAreReady = ref(false);
+
+onMounted(() => {
+  nextTick(() => {
+    notesAreReady.value = true;
+  })
+});
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
