@@ -25,8 +25,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import type { Note } from "../types";
-
-const notesAreReady = ref(false);
+import { Howl } from "howler";
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -43,7 +42,7 @@ const props = defineProps<{
 
 const notes = ref<HTMLDivElement[]>([]);
 const audioIsPlaying = ref(false);
-const audioElements = ref<HTMLAudioElement[]>();
+const audioElements = ref<Howl[]>();
 
 const animationInterval = computed(() => 60000 / +props.tempo);
 
@@ -57,24 +56,20 @@ const playNote = (index: number) => {
   }
 
   const audio = audioElements.value![index];
-  audio.currentTime = 0;
   audio.play();
 };
 
 const preloadAudio = () => {
-  const promises = props.scaleToDisplay.map(note => {
-    return new Promise<HTMLAudioElement>((resolve) => {
-      const audio = new Audio(note.audioSrc);
-      audio.preload = "auto";
-      audio.oncanplaythrough = () => resolve(audio);
-      audio.load();
+  //howler implementation
+  const loadedAudios = props.scaleToDisplay.map(note => {
+    return new Howl({
+      src: [note.audioSrc],
+      preload: true,
     });
   });
 
-  Promise.all(promises).then((loadedAudios) => {
-    audioElements.value = loadedAudios;
-    notesAreReady.value = true;
-  });
+  audioElements.value = loadedAudios;
+
 };
 
 watch(() => props.scaleToDisplay, preloadAudio, { deep: true, immediate: true });
