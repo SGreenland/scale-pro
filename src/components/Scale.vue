@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from "vue";
+import { ref, computed, onUpdated } from "vue";
 import type { ComputedRef, Ref } from "vue";
 import { Note } from "../types";
 import scaleManipulator from "../utils/scaleManipulator";
@@ -36,10 +36,9 @@ const { reverseScale } = scaleManipulator();
 
 const notesAreReady = ref(false);
 
-onMounted(() => {
-  nextTick(() => {
+onUpdated(() => {
+    console.log(props.scaleToDisplay);
     notesAreReady.value = true;
-  })
 });
 
 function getNoteName(note: string) {
