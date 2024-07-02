@@ -56,9 +56,10 @@ const props = defineProps<{
 const notes = ref<any[]>();
 const audioIsPlaying = ref(false);
 
-const animationInterval = computed(() => 60000 / +props.tempo);
+// const animationInterval = computed(() => 60000 / +props.tempo);
 
 const playNote = (audioSrc: string, index: number) => {
+  console.log(index);
   // add animation to note
   // notes.value?.findIndex((el, i) => {
   //   if (i === index) {
