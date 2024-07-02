@@ -24,19 +24,28 @@ function handleToggleAudio(isForwardsAndBackwards: boolean, shouldLoop: boolean)
   scaleComponent.value?.toggleAudio(isForwardsAndBackwards, shouldLoop);
 }
 
+// Preload audio files
+const preloadAudio = () => {
+  notesAreLoading.value = true;
+  const promises = scaleConfig.value.scaleToDisplay.map((note) => {
+    return new Promise<void>((resolve) => {
+      const audio = new Audio(note.audioSrc);
+      audio.preload = "auto";
+      audio.oncanplaythrough = () => resolve();
+      audio.load();
+    });
+  });
+
+  Promise.all(promises).then(() => {
+    notesAreLoading.value = false;
+  });
+};
+
 // load notes for scale when any config changes
 watch(
   [tempo, () => scaleConfig.value.scaleToDisplay],
   () => {
-    notesAreLoading.value = true;
-    scaleConfig.value.scaleToDisplay.forEach((note) => {
-      const audio = new Audio(note.audioSrc);
-      audio.load();
-    });
-    // give notes a second to load
-    setTimeout(() => {
-      notesAreLoading.value = false;
-    }, 800);
+    preloadAudio();
   },
   { deep: true, immediate: true }
 );
