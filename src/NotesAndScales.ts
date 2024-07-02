@@ -9,7 +9,7 @@ for (const octave of octaves) {
     for (const noteName of noteNames) {
         const note: Note = {
             name: `${noteName}${octave}`,
-            audioSrc: `public/assets/audio/${noteName}${octave}.mp3`,
+            audioSrc: `/assets/audio/${noteName}${octave}.mp3`,
         };
         notes.push(note);
     }
