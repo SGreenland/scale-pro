@@ -17,7 +17,10 @@
         gridColumnStart: index + 1,
       }"
     >
-      <span>{{ getNoteName(note.name) }}<small>({{ originalOrder.indexOf(note.name) + 1 }})</small></span>
+      <span
+        >{{ getNoteName(note.name)
+        }}<small>({{ originalOrder.indexOf(note.name) + 1 }})</small></span
+      >
     </div>
   </div>
 </template>
@@ -42,7 +45,7 @@ const props = defineProps<{
 const notes = ref<HTMLDivElement[]>([]);
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
-const audioContext = new (window.AudioContext)();
+const audioContext = new window.AudioContext();
 const isContextResumed = ref(false);
 
 const animationInterval = computed(() => 60000 / +props.tempo / 1000); // Convert to seconds
@@ -60,14 +63,14 @@ const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
 
 const preloadAudio = async () => {
   const loadedAudios = await Promise.all(
-    props.scaleToDisplay.map(note => loadAudioBuffer(note.audioSrc))
+    props.scaleToDisplay.map((note) => loadAudioBuffer(note.audioSrc))
   );
 
   audioBuffers.value = loadedAudios;
 };
 
 const resumeAudioContext = async () => {
-  if (audioContext.state === 'suspended') {
+  if (audioContext.state === "suspended") {
     await audioContext.resume();
   }
   isContextResumed.value = true;
@@ -83,28 +86,39 @@ const playNote = (index: number, time: number) => {
   const noteElement = notes.value[index];
   if (noteElement) {
     requestAnimationFrame(() => {
-      noteElement.style.animation = `bounce ${animationInterval.value * 1000}ms ease-out`;
+      noteElement.style.animation = `bounce ${
+        animationInterval.value * 1000
+      }ms ease-out`;
       setTimeout(() => {
         noteElement.style.animation = "";
-      }, animationInterval.value * 1000 - 20);
+      }, animationInterval.value * 1000);
     });
   }
 };
 
-watch(() => props.scaleToDisplay, preloadAudio, { deep: true, immediate: true });
+watch(() => props.scaleToDisplay, preloadAudio, {
+  deep: true,
+  immediate: true,
+});
 
 const scheduleNotes = (startTime: number) => {
   let currentTime = startTime;
   let currentNoteIndex = noteIndex.value;
   let currentDirection = direction.value;
 
-  while (currentTime < audioContext.currentTime + 0.1) { // Schedule ahead of time (100ms)
+  while (currentTime < audioContext.currentTime + 0.1) {
+    // Schedule ahead of time (100ms)
+
     playNote(currentNoteIndex, currentTime);
 
     currentTime += animationInterval.value;
     currentNoteIndex += currentDirection;
 
-    if (currentDirection === 1 && currentNoteIndex === props.scaleToDisplay.length) {
+    // reached the end of the scale
+    if (
+      currentDirection === 1 &&
+      currentNoteIndex === props.scaleToDisplay.length
+    ) {
       if (isForwardsAndBackwards.value) {
         currentDirection = -1;
         currentNoteIndex -= 2; // step back to the previous note
@@ -115,7 +129,7 @@ const scheduleNotes = (startTime: number) => {
         break;
       }
     } else if (currentDirection === -1 && currentNoteIndex === -1) {
-      if (isForwardsAndBackwards.value) {
+      if (isForwardsAndBackwards.value && shouldLoop.value) {
         currentDirection = 1;
         currentNoteIndex = 1; // step forward to the next note
       } else if (shouldLoop.value) {
@@ -157,7 +171,7 @@ const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
 };
 
 onMounted(() => {
-  window.addEventListener('click', resumeAudioContext, { once: true });
+  window.addEventListener("click", resumeAudioContext, { once: true });
 });
 
 onBeforeUnmount(() => {

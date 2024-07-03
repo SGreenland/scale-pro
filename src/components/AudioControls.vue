@@ -27,12 +27,6 @@
       <font-awesome-icon :icon="faArrowRight" />
       <font-awesome-icon :icon="faArrowLeft" />
     </div>
-    <!-- <input
-      class="size-4 rounded-lg"
-      style="accent-color: #3189b8;"
-      type="checkbox"
-      v-model="isForwardsAndBackwards"
-    /> -->
   </div>
 </template>
 
