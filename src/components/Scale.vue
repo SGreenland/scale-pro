@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, watch, } from "vue";
 import type { Note } from "../types";
 import { Howl } from "howler";
 
@@ -46,27 +46,10 @@ const audioElements = ref<Howl[]>();
 
 const animationInterval = computed(() => 60000 / +props.tempo);
 
-const audioWorker = ref<Worker | null>(null);
-
-onMounted(() => {
-  // Use new URL syntax to import the worker
-  audioWorker.value = new Worker(new URL('../utils/audioWorker.js', import.meta.url));
-  audioWorker.value.onmessage = (event) => {
-    const data = event.data;
-
-    if (data.type === 'playNote') {
-      playNote(data.index);
-    } else if (data.type === 'done') {
-      audioIsPlaying.value = false;
-    }
-  };
-});
-
-onBeforeUnmount(() => {
-  if (audioWorker.value) {
-    audioWorker.value.terminate();
-  }
-});
+const lastTime = ref(0);
+const noteIndex = ref(0);
+const direction = ref(1);
+let animationFrameId: number | null = null;
 
 const playNote = (index: number) => {
   const audio = audioElements.value![index];
@@ -83,8 +66,6 @@ const playNote = (index: number) => {
   }
 };
 
-// const playNoteDebounced = debounce(playNote, 30);
-
 const preloadAudio = () => {
   //howler implementation
   const loadedAudios = props.scaleToDisplay.map(note => {
@@ -96,40 +77,57 @@ const preloadAudio = () => {
   });
 
   audioElements.value = loadedAudios;
-
 };
 
 watch(() => props.scaleToDisplay, preloadAudio, { deep: true, immediate: true });
 
-const toggleAudio = (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {
-  // if (!audioIsPlaying.value) {
-  //   audioIsPlaying.value = true;
+const animate = (timestamp: number) => {
+  if (!lastTime.value) lastTime.value = timestamp;
+  const elapsed = timestamp - lastTime.value;
 
-  //   audioWorker.value?.postMessage({
-  //     type: 'start',
-  //     isForwardsAndBackwards,
-  //     shouldLoop,
-  //     scaleLength: props.scaleToDisplay.length,
-  //     animationInterval: animationInterval.value,
-  //   });
-  // } else {
-  //   audioWorker.value?.postMessage({ type: 'stop' });
-  //   audioIsPlaying.value = false;
-  // }
-  console.log(isForwardsAndBackwards, shouldLoop);
-  let index = 0;
-  const playScale = setInterval(() => {
-    if (index === props.scaleToDisplay.length) {
-      clearInterval(playScale);
-      audioIsPlaying.value = false;
-      return;
+  if (elapsed >= animationInterval.value) {
+    playNote(noteIndex.value);
+    if (direction.value === 1 && noteIndex.value === props.scaleToDisplay.length - 1) {
+      if (isForwardsAndBackwards.value) {
+        direction.value = -1;
+      } else if (shouldLoop.value) {
+        noteIndex.value = -1;
+      }
+    } else if (direction.value === -1 && noteIndex.value === 0) {
+      if (isForwardsAndBackwards.value) {
+        direction.value = 1;
+      } else if (shouldLoop.value) {
+        noteIndex.value = props.scaleToDisplay.length;
+      }
     }
-    else {
-      audioIsPlaying.value = true;
-      playNote(index);
-      index++;
+    noteIndex.value += direction.value;
+    lastTime.value = timestamp;
+  }
+
+  if (audioIsPlaying.value) {
+    animationFrameId = requestAnimationFrame(animate);
+  }
+};
+
+const isForwardsAndBackwards = ref(false);
+const shouldLoop = ref(false);
+
+const toggleAudio = (forwardsAndBackwards: boolean, loop: boolean) => {
+  isForwardsAndBackwards.value = forwardsAndBackwards;
+  shouldLoop.value = loop;
+  if (!audioIsPlaying.value) {
+    audioIsPlaying.value = true;
+    lastTime.value = 0;
+    noteIndex.value = 0;
+    direction.value = 1;
+    animationFrameId = requestAnimationFrame(animate);
+  } else {
+    audioIsPlaying.value = false;
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
     }
-  }, animationInterval.value);
+  }
 };
 
 defineExpose({
