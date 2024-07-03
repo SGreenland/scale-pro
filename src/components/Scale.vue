@@ -10,7 +10,7 @@
       v-for="(note, index) in scaleToDisplay"
       :key="index"
       ref="notes"
-      @click="!audioIsPlaying && playNote(index)"
+      @click="!audioIsPlaying && playNote(index, 0)"
       class="p-2 bg-blue-100 rounded-lg w-full h-full flex items-center justify-center cursor-pointer dark:bg-blue-800 dark:text-white"
       :style="{
         gridRowStart: scaleToDisplay.length - originalOrder.indexOf(note.name),
