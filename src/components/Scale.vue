@@ -70,6 +70,7 @@ onBeforeUnmount(() => {
 
 const playNote = (index: number) => {
   const audio = audioElements.value![index];
+  console.log(Date.now());
   audio.play();
   const noteElement = notes.value[index];
   if (noteElement) {
@@ -90,6 +91,7 @@ const preloadAudio = () => {
     return new Howl({
       src: [note.audioSrc],
       preload: true,
+      html5: true,
     });
   });
 
@@ -100,20 +102,34 @@ const preloadAudio = () => {
 watch(() => props.scaleToDisplay, preloadAudio, { deep: true, immediate: true });
 
 const toggleAudio = (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {
-  if (!audioIsPlaying.value) {
-    audioIsPlaying.value = true;
+  // if (!audioIsPlaying.value) {
+  //   audioIsPlaying.value = true;
 
-    audioWorker.value?.postMessage({
-      type: 'start',
-      isForwardsAndBackwards,
-      shouldLoop,
-      scaleLength: props.scaleToDisplay.length,
-      animationInterval: animationInterval.value,
-    });
-  } else {
-    audioWorker.value?.postMessage({ type: 'stop' });
-    audioIsPlaying.value = false;
-  }
+  //   audioWorker.value?.postMessage({
+  //     type: 'start',
+  //     isForwardsAndBackwards,
+  //     shouldLoop,
+  //     scaleLength: props.scaleToDisplay.length,
+  //     animationInterval: animationInterval.value,
+  //   });
+  // } else {
+  //   audioWorker.value?.postMessage({ type: 'stop' });
+  //   audioIsPlaying.value = false;
+  // }
+  console.log(isForwardsAndBackwards, shouldLoop);
+  let index = 0;
+  const playScale = setInterval(() => {
+    if (index === props.scaleToDisplay.length) {
+      clearInterval(playScale);
+      audioIsPlaying.value = false;
+      return;
+    }
+    else {
+      audioIsPlaying.value = true;
+      playNote(index);
+      index++;
+    }
+  }, animationInterval.value);
 };
 
 defineExpose({
