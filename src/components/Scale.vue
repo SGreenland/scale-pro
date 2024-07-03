@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { Note } from "../types";
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -41,12 +42,12 @@ const props = defineProps<{
 const notes = ref<HTMLDivElement[]>([]);
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const audioContext = new (window.AudioContext)();
 const isContextResumed = ref(false);
 
 const animationInterval = computed(() => 60000 / +props.tempo / 1000); // Convert to seconds
 
-const lastTime = ref(0);
+// const lastTime = ref(0);
 const noteIndex = ref(0);
 const direction = ref(1);
 let animationFrameId: number | null = null;
