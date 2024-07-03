@@ -4,9 +4,11 @@ let shouldLoop = false;
 let scaleLength = 0;
 let animationInterval = 1000;
 let isRunning = false;
+let lastFrameTime = 0;
 
 self.onmessage = function (event) {
   const data = event.data;
+  console.log('Received message:', data); // Debug logging
 
   if (data.type === "start") {
     currentIndex = 0;
@@ -15,15 +17,21 @@ self.onmessage = function (event) {
     scaleLength = data.scaleLength;
     animationInterval = data.animationInterval;
     isRunning = true;
-    lastFrameTime = performance.now();
-    playSequence(lastFrameTime);
+    lastFrameTime = Date.now();
+    console.log('Starting sequence'); // Debug logging
+    requestAnimationFrame(playSequence);
   } else if (data.type === "stop") {
     isRunning = false;
+    console.log('Stopping sequence'); // Debug logging
   }
 };
 
 function playSequence(timestamp) {
   if (!isRunning) return;
+
+  if (!timestamp) {
+    timestamp = Date.now();
+  }
 
   const elapsed = timestamp - lastFrameTime;
 
@@ -51,6 +59,6 @@ function playSequence(timestamp) {
 
 function requestAnimationFrame(callback) {
   setTimeout(() => {
-    callback(performance.now());
+    callback(Date.now());
   }, 1000 / 60); // Aim for 60 FPS
 }

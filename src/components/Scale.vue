@@ -90,7 +90,6 @@ const preloadAudio = () => {
     return new Howl({
       src: [note.audioSrc],
       preload: true,
-      html5: true,
     });
   });
 
