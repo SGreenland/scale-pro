@@ -45,8 +45,17 @@
           </div>
           <div class="space-y-2 mt-2 max-h-40 overflow-auto">
             <button
-              v-for="(preset, index) in presets"
+              v-if="!selectedScaleType.includes('Pentatonic')"
+              v-for="(preset, index) in presets8"
               :key="index"
+              @click="applyPreset"
+            >
+              {{ preset }}
+            </button>
+            <button
+              v-else
+              v-for="(preset, index) in presets5"
+              :key="index + 1"
               @click="applyPreset"
             >
               {{ preset }}
@@ -82,7 +91,7 @@ const scaleToDisplay: Ref<Note[]> = ref(
   getScale(selectedNote.value, selectedScaleType.value)
 );
 const originalOrder = ref(scaleToDisplay.value.map((note) => note.name));
-const presets = [
+const presets8 = [
   "1 3 5 7 2 4 6 8",
   "1 6 2 4 3 7 5 8",
   "1 5 3 7 2 6 4 8",
@@ -91,6 +100,15 @@ const presets = [
   "1 6 2 4 5 7 3 8",
   "1 5 3 7 8 6 4 2",
   "1 4 2 6 8 7 5 3",
+];
+
+const presets5 = [
+  "1 3 5 2 4",
+  "1 5 3 2 4",
+  "1 4 2 5 3",
+  "1 3 5 4 2",
+  "1 5 3 4 2",
+  "1 4 2 3 5",
 ];
 
 function applyPreset(event: Event) {

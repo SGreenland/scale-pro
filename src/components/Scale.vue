@@ -26,7 +26,6 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import type { Note } from "../types";
 import { Howl } from "howler";
-import { debounce } from "lodash";
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -56,7 +55,7 @@ onMounted(() => {
     const data = event.data;
 
     if (data.type === 'playNote') {
-      playNoteDebounced(data.index);
+      playNote(data.index);
     } else if (data.type === 'done') {
       audioIsPlaying.value = false;
     }
@@ -72,20 +71,18 @@ onBeforeUnmount(() => {
 const playNote = (index: number) => {
   const audio = audioElements.value![index];
   audio.play();
-  // slight crossfade to avoid clipping
-  audio.fade(1, 0, animationInterval.value * 2);
   const noteElement = notes.value[index];
   if (noteElement) {
     requestAnimationFrame(() => {
       noteElement.style.animation = `bounce ${animationInterval.value}ms ease-out`;
       setTimeout(() => {
         noteElement.style.animation = "";
-      }, animationInterval.value);
+      }, animationInterval.value - 20);
     });
   }
 };
 
-const playNoteDebounced = debounce(playNote, 50);
+// const playNoteDebounced = debounce(playNote, 30);
 
 const preloadAudio = () => {
   //howler implementation
@@ -93,6 +90,7 @@ const preloadAudio = () => {
     return new Howl({
       src: [note.audioSrc],
       preload: true,
+      html5: true,
     });
   });
 
