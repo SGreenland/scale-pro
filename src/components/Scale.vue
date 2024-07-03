@@ -23,9 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, } from "vue";
-import type { Note } from "../types";
-import { Howl } from "howler";
+import { ref, computed, watch } from "vue";
+import { Note } from "../types";
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -42,7 +41,8 @@ const props = defineProps<{
 
 const notes = ref<HTMLDivElement[]>([]);
 const audioIsPlaying = ref(false);
-const audioElements = ref<Howl[]>();
+const audioBuffers = ref<AudioBuffer[]>([]);
+const audioContext = new (window.AudioContext)();
 
 const animationInterval = computed(() => 60000 / +props.tempo);
 
@@ -51,10 +51,27 @@ const noteIndex = ref(0);
 const direction = ref(1);
 let animationFrameId: number | null = null;
 
+const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  return await audioContext.decodeAudioData(arrayBuffer);
+};
+
+const preloadAudio = async () => {
+  const loadedAudios = await Promise.all(
+    props.scaleToDisplay.map(note => loadAudioBuffer(note.audioSrc))
+  );
+
+  audioBuffers.value = loadedAudios;
+};
+
 const playNote = (index: number) => {
-  const audio = audioElements.value![index];
-  console.log(Date.now());
-  audio.play();
+  const audioBuffer = audioBuffers.value[index];
+  const source = audioContext.createBufferSource();
+  source.buffer = audioBuffer;
+  source.connect(audioContext.destination);
+  source.start();
+
   const noteElement = notes.value[index];
   if (noteElement) {
     requestAnimationFrame(() => {
@@ -64,19 +81,6 @@ const playNote = (index: number) => {
       }, animationInterval.value - 20);
     });
   }
-};
-
-const preloadAudio = () => {
-  //howler implementation
-  const loadedAudios = props.scaleToDisplay.map(note => {
-    return new Howl({
-      src: [note.audioSrc],
-      preload: true,
-      html5: true,
-    });
-  });
-
-  audioElements.value = loadedAudios;
 };
 
 watch(() => props.scaleToDisplay, preloadAudio, { deep: true, immediate: true });
