@@ -2,7 +2,7 @@
   <div class="flex w-fit items-center m-auto gap-4">
     <div
       @click="shouldLoop = !shouldLoop"
-      class="flex center-xy py-1 px-2 size-10 rounded-md cursor-pointer"
+      class="flex center-xy py-1 px-2 size-10 rounded-lg cursor-pointer"
       :class="{ 'border-2 border-blue-300': shouldLoop }"
     >
       <font-awesome-icon :icon="faRepeat" size="lg" />
@@ -21,7 +21,7 @@
     </button>
     <div
       @click="isForwardsAndBackwards = !isForwardsAndBackwards"
-      class="flex center-xy flex-col py-1 px-2 size-10 rounded-md cursor-pointer"
+      class="flex center-xy flex-col py-1 px-2 size-10 rounded-lg cursor-pointer"
       :class="{ 'border-2 border-blue-300': isForwardsAndBackwards }"
     >
       <font-awesome-icon :icon="faArrowRight" />

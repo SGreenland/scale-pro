@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import type { Ref } from "vue";
 import { Scales, Note } from "../types";
 import { scales, notes } from "../NotesAndScales";
@@ -86,7 +86,9 @@ const selectedScaleType: Ref<keyof Scales> = ref("Major");
 // root notes can only be up to C6
 // @ts-ignore
 const rootNotes = notes.filter((note, index) => index <= 48);
-// const templates = [''];
+const selectedScaleInOrder = computed(() =>
+  getScale(selectedNote.value, selectedScaleType.value)
+);
 const scaleToDisplay: Ref<Note[]> = ref(
   getScale(selectedNote.value, selectedScaleType.value)
 );
@@ -117,13 +119,16 @@ function applyPreset(event: Event) {
   const presetString = element.textContent;
   const presetOrder: number[] =
     presetString?.split(" ").map((note: string) => +note) ?? [];
-  scaleToDisplay.value = reorderScale(scaleToDisplay.value, presetOrder);
+  scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, presetOrder);
 }
 
 watch([selectedNote, selectedScaleType], () => {
-  const newScale = getScale(selectedNote.value, selectedScaleType.value);
-  //keep old order
-  scaleToDisplay.value = reorderScale(newScale, scaleToDisplay.value.map((note) => note.interval));
+  //keep old order if same length
+  if(selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
+    scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, scaleToDisplay.value.map((note) => note.interval));
+    return;
+  }
+  scaleToDisplay.value = selectedScaleInOrder.value;
 });
 
 defineExpose({
