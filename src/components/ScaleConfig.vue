@@ -83,14 +83,13 @@ const { getScale, reverseScale, shuffleScale, reorderScale } =
 const scaleNames = Object.keys(scales);
 const selectedNote: Ref<string> = ref("C4");
 const selectedScaleType: Ref<keyof Scales> = ref("Major");
-// roote notes can only be up to C6
+// root notes can only be up to C6
 // @ts-ignore
 const rootNotes = notes.filter((note, index) => index <= 48);
 // const templates = [''];
 const scaleToDisplay: Ref<Note[]> = ref(
   getScale(selectedNote.value, selectedScaleType.value)
 );
-const originalOrder = ref(scaleToDisplay.value.map((note) => note.name));
 const presets8 = [
   "1 3 5 7 2 4 6 8",
   "1 6 2 4 3 7 5 8",
@@ -122,12 +121,12 @@ function applyPreset(event: Event) {
 }
 
 watch([selectedNote, selectedScaleType], () => {
-  scaleToDisplay.value = getScale(selectedNote.value, selectedScaleType.value);
-  originalOrder.value = scaleToDisplay.value?.map((note) => note.name);
+  const newScale = getScale(selectedNote.value, selectedScaleType.value);
+  //keep old order
+  scaleToDisplay.value = reorderScale(newScale, scaleToDisplay.value.map((note) => note.interval));
 });
 
 defineExpose({
   scaleToDisplay,
-  originalOrder,
 });
 </script>

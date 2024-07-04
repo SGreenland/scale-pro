@@ -11,9 +11,9 @@ export default function scaleManipulator() {
         // get scale intervals
         const intervals = scales[scaleType];
         // get scale notes
-        const scale = intervals.map(interval => {
+        const scale = intervals.map((interval,index) => {
             const noteIndex = rootIndex + interval;
-            return notes[noteIndex];
+            return {...notes[noteIndex], interval: index + 1 };
         });
         return scale;
 

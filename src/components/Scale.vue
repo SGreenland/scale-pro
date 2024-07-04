@@ -13,13 +13,13 @@
       @click="!audioIsPlaying && playNote(index, 0)"
       class="p-2 bg-blue-100 rounded-lg w-full h-full flex items-center justify-center cursor-pointer dark:bg-blue-800 dark:text-white"
       :style="{
-        gridRowStart: scaleToDisplay.length - originalOrder.indexOf(note.name),
+        gridRowStart: scaleToDisplay.length - note.interval + 1,
         gridColumnStart: index + 1,
       }"
     >
       <span
         >{{ getNoteName(note.name)
-        }}<small>({{ originalOrder.indexOf(note.name) + 1 }})</small></span
+        }}<small>({{ note.interval }})</small></span
       >
     </div>
   </div>
@@ -38,7 +38,6 @@ function getNoteName(note: string) {
 
 const props = defineProps<{
   scaleToDisplay: Note[];
-  originalOrder: string[];
   tempo: string;
 }>();
 
@@ -70,6 +69,9 @@ const preloadAudio = async () => {
 };
 
 const resumeAudioContext = async () => {
+  if (isContextResumed.value) {
+    return;
+  }
   if (audioContext.state === "suspended") {
     await audioContext.resume();
   }
@@ -85,14 +87,13 @@ const playNote = (index: number, time: number) => {
 
   const noteElement = notes.value[index];
   if (noteElement) {
-    requestAnimationFrame(() => {
       noteElement.style.animation = `bounce ${
         animationInterval.value * 1000
-      }ms linear`;
+      }ms linear 1`;
+      // remove animation after it finishes
       setTimeout(() => {
         noteElement.style.animation = "";
       }, animationInterval.value * 1000);
-    });
   }
 };
 
@@ -176,6 +177,7 @@ const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
 
 onMounted(() => {
   window.addEventListener("click", resumeAudioContext, { once: true });
+  window.addEventListener("mousemove", resumeAudioContext, { once: true });
 });
 
 onBeforeUnmount(() => {

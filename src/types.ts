@@ -1,5 +1,6 @@
 interface Note {
     name: string;
+    interval: number;
     audioSrc: string;
 }
 
