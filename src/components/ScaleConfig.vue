@@ -54,7 +54,7 @@
             </button>
             <button
               v-else
-              v-for="(preset, index) in presets5"
+              v-for="(preset, index) in presets6"
               :key="index + 1"
               @click="applyPreset"
             >
@@ -102,13 +102,15 @@ const presets8 = [
   "1 4 2 6 8 7 5 3",
 ];
 
-const presets5 = [
-  "1 3 5 2 4",
-  "1 5 3 2 4",
-  "1 4 2 5 3",
-  "1 3 5 4 2",
-  "1 5 3 4 2",
-  "1 4 2 3 5",
+const presets6 = [
+  "1 3 5 2 4 6",
+  "1 6 2 4 3 5",
+  "1 5 3 2 4 6",
+  "1 4 2 3 5 6",
+  "1 3 5 6 4 2",
+  "1 6 2 5 3 4",
+  "1 5 3 6 4 2",
+  "1 4 2 5 3 6",
 ];
 
 function applyPreset(event: Event) {

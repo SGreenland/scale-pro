@@ -34,11 +34,11 @@ function handleToggleAudio(
       class="w-60 m-auto"
       v-model="tempo"
       :labels="['Tempo', `${tempo}bpm`]"
-      :disabled="scaleComponent.audioIsPlaying"
+      :disabled="scaleComponent?.audioIsPlaying!"
     />
     <audio-controls
       :notesAreLoading="notesAreLoading"
-      :audioIsPlaying="scaleComponent.audioIsPlaying"
+      :audioIsPlaying="scaleComponent?.audioIsPlaying!"
       @toggleAudio="handleToggleAudio"
     ></audio-controls>
     <scale

@@ -88,7 +88,7 @@ const playNote = (index: number, time: number) => {
     requestAnimationFrame(() => {
       noteElement.style.animation = `bounce ${
         animationInterval.value * 1000
-      }ms ease-out`;
+      }ms linear`;
       setTimeout(() => {
         noteElement.style.animation = "";
       }, animationInterval.value * 1000);
@@ -123,6 +123,8 @@ const scheduleNotes = (startTime: number) => {
         currentDirection = -1;
         currentNoteIndex -= 2; // step back to the previous note
       } else if (shouldLoop.value) {
+        // pause for two beats before looping - maybe make this a setting
+        currentTime += animationInterval.value * 2;
         currentNoteIndex = 0;
       } else {
         audioIsPlaying.value = false;
@@ -130,8 +132,10 @@ const scheduleNotes = (startTime: number) => {
       }
     } else if (currentDirection === -1 && currentNoteIndex === -1) {
       if (isForwardsAndBackwards.value && shouldLoop.value) {
+        // pause for one beat before looping
+        currentTime += animationInterval.value;
         currentDirection = 1;
-        currentNoteIndex = 1; // step forward to the next note
+        currentNoteIndex = 0; // step forward to the next note
       } else if (shouldLoop.value) {
         currentNoteIndex = props.scaleToDisplay.length - 1;
       } else {
