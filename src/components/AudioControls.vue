@@ -9,15 +9,9 @@
     </div>
     <button
       class="disabled:opacity-50 h-10 flex items-center"
-      :disabled="notesAreLoading"
       @click="$emit('toggleAudio', isForwardsAndBackwards, shouldLoop)"
     >
-      <font-awesome-icon
-        v-if="notesAreLoading"
-        :icon="faSpinner"
-        class="animate-spin"
-      />
-      <font-awesome-icon v-else :icon="audioIsPlaying ? faStop : faPlay" />
+      <font-awesome-icon :icon="audioIsPlaying ? faStop : faPlay" />
     </button>
     <div
       @click="isForwardsAndBackwards = !isForwardsAndBackwards"
@@ -37,11 +31,9 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { faStop } from "@fortawesome/free-solid-svg-icons";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 
 defineProps<{
-  notesAreLoading: boolean;
   audioIsPlaying: boolean;
 }>();
 

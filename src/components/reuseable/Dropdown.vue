@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, defineProps, defineExpose } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const props = withDefaults(defineProps<{
     align?: 'left' | 'right' | 'center';

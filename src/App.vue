@@ -16,7 +16,6 @@ const scaleComponent = ref({
   toggleAudio: (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {},
   audioIsPlaying: false,
 });
-const notesAreLoading = ref(false);
 const tempo = ref("120");
 
 function handleToggleAudio(
@@ -34,10 +33,8 @@ function handleToggleAudio(
       class="w-60 m-auto"
       v-model="tempo"
       :labels="['Tempo', `${tempo}bpm`]"
-      :disabled="scaleComponent?.audioIsPlaying"
     />
     <audio-controls
-      :notesAreLoading="notesAreLoading"
       :audioIsPlaying="scaleComponent?.audioIsPlaying || false"
       @toggleAudio="handleToggleAudio"
     ></audio-controls>

@@ -29,13 +29,6 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { Note } from "../types";
 
-function getNoteName(note: string) {
-  if (note.includes("sharp")) {
-    return note.replace("sharp", "#");
-  }
-  return note;
-}
-
 const props = defineProps<{
   scaleToDisplay: Note[];
   tempo: string;
@@ -46,13 +39,19 @@ const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
 const audioContext = new window.AudioContext();
 const isContextResumed = ref(false);
-
+const isForwardsAndBackwards = ref(false);
+const shouldLoop = ref(false);
 const animationInterval = computed(() => 60000 / +props.tempo / 1000); // Convert to seconds
-
-// const lastTime = ref(0);
 const noteIndex = ref(0);
 const direction = ref(1);
 let animationFrameId: number | null = null;
+
+function getNoteName(note: string) {
+  if (note.includes("sharp")) {
+    return note.replace("sharp", "#");
+  }
+  return note;
+}
 
 const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
   const response = await fetch(url);
@@ -153,9 +152,6 @@ const scheduleNotes = (startTime: number) => {
     animationFrameId = requestAnimationFrame(() => scheduleNotes(currentTime));
   }
 };
-
-const isForwardsAndBackwards = ref(false);
-const shouldLoop = ref(false);
 
 const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
   isForwardsAndBackwards.value = forwardsAndBackwards;
