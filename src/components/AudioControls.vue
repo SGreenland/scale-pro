@@ -2,21 +2,22 @@
   <div class="flex w-fit items-center m-auto gap-4">
     <div
       @click="shouldLoop = !shouldLoop"
-      class="flex center-xy py-1 px-2 size-10 rounded-lg cursor-pointer"
-      :class="{ 'border-2 border-blue-300': shouldLoop }"
+      class="flex center-xy py-1 px-2 size-10 rounded-lg cursor-pointer border-2 border-blue-300"
+      :class="{ 'bg-blue-200': shouldLoop }"
     >
       <font-awesome-icon :icon="faRepeat" size="lg" />
     </div>
     <button
-      class="disabled:opacity-50 h-10 flex items-center"
+      class="disabled:opacity-50 h-10 flex items-center focus:outline-none"
+      :class="{ 'bg-red-200': audioIsPlaying }"
       @click="$emit('toggleAudio', isForwardsAndBackwards, shouldLoop)"
     >
       <font-awesome-icon :icon="audioIsPlaying ? faStop : faPlay" />
     </button>
     <div
       @click="isForwardsAndBackwards = !isForwardsAndBackwards"
-      class="flex center-xy flex-col py-1 px-2 size-10 rounded-lg cursor-pointer"
-      :class="{ 'border-2 border-blue-300': isForwardsAndBackwards }"
+      class="flex center-xy flex-col py-1 px-2 size-10 rounded-lg cursor-pointer border-2 border-blue-300"
+      :class="{ 'bg-blue-200': isForwardsAndBackwards }"
     >
       <font-awesome-icon :icon="faArrowRight" />
       <font-awesome-icon :icon="faArrowLeft" />

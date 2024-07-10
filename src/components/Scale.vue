@@ -1,25 +1,27 @@
 <template>
-  <div
-    class="grid max-sm:text-xs md:gap-2 gap-1 py-3 lg:w-2/3 w-full m-auto drag-select-area"
-    :style="{
-      gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-      gridTemplateRows: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-    }"
-  >
+  <div class="w-full pt-5" ref="dragSelectArea">
     <div
-      v-for="(note, index) in scaleToDisplay"
-      :key="index"
-      ref="notes"
-      @click="!audioIsPlaying && playNote(index, 0)"
-      class="p-2 bg-blue-100 rounded-lg w-full h-full flex items-center justify-center cursor-pointer dark:bg-blue-800 dark:text-white selectable"
+      class="grid max-sm:text-xs md:gap-2 gap-1 p-3 lg:w-2/3 w-full m-auto"
       :style="{
-        gridRowStart: scaleToDisplay.length - note.interval + 1,
-        gridColumnStart: index + 1,
+        gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
       }"
     >
-      <span class="select-none"
-        >{{ getNoteName(note.name) }}<small>({{ note.interval }})</small></span
+      <div
+        v-for="(note, index) in scaleToDisplay"
+        :key="index"
+        ref="notes"
+        @click="!audioIsPlaying && playNote(index, 0)"
+        class="p-2 bg-blue-100 rounded-lg w-full h-8 flex items-center justify-center cursor-pointer dark:bg-blue-800 dark:text-white"
+        :style="{
+          gridRowStart: scaleToDisplay.length - note.interval + 1,
+          gridColumnStart: index + 1,
+        }"
       >
+        <span class="select-none"
+          >{{ getNoteName(note.name) }}<small>({{ note.interval }})</small></span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +43,7 @@ const props = defineProps<{
   tempo: string;
 }>();
 
-const notes = ref<HTMLDivElement[]>([]);
+const notes = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
 const audioContext = new window.AudioContext();
@@ -54,6 +56,7 @@ const direction = ref(1);
 let animationFrameId: number | null = null;
 const ds = ref<DragSelect | null>(null);
 const noteSelection = ref<Note[]>([]);
+const dragSelectArea = ref<HTMLElement | undefined>();
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -77,9 +80,6 @@ const preloadAudio = async () => {
 };
 
 const resumeAudioContext = async () => {
-  if (isContextResumed.value) {
-    return;
-  }
   if (audioContext.state === "suspended") {
     await audioContext.resume();
   }
@@ -93,7 +93,7 @@ const playNote = (index: number, time: number) => {
   source.connect(audioContext.destination);
   source.start(time);
 
-  const noteElement = notes.value[index];
+  const noteElement = notes.value![index];
   if (noteElement) {
     noteElement.style.animation = `bounce ${
       animationInterval.value * 1000
@@ -180,7 +180,7 @@ const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
   isForwardsAndBackwards.value = forwardsAndBackwards;
   shouldLoop.value = loop;
   if (!audioIsPlaying.value) {
-    await resumeAudioContext();
+    await preloadAudio();
     audioIsPlaying.value = true;
     noteIndex.value = noteSelection.value.length
       ? props.scaleToDisplay.indexOf(noteSelection.value[0])
@@ -197,19 +197,16 @@ const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
 };
 
 onMounted(() => {
-  window.addEventListener("click", resumeAudioContext, { once: true });
-  window.addEventListener("mousemove", resumeAudioContext, { once: true });
+  window.addEventListener("visibilitychange", preloadAudio);
 
   nextTick(() => {
     ds.value = new DragSelect({
-      area: document.querySelector(".drag-select-area") as HTMLElement,
-      selectables: document.querySelectorAll(
-        ".selectable"
-      ) as NodeListOf<HTMLElement>,
+      area: dragSelectArea.value,
       draggability: false,
       selectedClass: "bg-blue-300",
     });
-    ds.value?.subscribe("DS:end", (e) => {
+    ds.value.addSelectables(notes.value!);
+    ds.value.subscribe("DS:end", (e) => {
       const selected = e.items.map((item) =>
         item.textContent?.replace(/\(.*\)/, "").trim()
       );
@@ -223,6 +220,15 @@ onMounted(() => {
       noteSelection.value = props.scaleToDisplay.filter((note) =>
         noteSelection.value.includes(note)
       );
+    });
+
+    ds.value.subscribe("DS:start:pre", (e) => {
+       if(!e.isDragging) {
+        // @ts-ignore
+        const noteIndex = notes.value?.indexOf(e.items[0]);
+        if(noteIndex !== undefined) playNote(noteIndex, 0);
+        ds.value?.clearSelection();
+       }
     });
 
     ds.value?.subscribe("DS:unselect", (e) => {
