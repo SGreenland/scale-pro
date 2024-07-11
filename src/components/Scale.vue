@@ -11,7 +11,6 @@
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="notes"
-        @click="!audioIsPlaying && playNote(index, 0)"
         class="p-2 bg-blue-100 rounded-lg w-full h-8 flex items-center justify-center cursor-pointer dark:bg-blue-800 dark:text-white"
         :style="{
           gridRowStart: scaleToDisplay.length - note.interval + 1,
@@ -231,6 +230,7 @@ onMounted(() => {
        if(!e.isDragging) {
         // @ts-ignore
         const noteIndex = notes.value?.indexOf(e.items[0]);
+        // if a note is clicked, play it
         if(noteIndex !== undefined) playNote(noteIndex, 0);
         ds.value?.clearSelection();
        }
