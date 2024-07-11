@@ -105,7 +105,12 @@ const playNote = (index: number, time: number) => {
   }
 };
 
-watch(() => props.scaleToDisplay, preloadAudio, {
+watch(() => props.scaleToDisplay, () => {
+  preloadAudio();
+  nextTick(() => {
+    ds.value?.addSelectables(notes.value!);
+  });
+}, {
   deep: true,
   immediate: true,
 });
