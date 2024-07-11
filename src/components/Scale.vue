@@ -106,6 +106,7 @@ const playNote = (index: number, time: number) => {
 
 watch(() => props.scaleToDisplay, () => {
   preloadAudio();
+  ds.value?.clearSelection();
   nextTick(() => {
     ds.value?.addSelectables(notes.value!);
   });
