@@ -76,14 +76,22 @@ const preloadAudio = async () => {
   );
 
   audioBuffers.value = loadedAudios;
+
+  // warm up audioContext by playing a silent buffer
+    const buffer = audioContext.createBuffer(1, 1, 22050);
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start(0);
+
 };
 
-const resumeAudioContext = async () => {
-  if (audioContext.state === "suspended") {
-    await audioContext.resume();
-  }
-  isContextResumed.value = true;
-};
+// const resumeAudioContext = async () => {
+//   if (audioContext.state === "suspended") {
+//     await audioContext.resume();
+//   }
+//   isContextResumed.value = true;
+// };
 
 const playNote = (index: number, time: number) => {
   const audioBuffer = audioBuffers.value[index];
@@ -185,8 +193,7 @@ const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
   isForwardsAndBackwards.value = forwardsAndBackwards;
   shouldLoop.value = loop;
   if (!audioIsPlaying.value) {
-    await resumeAudioContext();
-    await preloadAudio();
+    console.log(audioContext.state, audioBuffers.value);
     audioIsPlaying.value = true;
     noteIndex.value = noteSelection.value.length
       ? props.scaleToDisplay.indexOf(noteSelection.value[0])
