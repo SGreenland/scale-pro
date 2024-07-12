@@ -11,7 +11,7 @@
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="notes"
-        class="p-2 bg-blue-100 rounded-lg w-full h-8 flex items-center justify-center cursor-pointer dark:bg-blue-800 dark:text-white"
+        class="p-2 bg-blue-100 rounded-lg w-full h-8 flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
         :style="{
           gridRowStart: scaleToDisplay.length - note.interval + 1,
           gridColumnStart: index + 1,
@@ -193,7 +193,6 @@ const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
   isForwardsAndBackwards.value = forwardsAndBackwards;
   shouldLoop.value = loop;
   if (!audioIsPlaying.value) {
-    console.log(audioContext.state, audioBuffers.value);
     audioIsPlaying.value = true;
     noteIndex.value = noteSelection.value.length
       ? props.scaleToDisplay.indexOf(noteSelection.value[0])
@@ -216,7 +215,7 @@ onMounted(() => {
     ds.value = new DragSelect({
       area: dragSelectArea.value,
       draggability: false,
-      selectedClass: "bg-blue-300",
+      selectedClass: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark:bg-orange-700" : "bg-blue-300",
     });
     ds.value.addSelectables(notes.value!);
     //events
@@ -261,6 +260,7 @@ onBeforeUnmount(() => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
+  window.removeEventListener("visibilitychange", preloadAudio);
   // not sure if this unsubscribes but hopefully?
   ds.value?.stop();
 
