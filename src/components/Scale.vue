@@ -46,7 +46,7 @@ const notes = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
 const audioContext = new window.AudioContext();
-const isContextResumed = ref(false);
+// const isContextResumed = ref(false);
 const isForwardsAndBackwards = ref(false);
 const shouldLoop = ref(false);
 const animationInterval = computed(() => 60000 / +props.tempo / 1000); // Convert to seconds
