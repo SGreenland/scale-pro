@@ -35,7 +35,7 @@ import {
   nextTick,
 } from "vue";
 import { Note } from "../types";
-import DragSelect from "dragselect";
+import DragSelect, { DSInputElement } from "dragselect";
 
 const props = defineProps<{
   scaleToDisplay: Note[];
@@ -53,7 +53,7 @@ const animationInterval = computed(() => 60000 / +props.tempo / 1000); // Conver
 const noteIndex = ref(0);
 const direction = ref(1);
 let animationFrameId: number | null = null;
-const ds = ref<DragSelect | null>(null);
+const ds = ref<DragSelect<DSInputElement> | null>(null);
 const noteSelection = ref<Note[]>([]);
 const dragSelectArea = ref<HTMLElement | undefined>();
 
@@ -185,6 +185,7 @@ const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
   isForwardsAndBackwards.value = forwardsAndBackwards;
   shouldLoop.value = loop;
   if (!audioIsPlaying.value) {
+    await resumeAudioContext();
     await preloadAudio();
     audioIsPlaying.value = true;
     noteIndex.value = noteSelection.value.length
@@ -211,6 +212,16 @@ onMounted(() => {
       selectedClass: "bg-blue-300",
     });
     ds.value.addSelectables(notes.value!);
+    //events
+    ds.value.subscribe("DS:start", (e) => {
+       if(!e.isDragging) {
+        // @ts-ignore
+        const noteIndex = notes.value?.indexOf(e.items[0]);
+        // if a note is clicked, play it
+        if(noteIndex !== undefined) playNote(noteIndex, 0);
+        ds.value?.clearSelection();
+       }
+    });
     ds.value.subscribe("DS:end", (e) => {
       const selected = e.items.map((item) =>
         item.textContent?.replace(/\(.*\)/, "").trim()
@@ -227,16 +238,6 @@ onMounted(() => {
       );
     });
 
-    ds.value.subscribe("DS:start:pre", (e) => {
-       if(!e.isDragging) {
-        // @ts-ignore
-        const noteIndex = notes.value?.indexOf(e.items[0]);
-        // if a note is clicked, play it
-        if(noteIndex !== undefined) playNote(noteIndex, 0);
-        ds.value?.clearSelection();
-       }
-    });
-
     ds.value?.subscribe("DS:unselect", (e) => {
       const selected = e.items.map((item) =>
         item.textContent?.replace(/\(.*\)/, "").trim()
@@ -246,12 +247,16 @@ onMounted(() => {
       });
     });
   });
+
 });
 
 onBeforeUnmount(() => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
+  // not sure if this unsubscribes but hopefully?
+  ds.value?.stop();
+
 });
 
 defineExpose({
