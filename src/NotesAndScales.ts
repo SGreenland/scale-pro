@@ -2,7 +2,7 @@ import { Note } from './types';
 import { Scales } from './types';
 
 export const notes: Note[] = [];
-const noteNames: string[] = ['C', 'Csharp', 'D', 'Dsharp', 'E', 'F', 'Fsharp', 'G', 'Gsharp', 'A', 'Asharp', 'B'];
+const noteNames: string[] = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const octaves: number[] = [2, 3, 4, 5, 6, 7];
 
 for (const octave of octaves) {

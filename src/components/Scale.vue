@@ -1,7 +1,7 @@
 <template>
   <div class="w-full pt-5" ref="dragSelectArea">
     <div
-      class="grid max-sm:text-xs md:gap-2 gap-1 p-3 lg:w-2/3 w-full m-auto"
+      class="grid my-6 max-sm:text-xs md:gap-2 gap-1 p-3 justify-center items-center lg:w-2/3 w-full m-auto"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
@@ -11,14 +11,16 @@
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="notes"
-        class="p-2 bg-blue-100 rounded-lg w-full h-8 flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
+        class="w-auto  h-6 flex items-center justify-center cursor-pointer "
         :style="{
           gridRowStart: scaleToDisplay.length - note.interval + 1,
           gridColumnStart: index + 1,
         }"
       >
-        <span class="select-none"
-          >{{ getNoteName(note.name) }}<small>({{ note.interval }})</small></span
+        <span class="font-bold text-sm rounded-full h-5 w-12 dark:bg-blue-700 dark:text-white select-none"
+          >{{ getNoteName(note.name) }}
+          <!-- <small>({{ note.interval }})</small> -->
+          </span
         >
       </div>
     </div>

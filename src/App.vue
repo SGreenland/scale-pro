@@ -29,6 +29,12 @@ function handleToggleAudio(
 <template>
   <div class="grid gap-3 w-full">
     <scale-config ref="scaleConfig" />
+    <scale
+      ref="scaleComponent"
+      :scaleToDisplay="scaleConfig.scaleToDisplay"
+      :originalOrder="scaleConfig.originalOrder"
+      :tempo="tempo"
+    />
     <tempo-select
       class="w-60 m-auto"
       v-model="tempo"
@@ -38,11 +44,5 @@ function handleToggleAudio(
       :audioIsPlaying="scaleComponent?.audioIsPlaying || false"
       @toggleAudio="handleToggleAudio"
     ></audio-controls>
-    <scale
-      ref="scaleComponent"
-      :scaleToDisplay="scaleConfig.scaleToDisplay"
-      :originalOrder="scaleConfig.originalOrder"
-      :tempo="tempo"
-    />
   </div>
 </template>

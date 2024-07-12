@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-2 gap-x-3 m-auto max-w-4xl">
+  <div class="grid  w-full grid-cols-2 gap-x-3 m-auto max-w-3xl">
     <div class="col-span-2 md:col-span-1 grid grid-cols-6 gap-3 w-full">
       <div class="col-span-2 flex flex-col items-start">
         <label class="text-sm font-bold mb-2" for="note">Root Note:</label>
@@ -35,7 +35,7 @@
           <dropdown>
             <template #trigger>
 
-              <button class="w-full" for="custom-order">Presets:</button>
+              <button class="w-full" for="custom-order">Presets</button>
             </template>
             <template #content>
               <div>
