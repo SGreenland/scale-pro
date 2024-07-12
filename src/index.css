@@ -49,10 +49,17 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+
+  @apply
+  font-bold
+  text-base
+  dark:border-white
+  dark:bg-white
+  dark:text-black
+  dark:hover:bg-transparent
+  dark:hover:text-white;
 }
-button:hover {
-  border-color: #de9898;
-}
+ 
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -63,9 +70,21 @@ button:focus-visible {
 }
 
 select {
-  padding: 0.6em 1.2em;
-  border: 1px solid #6f6b6b;
-  border-radius: 8px;
+  @apply 
+  form-select
+  px-3 
+  py-2 
+  font-bold
+  text-xl
+  rounded-lg 
+  border-0
+
+  dark:bg-emerald-300 
+  dark:text-black
+
+  bg-[url('dist/assets/svg/caret-down-solid.svg')]
+  bg-[length:13px];
+background-position: right 1rem center;
 }
 
 #app {

@@ -5,8 +5,13 @@ export default {
     './src/**/*.{html,js,ts,jsx,tsx,vue}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontSize: {
+       }
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
 

@@ -1,16 +1,16 @@
 <template>
-  <div class="grid gap-2 m-auto">
-    <div class="flex items-center gap-2 w-full">
-      <div class="flex flex-col w-fit items-start">
-        <label class="font-medium" for="note">Root Note:</label>
-        <select id="note" v-model="selectedNote">
+  <div class="grid grid-cols-2 gap-x-3 m-auto max-w-4xl">
+    <div class="col-span-2 md:col-span-1 grid grid-cols-6 gap-3 w-full">
+      <div class="col-span-2 flex flex-col items-start">
+        <label class="text-sm font-bold mb-2" for="note">Root Note:</label>
+        <select class="w-full" id="note" v-model="selectedNote">
           <option v-for="(note, index) in rootNotes" :key="index">
             {{ note.name }}
           </option>
         </select>
       </div>
-      <div class="flex flex-col w-full items-start">
-        <label class="font-medium" for="scale">Scale:</label>
+      <div class="col-span-4 flex flex-col  items-start">
+        <label class="text-sm font-bold mb-2" for="scale">Scale:</label>
         <select class="flex w-full" id="scale" v-model="selectedScaleType">
           <option v-for="(name, index) in scaleNames" :key="index">
             {{ name }}
@@ -18,51 +18,51 @@
         </select>
       </div>
     </div>
-    <div class="flex w-full justify-evenly items-center gap-2">
-      <button @click="scaleToDisplay = reverseScale(scaleToDisplay)">
-        Reverse
-      </button>
-      <button @click="scaleToDisplay = shuffleScale(scaleToDisplay)">
-        Shuffle
-      </button>
-      <button
-        @click="scaleToDisplay = getScale(selectedNote, selectedScaleType)"
-      >
-        Reset
-      </button>
-      <dropdown>
-        <template #trigger>
-          <font-awesome-icon
-            class="rotate-90 cursor-pointer"
-            size="lg"
-            :icon="faEllipsis"
-          />
-        </template>
-        <template #content>
-          <div>
-            <label class="mb-1" for="custom-order"><b>Presets: </b></label>
-            <hr />
-          </div>
-          <div class="space-y-2 mt-2 max-h-40 overflow-auto">
-            <button
-              v-if="!selectedScaleType.includes('Pentatonic')"
-              v-for="(preset, index) in presets8"
-              :key="index"
-              @click="applyPreset"
-            >
-              {{ preset }}
-            </button>
-            <button
-              v-else
-              v-for="(preset, index) in presets6"
-              :key="index + 1"
-              @click="applyPreset"
-            >
-              {{ preset }}
-            </button>
-          </div>
-        </template>
-      </dropdown>
+
+
+    <div class="col-span-2 md:col-span-1 grid grid-cols-6 gap-x-3 w-full">
+      <label class="text-left col-span-full text-sm font-bold mb-2" for="note">Note order:</label>
+
+      <div class="col-span-6 grid gap-x-3 grid-cols-3 items-start">
+        <button class="col-span-1" @click="scaleToDisplay = reverseScale(scaleToDisplay)">
+          Reverse
+        </button>
+        <button class="col-span-1" @click="scaleToDisplay = shuffleScale(scaleToDisplay)">
+          Shuffle
+        </button>
+
+        <div class="col-span-1">
+          <dropdown>
+            <template #trigger>
+
+              <button class="w-full" for="custom-order">Presets:</button>
+            </template>
+            <template #content>
+              <div>
+                <hr />
+              </div>
+              <div class="space-y-2 mt-2 max-h-40 overflow-auto">
+                <button v-if="!selectedScaleType.includes('Pentatonic')" v-for="(preset, index) in presets8"
+                  :key="index" @click="applyPreset">
+                  {{ preset }}
+                </button>
+                <button v-else v-for="(preset, index) in presets6" :key="index + 1" @click="applyPreset">
+                  {{ preset }}
+                </button>
+              </div>
+            </template>
+          </dropdown>
+
+        </div>
+        <div class="col-span-full flex items-end justify-end pt-3">
+          <button
+            class="rounded-full text-sm w-auto border py-1 px-3 bg-transparent border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+            @click="scaleToDisplay = getScale(selectedNote, selectedScaleType)">
+            Reset
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -70,12 +70,18 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import type { Ref } from "vue";
+
 import { Scales, Note } from "../types";
 import { scales, notes } from "../NotesAndScales";
+
 import scaleManipulator from "../utils/scaleManipulator";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+
 import Dropdown from "./reuseable/Dropdown.vue";
+
+
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 
 const { getScale, reverseScale, shuffleScale, reorderScale } =
   scaleManipulator();
@@ -124,7 +130,7 @@ function applyPreset(event: Event) {
 
 watch([selectedNote, selectedScaleType], () => {
   //keep old order if same length
-  if(selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
+  if (selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
     scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, scaleToDisplay.value.map((note) => note.interval));
     return;
   }
