@@ -11,6 +11,12 @@ interface Scales {
     'Minor Pentatonic': number[];
 }
 
-export type { Note, Scales };
+
+interface PresetNoteOrders {
+    presets8: string[];
+    presets6: string[];
+}
+
+export type { Note, Scales, PresetNoteOrders };
 
 

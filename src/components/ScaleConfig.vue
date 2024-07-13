@@ -45,17 +45,8 @@
           </div>
           <div class="space-y-2 mt-2 max-h-40 overflow-auto">
             <button
-              v-if="!selectedScaleType.includes('Pentatonic')"
-              v-for="(preset, index) in presets8"
+              v-for="(preset, index) in presets"
               :key="index"
-              @click="applyPreset"
-            >
-              {{ preset }}
-            </button>
-            <button
-              v-else
-              v-for="(preset, index) in presets6"
-              :key="index + 1"
               @click="applyPreset"
             >
               {{ preset }}
@@ -70,8 +61,9 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import type { Ref } from "vue";
-import { Scales, Note } from "../types";
+import { Scales, Note, PresetNoteOrders } from "../types";
 import { scales, notes } from "../NotesAndScales";
+import { presetNoteOrders } from "../PresetStore";
 import scaleManipulator from "../utils/scaleManipulator";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
@@ -92,27 +84,11 @@ const selectedScaleInOrder = computed(() =>
 const scaleToDisplay: Ref<Note[]> = ref(
   getScale(selectedNote.value, selectedScaleType.value)
 );
-const presets8 = [
-  "1 3 5 7 2 4 6 8",
-  "1 6 2 4 3 7 5 8",
-  "1 5 3 7 2 6 4 8",
-  "1 4 2 6 3 7 5 8",
-  "1 3 5 7 8 6 4 2",
-  "1 6 2 4 5 7 3 8",
-  "1 5 3 7 8 6 4 2",
-  "1 4 2 6 8 7 5 3",
-];
 
-const presets6 = [
-  "1 3 5 2 4 6",
-  "1 6 2 4 3 5",
-  "1 5 3 2 4 6",
-  "1 4 2 3 5 6",
-  "1 3 5 6 4 2",
-  "1 6 2 5 3 4",
-  "1 5 3 6 4 2",
-  "1 4 2 5 3 6",
-];
+const presets = computed(() => {
+   const presetsKey = `presets${scaleToDisplay.value.length.toString()}` as keyof PresetNoteOrders;
+   return presetNoteOrders[presetsKey];
+ });
 
 function applyPreset(event: Event) {
   const element = event?.target as HTMLButtonElement;
