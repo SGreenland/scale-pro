@@ -13,17 +13,11 @@ const scaleConfig = ref({
 });
 const scaleComponent = ref({
   // @ts-ignore
-  toggleAudio: (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {},
+  toggleAudio: () => {},
   audioIsPlaying: false,
 });
 const tempo = ref("120");
 
-function handleToggleAudio(
-  isForwardsAndBackwards: boolean,
-  shouldLoop: boolean
-) {
-  scaleComponent.value?.toggleAudio(isForwardsAndBackwards, shouldLoop);
-}
 </script>
 
 <template>
@@ -36,7 +30,7 @@ function handleToggleAudio(
     />
     <audio-controls
       :audioIsPlaying="scaleComponent?.audioIsPlaying || false"
-      @toggleAudio="handleToggleAudio"
+      @toggleAudio="scaleComponent?.toggleAudio"
     ></audio-controls>
     <scale
       ref="scaleComponent"

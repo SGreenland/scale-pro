@@ -18,7 +18,8 @@
         }"
       >
         <span class="select-none"
-          >{{ getNoteName(note.name) }}<small>({{ note.interval }})</small></span
+          >{{ getNoteName(note.name)
+          }}<small>({{ note.interval }})</small></span
         >
       </div>
     </div>
@@ -36,6 +37,7 @@ import {
 } from "vue";
 import { Note } from "../types";
 import DragSelect, { DSInputElement } from "dragselect";
+import { playBackOptions } from "../GlobalState";
 
 const props = defineProps<{
   scaleToDisplay: Note[];
@@ -46,9 +48,6 @@ const notes = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
 const audioContext = new window.AudioContext();
-// const isContextResumed = ref(false);
-const isForwardsAndBackwards = ref(false);
-const shouldLoop = ref(false);
 const animationInterval = computed(() => 60000 / +props.tempo / 1000); // Convert to seconds
 const noteIndex = ref(0);
 const direction = ref(1);
@@ -78,20 +77,12 @@ const preloadAudio = async () => {
   audioBuffers.value = loadedAudios;
 
   // warm up audioContext by playing a silent buffer
-    const buffer = audioContext.createBuffer(1, 1, 22050);
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start(0);
-
+  const buffer = audioContext.createBuffer(1, 1, 22050);
+  const source = audioContext.createBufferSource();
+  source.buffer = buffer;
+  source.connect(audioContext.destination);
+  source.start(0);
 };
-
-// const resumeAudioContext = async () => {
-//   if (audioContext.state === "suspended") {
-//     await audioContext.resume();
-//   }
-//   isContextResumed.value = true;
-// };
 
 const playNote = (index: number, time: number) => {
   const audioBuffer = audioBuffers.value[index];
@@ -112,16 +103,20 @@ const playNote = (index: number, time: number) => {
   }
 };
 
-watch(() => props.scaleToDisplay, () => {
-  preloadAudio();
-  ds.value?.clearSelection();
-  nextTick(() => {
-    ds.value?.addSelectables(notes.value!);
-  });
-}, {
-  deep: true,
-  immediate: true,
-});
+watch(
+  () => props.scaleToDisplay,
+  () => {
+    preloadAudio();
+    ds.value?.clearSelection();
+    nextTick(() => {
+      ds.value?.addSelectables(notes.value!);
+    });
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 
 const scheduleNotes = (startTime: number) => {
   let currentTime = startTime;
@@ -146,10 +141,10 @@ const scheduleNotes = (startTime: number) => {
           ) +
             1) // reached the end of the selection
     ) {
-      if (isForwardsAndBackwards.value) {
+      if (playBackOptions.isRoundTrip) {
         currentDirection = -1;
         currentNoteIndex -= 2; // step back to the previous note
-      } else if (shouldLoop.value) {
+      } else if (playBackOptions.shouldLoop) {
         // pause for two beats before looping - maybe make this a setting
         currentTime += animationInterval.value * 2;
         currentNoteIndex = noteSelection.value.length
@@ -165,14 +160,14 @@ const scheduleNotes = (startTime: number) => {
         currentNoteIndex ===
           props.scaleToDisplay.indexOf(noteSelection.value[0]) - 1)
     ) {
-      if (isForwardsAndBackwards.value && shouldLoop.value) {
+      if (playBackOptions.isRoundTrip && playBackOptions.shouldLoop) {
         // pause for one beat before looping
         currentTime += animationInterval.value;
         currentDirection = 1;
         currentNoteIndex = noteSelection.value.length
           ? props.scaleToDisplay.indexOf(noteSelection.value[0])
           : 0;
-      } else if (shouldLoop.value) {
+      } else if (playBackOptions.shouldLoop) {
         currentNoteIndex = props.scaleToDisplay.length - 1;
       } else {
         audioIsPlaying.value = false;
@@ -189,9 +184,7 @@ const scheduleNotes = (startTime: number) => {
   }
 };
 
-const toggleAudio = async (forwardsAndBackwards: boolean, loop: boolean) => {
-  isForwardsAndBackwards.value = forwardsAndBackwards;
-  shouldLoop.value = loop;
+const toggleAudio = async () => {
   if (!audioIsPlaying.value) {
     audioIsPlaying.value = true;
     noteIndex.value = noteSelection.value.length
@@ -215,18 +208,22 @@ onMounted(() => {
     ds.value = new DragSelect({
       area: dragSelectArea.value,
       draggability: false,
-      selectedClass: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark:bg-orange-700" : "bg-blue-300",
+      selectedClass:
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark:bg-orange-700"
+          : "bg-blue-300",
     });
     ds.value.addSelectables(notes.value!);
     //events
     ds.value.subscribe("DS:start", (e) => {
-       if(!e.isDragging) {
+      if (!e.isDragging) {
         // @ts-ignore
         const noteIndex = notes.value?.indexOf(e.items[0]);
         // if a note is clicked, play it
-        if(noteIndex !== undefined) playNote(noteIndex, 0);
+        if (noteIndex !== undefined) playNote(noteIndex, 0);
         ds.value?.clearSelection();
-       }
+      }
     });
     ds.value.subscribe("DS:end", (e) => {
       const selected = e.items.map((item) =>
@@ -253,7 +250,6 @@ onMounted(() => {
       });
     });
   });
-
 });
 
 onBeforeUnmount(() => {
@@ -263,7 +259,6 @@ onBeforeUnmount(() => {
   window.removeEventListener("visibilitychange", preloadAudio);
   // not sure if this unsubscribes but hopefully?
   ds.value?.stop();
-
 });
 
 defineExpose({

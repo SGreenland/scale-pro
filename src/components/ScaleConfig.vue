@@ -63,7 +63,7 @@ import { ref, watch, computed } from "vue";
 import type { Ref } from "vue";
 import { Scales, Note, PresetNoteOrders } from "../types";
 import { scales, notes } from "../NotesAndScales";
-import { presetNoteOrders } from "../PresetStore";
+import { presetNoteOrders } from "../GlobalState";
 import scaleManipulator from "../utils/scaleManipulator";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";

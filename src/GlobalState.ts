@@ -23,3 +23,8 @@ export const presetNoteOrders = reactive<PresetNoteOrders>({
     "1 4 2 5 3 6",
   ],
 });
+
+export const playBackOptions = reactive({
+  shouldLoop: false,
+  isRoundTrip: true,
+});
