@@ -3,6 +3,7 @@ import ScaleConfig from "./components/ScaleConfig.vue";
 import Scale from "./components/Scale.vue";
 import TempoSelect from "./components/TempoSelect.vue";
 import AudioControls from "./components/AudioControls.vue";
+import Header from "./components/Header.vue"
 
 import { ref } from "vue";
 import { Note } from "./types";
@@ -27,7 +28,8 @@ function handleToggleAudio(
 </script>
 
 <template>
-  <div class="grid gap-3 w-full">
+  <Header></Header>
+  <div class="grid gap-3 w-full min-h-screen pt-12 bg-stone-100 text-black | dark:bg-stone-900 dark:text-white">
     <scale-config ref="scaleConfig" />
     <scale
       ref="scaleComponent"

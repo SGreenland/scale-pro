@@ -1,5 +1,5 @@
 <template>
-  <div class="grid  w-full grid-cols-2 gap-x-3 m-auto max-w-3xl">
+  <div class="grid w-full grid-cols-2 gap-x-3 gap-y-5 m-auto max-w-3xl px-6">
     <div class="col-span-2 md:col-span-1 grid grid-cols-6 gap-3 w-full">
       <div class="col-span-2 flex flex-col items-start">
         <label class="text-sm font-bold mb-2" for="note">Root Note:</label>
@@ -22,12 +22,11 @@
 
     <div class="col-span-2 md:col-span-1 grid grid-cols-6 gap-x-3 w-full">
       <label class="text-left col-span-full text-sm font-bold mb-2" for="note">Note order:</label>
-
       <div class="col-span-6 grid gap-x-3 grid-cols-3 items-start">
-        <button class="col-span-1" @click="scaleToDisplay = reverseScale(scaleToDisplay)">
+        <button class="col-span-1 text-base" @click="scaleToDisplay = reverseScale(scaleToDisplay)">
           Reverse
         </button>
-        <button class="col-span-1" @click="scaleToDisplay = shuffleScale(scaleToDisplay)">
+        <button class="col-span-1 text-base" @click="scaleToDisplay = shuffleScale(scaleToDisplay)">
           Shuffle
         </button>
 
@@ -35,7 +34,7 @@
           <dropdown>
             <template #trigger>
 
-              <button class="w-full" for="custom-order">Presets</button>
+              <button class="w-full text-base" for="custom-order">Presets</button>
             </template>
             <template #content>
               <div>
@@ -56,7 +55,7 @@
         </div>
         <div class="col-span-full flex items-end justify-end pt-3">
           <button
-            class="rounded-full text-sm w-auto border py-1 px-3 bg-transparent border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+            class="rounded-full text-sm w-auto border py-1 px-3 bg-transparent h-8 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
             @click="scaleToDisplay = getScale(selectedNote, selectedScaleType)">
             Reset
           </button>

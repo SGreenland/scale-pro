@@ -1,27 +1,26 @@
 <template>
-  <div class="w-full pt-5" ref="dragSelectArea">
-    <div
-      class="grid my-6 max-sm:text-xs md:gap-2 gap-1 p-3 justify-center items-center lg:w-2/3 w-full m-auto"
-      :style="{
-        gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-        gridTemplateRows: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-      }"
-    >
+  <div class="w-full" ref="dragSelectArea">
+    <div class="relative">
+      <div v-for="(note, index) in scaleToDisplay" class="absolute z-0 left-0 w-full border-t border-stone-300 dark:border-stone-800"
+        :style="{ top: 'calc(' + (index) * (100 / scaleToDisplay.length) + '% + 11px' }"></div>
+
       <div
-        v-for="(note, index) in scaleToDisplay"
-        :key="index"
-        ref="notes"
-        class="w-auto  h-6 flex items-center justify-center cursor-pointer "
+        class="z-10 relative grid my-6 max-sm:text-xs gap-x-2 justify-center items-center lg:w-2/3 w-full m-auto max-w-3xl px-6"
         :style="{
-          gridRowStart: scaleToDisplay.length - note.interval + 1,
-          gridColumnStart: index + 1,
-        }"
-      >
-        <span class="font-bold text-sm rounded-full h-5 w-12 dark:bg-blue-700 dark:text-white select-none"
-          >{{ getNoteName(note.name) }}
-          <!-- <small>({{ note.interval }})</small> -->
-          </span
-        >
+          gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
+        }">
+        <div v-for="(note, index) in scaleToDisplay" :key="index" ref="notes"
+          class="w-auto  h-6 flex items-center justify-center cursor-pointer group" :style="{
+            gridRowStart: scaleToDisplay.length - note.interval + 1,
+            gridColumnStart: index + 1,
+          }">
+          <span
+            class="font-bold text-sm rounded-full h-5 w-12 bg-cyan-600 text-white | dark:bg-yellow-500 dark:text-black select-none group-[.current]:bg-cyan-300">{{
+              getNoteName(note.name) }}
+            <!-- <small>({{ note.interval }})</small> -->
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -66,6 +65,7 @@ function getNoteName(note: string) {
   return note;
 }
 
+
 const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
@@ -80,11 +80,11 @@ const preloadAudio = async () => {
   audioBuffers.value = loadedAudios;
 
   // warm up audioContext by playing a silent buffer
-    const buffer = audioContext.createBuffer(1, 1, 22050);
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start(0);
+  const buffer = audioContext.createBuffer(1, 1, 22050);
+  const source = audioContext.createBufferSource();
+  source.buffer = buffer;
+  source.connect(audioContext.destination);
+  source.start(0);
 
 };
 
@@ -104,12 +104,14 @@ const playNote = (index: number, time: number) => {
 
   const noteElement = notes.value![index];
   if (noteElement) {
-    noteElement.style.animation = `bounce ${
-      animationInterval.value * 1000
-    }ms linear 1`;
+    noteElement.style.animation = `bounce ${animationInterval.value * 1000
+      }ms linear 1`;
+    noteElement.classList.add('current')
     // remove animation after it finishes
     setTimeout(() => {
       noteElement.style.animation = "";
+      noteElement.classList.remove('current')
+
     }, animationInterval.value * 1000);
   }
 };
@@ -143,10 +145,10 @@ const scheduleNotes = (startTime: number) => {
       currentDirection === 1 &&
       (currentNoteIndex === props.scaleToDisplay.length ||
         currentNoteIndex ===
-          props.scaleToDisplay.indexOf(
-            noteSelection.value[noteSelection.value.length - 1]
-          ) +
-            1) // reached the end of the selection
+        props.scaleToDisplay.indexOf(
+          noteSelection.value[noteSelection.value.length - 1]
+        ) +
+        1) // reached the end of the selection
     ) {
       if (isForwardsAndBackwards.value) {
         currentDirection = -1;
@@ -165,7 +167,7 @@ const scheduleNotes = (startTime: number) => {
       currentDirection === -1 &&
       (currentNoteIndex === -1 ||
         currentNoteIndex ===
-          props.scaleToDisplay.indexOf(noteSelection.value[0]) - 1)
+        props.scaleToDisplay.indexOf(noteSelection.value[0]) - 1)
     ) {
       if (isForwardsAndBackwards.value && shouldLoop.value) {
         // pause for one beat before looping
@@ -222,13 +224,13 @@ onMounted(() => {
     ds.value.addSelectables(notes.value!);
     //events
     ds.value.subscribe("DS:start", (e) => {
-       if(!e.isDragging) {
+      if (!e.isDragging) {
         // @ts-ignore
         const noteIndex = notes.value?.indexOf(e.items[0]);
         // if a note is clicked, play it
-        if(noteIndex !== undefined) playNote(noteIndex, 0);
+        if (noteIndex !== undefined) playNote(noteIndex, 0);
         ds.value?.clearSelection();
-       }
+      }
     });
     ds.value.subscribe("DS:end", (e) => {
       const selected = e.items.map((item) =>
@@ -279,9 +281,11 @@ defineExpose({
   0% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
+
   100% {
     transform: translateY(0);
   }
