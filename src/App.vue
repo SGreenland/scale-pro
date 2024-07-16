@@ -12,11 +12,13 @@ const scaleConfig = ref({
   scaleToDisplay: [] as Note[],
   originalOrder: [] as string[],
 });
+
 const scaleComponent = ref({
   // @ts-ignore
   toggleAudio: (isForwardsAndBackwards: boolean, shouldLoop: boolean) => {},
   audioIsPlaying: false,
 });
+
 const tempo = ref("120");
 
 function handleToggleAudio(

@@ -1,7 +1,7 @@
 <template>
     <div class="absolute px-3">
         <button type="button" @click="toggleDarkMode"
-            class="mt-2 bg-opacity-0 bg-black group flex h-10 w-10 center-xy rounded-full    border-0 text-black dark:text-white dark:bg-black dark:bg-opacity-0 dark:hover:bg-stone-800 hover:bg-stone-200 focus:bg-stone-200 dark:focus:bg-stone-800 focus:outline-0"
+            class="mt-2 group flex h-10 w-10 center-xy rounded-full    border-0 text-black bg-stone-200 dark:text-white dark:bg-stone-800 dark:hover:bg-stone-800 hover:bg-stone-200 focus:bg-stone-200 dark:focus:bg-stone-800 focus:outline-0"
             data-hs-theme-click-value="dark">
             <svg class="dark:hidden flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -46,6 +46,4 @@ export default {
         },
     },
 };
-
-
 </script>
