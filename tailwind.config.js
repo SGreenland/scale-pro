@@ -8,7 +8,10 @@ export default {
   theme: {
     extend: {
       fontSize: {
-       }
+      },
+      width: {
+        tempo: 'calc(200% - 4px)',
+      }
     },
   },
   plugins: [

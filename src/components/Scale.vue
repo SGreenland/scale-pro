@@ -16,7 +16,7 @@
             gridColumnStart: index + 1,
           }">
           <span
-            class="font-bold text-sm rounded-full h-5 w-12 bg-cyan-600 text-white | dark:bg-yellow-500 dark:text-black select-none group-[.current]:bg-cyan-300">{{
+            class="font-bold text-sm rounded-full h-5 w-12 bg-cyan-600 text-white | dark:bg-stone-300 dark:text-black select-none group-[.current]:bg-cyan-300">{{
               getNoteName(note.name) }}
             <!-- <small>({{ note.interval }})</small> -->
           </span>
