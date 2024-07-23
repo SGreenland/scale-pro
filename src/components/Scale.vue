@@ -1,17 +1,17 @@
 <template>
   <div class="w-full pt-5" ref="dragSelectArea">
     <div
-      class="grid max-sm:text-xs md:gap-2 gap-1 p-3 lg:w-2/3 w-full m-auto"
+      class="piano-roll grid max-sm:text-xs lg:w-2/3 w-full m-auto"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-        gridTemplateRows: `repeat(13, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(13, minmax(0, 2rem))`,
       }"
     >
       <div
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="notes"
-        class="p-2 bg-blue-100 rounded-lg w-full h-8 flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
+        class="bg-blue-100 rounded-lg size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
         :style="{
           gridRowStart: (13 - scales[scaleType][note.interval - 1]),
           gridColumnStart: index + 1,
@@ -280,5 +280,9 @@ defineExpose({
   100% {
     transform: translateY(0);
   }
+}
+
+.piano-roll {
+  background: repeating-linear-gradient(180deg, #f3f4f6, #f3f4f6 2rem, #e5e7eb 2rem, #e5e7eb 4rem);
 }
 </style>
