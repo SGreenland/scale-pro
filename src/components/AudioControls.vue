@@ -10,7 +10,7 @@
     <button
       class="disabled:opacity-50 h-10 flex items-center focus:outline-none"
       :class="{ 'bg-red-200 dark:bg-red-500': audioIsPlaying }"
-      @click="$emit('toggleAudio', playBackOptions.isRoundTrip, playBackOptions.shouldLoop)"
+      @click="$emit('toggleAudio')"
     >
       <font-awesome-icon :icon="audioIsPlaying ? faStop : faPlay" />
     </button>
