@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { PresetNoteOrders } from "./types";
+import { PresetNoteOrders, PlayBackOptions } from "./types";
 
 export const presetNoteOrders = reactive<PresetNoteOrders>({
   presets8: [
@@ -24,7 +24,7 @@ export const presetNoteOrders = reactive<PresetNoteOrders>({
   ],
 });
 
-export const playBackOptions = reactive({
+export const playBackOptions = reactive<PlayBackOptions>({
   shouldLoop: false,
   isRoundTrip: true,
 });

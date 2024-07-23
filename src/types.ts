@@ -17,6 +17,11 @@ interface PresetNoteOrders {
     presets6: string[];
 }
 
-export type { Note, Scales, PresetNoteOrders };
+interface PlayBackOptions {
+    shouldLoop: boolean;
+    isRoundTrip: boolean;
+}
+
+export type { Note, Scales, PresetNoteOrders, PlayBackOptions };
 
 
