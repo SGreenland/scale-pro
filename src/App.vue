@@ -5,11 +5,12 @@ import TempoSelect from "./components/TempoSelect.vue";
 import AudioControls from "./components/AudioControls.vue";
 
 import { ref } from "vue";
-import { Note } from "./types";
+import { Note, Scales } from "./types";
 
 const scaleConfig = ref({
   scaleToDisplay: [] as Note[],
   originalOrder: [] as string[],
+  selectedScaleType: "Major" as keyof Scales,
 });
 const scaleComponent = ref({
   // @ts-ignore
@@ -35,7 +36,7 @@ const tempo = ref("120");
     <scale
       ref="scaleComponent"
       :scaleToDisplay="scaleConfig.scaleToDisplay"
-      :originalOrder="scaleConfig.originalOrder"
+      :scaleType="scaleConfig.selectedScaleType"
       :tempo="tempo"
     />
   </div>

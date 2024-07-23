@@ -4,7 +4,7 @@
       class="grid max-sm:text-xs md:gap-2 gap-1 p-3 lg:w-2/3 w-full m-auto"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-        gridTemplateRows: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(13, minmax(0, 1fr))`,
       }"
     >
       <div
@@ -13,7 +13,7 @@
         ref="notes"
         class="p-2 bg-blue-100 rounded-lg w-full h-8 flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
         :style="{
-          gridRowStart: scaleToDisplay.length - note.interval + 1,
+          gridRowStart: (13 - scales[scaleType][note.interval - 1]),
           gridColumnStart: index + 1,
         }"
       >
@@ -35,13 +35,15 @@ import {
   onBeforeUnmount,
   nextTick,
 } from "vue";
-import { Note } from "../types";
+import { Note, Scales } from "../types";
+import { scales } from "../NotesAndScales";
 import DragSelect, { DSInputElement } from "dragselect";
 import { playBackOptions } from "../GlobalState";
 
 const props = defineProps<{
   scaleToDisplay: Note[];
   tempo: string;
+  scaleType: keyof Scales;
 }>();
 
 const notes = ref<HTMLElement[]>();

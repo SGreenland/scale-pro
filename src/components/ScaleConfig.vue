@@ -109,5 +109,6 @@ watch([selectedNote, selectedScaleType], () => {
 
 defineExpose({
   scaleToDisplay,
+  selectedScaleType,
 });
 </script>
