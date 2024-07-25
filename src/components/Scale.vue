@@ -18,7 +18,7 @@
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="notes"
-        class="bg-blue-100 border border-blue-300 rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
+        class="bg-blue-100 border border-blue-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
         :style="{
           gridRowStart: 13 - scales[scaleType][note.interval - 1],
           gridColumnStart: index + 1,
@@ -123,6 +123,7 @@ watch(
     preloadAudio();
     ds.value?.clearSelection();
     nextTick(() => {
+      cellWidth.value = notes.value![0].getBoundingClientRect().width;
       ds.value?.addSelectables(notes.value!);
     });
   },
@@ -222,7 +223,6 @@ onMounted(() => {
   });
 
   nextTick(() => {
-    cellWidth.value = notes.value![0].getBoundingClientRect().width;
     ds.value = new DragSelect({
       area: dragSelectArea.value,
       draggability: false,
