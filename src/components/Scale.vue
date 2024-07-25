@@ -1,19 +1,26 @@
 <template>
   <div class="w-full pt-5" ref="dragSelectArea">
     <div
-      class="piano-roll grid max-sm:text-xs lg:w-2/3 w-full m-auto"
+      class="relative piano-roll grid max-sm:text-xs lg:w-2/3 w-full m-auto"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-        gridTemplateRows: `repeat(13, minmax(0, 2rem))`,
+        gridTemplateRows: `repeat(13, minmax(0, 1.8rem))`,
       }"
     >
+      <div
+        class="grid col-span-full row-span-full"
+        :style="{
+          background: `repeating-linear-gradient(90deg, transparent 0px, transparent ${cellWidth - 1.5}px, ${gridColor} ${
+            cellWidth - 1.5}px, ${gridColor} ${cellWidth + 0.2}px)`,
+        }"
+      ></div>
       <div
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="notes"
-        class="bg-blue-100 rounded-lg size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
+        class="bg-blue-100 border border-blue-300 rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
         :style="{
-          gridRowStart: (13 - scales[scaleType][note.interval - 1]),
+          gridRowStart: 13 - scales[scaleType][note.interval - 1],
           gridColumnStart: index + 1,
         }"
       >
@@ -57,6 +64,11 @@ let animationFrameId: number | null = null;
 const ds = ref<DragSelect<DSInputElement> | null>(null);
 const noteSelection = ref<Note[]>([]);
 const dragSelectArea = ref<HTMLElement | undefined>();
+const gridColor = window.matchMedia &&
+  window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "rgb(17 24 39)"
+    : "white";
+const cellWidth = ref();
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -205,8 +217,12 @@ const toggleAudio = async () => {
 
 onMounted(() => {
   window.addEventListener("visibilitychange", preloadAudio);
+  window.addEventListener('resize', () => {
+    cellWidth.value = notes.value![0].getBoundingClientRect().width;
+  });
 
   nextTick(() => {
+    cellWidth.value = notes.value![0].getBoundingClientRect().width;
     ds.value = new DragSelect({
       area: dragSelectArea.value,
       draggability: false,
@@ -283,6 +299,24 @@ defineExpose({
 }
 
 .piano-roll {
-  background: repeating-linear-gradient(180deg, #f3f4f6, #f3f4f6 2rem, #e5e7eb 2rem, #e5e7eb 4rem);
+  background: repeating-linear-gradient(
+    180deg,
+    rgb(249 250 251),
+    rgb(249 250 251) 1.8rem,
+    rgb(243 244 246) 1.8rem,
+    rgb(243 244 246) 3.6rem
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  .piano-roll {
+    background: repeating-linear-gradient(
+      180deg,
+      #1a202c,
+      #1a202c 1.8rem,
+      #2d3748 1.8rem,
+      #2d3748 3.6rem
+    );
+  }
 }
 </style>
