@@ -301,10 +301,10 @@ defineExpose({
 .piano-roll {
   background: repeating-linear-gradient(
     180deg,
-    rgb(249 250 251),
-    rgb(249 250 251) 1.8rem,
-    rgb(243 244 246) 1.8rem,
-    rgb(243 244 246) 3.6rem
+    rgb(245 245 245),
+    rgb(245 245 245) 1.8rem,
+    rgb(229 229 229) 1.8rem,
+    rgb(229 229 229) 3.6rem
   );
 }
 
