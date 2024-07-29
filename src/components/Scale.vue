@@ -8,13 +8,10 @@
       }"
     >
       <div
-        class="grid col-span-full row-span-full"
+        class="grid col-[2_/_-1] row-span-full"
         :style="{
-          background: `repeating-linear-gradient(90deg, transparent 0px, transparent ${
-            cellWidth - 1.5
-          }px, ${gridLineColor} ${
-            cellWidth - 1.5
-          }px, ${gridLineColor} ${cellWidth}px)`,
+        background: `linear-gradient(90deg, ${gridLineColor} 1px, transparent 1px)`,
+        backgroundSize: `${cellWidth}px 100%`
         }"
       ></div>
       <div
