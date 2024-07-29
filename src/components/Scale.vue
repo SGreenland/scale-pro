@@ -10,8 +10,11 @@
       <div
         class="grid col-span-full row-span-full"
         :style="{
-          background: `repeating-linear-gradient(90deg, transparent 0px, transparent ${cellWidth - 1.5}px, ${gridColor} ${
-            cellWidth - 1.5}px, ${gridColor} ${cellWidth + 0.2}px)`,
+          background: `repeating-linear-gradient(90deg, transparent 0px, transparent ${
+            cellWidth - 1.5
+          }px, ${gridLineColor} ${
+            cellWidth - 1.5
+          }px, ${gridLineColor} ${cellWidth}px)`,
         }"
       ></div>
       <div
@@ -64,11 +67,11 @@ let animationFrameId: number | null = null;
 const ds = ref<DragSelect<DSInputElement> | null>(null);
 const noteSelection = ref<Note[]>([]);
 const dragSelectArea = ref<HTMLElement | undefined>();
-const gridColor = window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches
+const gridLineColor: string =
+  window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "rgb(17 24 39)"
     : "white";
-const cellWidth = ref();
+const cellWidth = ref<number>(0);
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -218,7 +221,7 @@ const toggleAudio = async () => {
 
 onMounted(() => {
   window.addEventListener("visibilitychange", preloadAudio);
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     cellWidth.value = notes.value![0].getBoundingClientRect().width;
   });
 
