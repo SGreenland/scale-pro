@@ -17,7 +17,6 @@
       <div
         v-for="(note, index) in scaleToDisplay"
         :key="index"
-        @click="playNote(index, 0)"
         ref="notes"
         :id="index.toString()"
         class="bg-blue-100 border border-blue-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
@@ -238,6 +237,9 @@ onMounted(() => {
     //events
     ds.value.subscribe("DS:start", (e) => {
       if (!e.isDragging) {
+        // @ts-ignore
+        // if a note is clicked, play it
+        if (e.items[0]) playNote(e.items[0].id, 0);
         ds.value?.clearSelection();
       }
     });
