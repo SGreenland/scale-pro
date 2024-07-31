@@ -10,14 +10,16 @@
       <div
         class="grid col-[2_/_-1] row-span-full"
         :style="{
-        background: `linear-gradient(90deg, ${gridLineColor} 1px, transparent 1px)`,
-        backgroundSize: `${cellWidth}px 100%`
+          background: `linear-gradient(90deg, ${gridLineColor} 1px, transparent 1px)`,
+          backgroundSize: `${cellWidth}px 100%`,
         }"
       ></div>
       <div
         v-for="(note, index) in scaleToDisplay"
         :key="index"
+        @click="playNote(index, 0)"
         ref="notes"
+        :id="index.toString()"
         class="bg-blue-100 border border-blue-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
         :style="{
           gridRowStart: 13 - scales[scaleType][note.interval - 1],
@@ -52,7 +54,6 @@ const props = defineProps<{
   tempo: string;
   scaleType: keyof Scales;
 }>();
-
 const notes = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
@@ -105,7 +106,8 @@ const playNote = (index: number, time: number) => {
   source.connect(audioContext.destination);
   source.start(time);
 
-  const noteElement = notes.value![index];
+  // note very 'vue' way of doing this but it works better than using refs
+  const noteElement = document.getElementById(index.toString());
   if (noteElement) {
     noteElement.style.animation = `bounce ${
       animationInterval.value * 1000
@@ -236,10 +238,6 @@ onMounted(() => {
     //events
     ds.value.subscribe("DS:start", (e) => {
       if (!e.isDragging) {
-        // @ts-ignore
-        const noteIndex = notes.value?.indexOf(e.items[0]);
-        // if a note is clicked, play it
-        if (noteIndex !== undefined) playNote(noteIndex, 0);
         ds.value?.clearSelection();
       }
     });
