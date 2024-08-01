@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-between lg:w-2/3 w-full m-auto"
+    class="flex justify-between lg:w-2/3 w-full m-auto py-2 dark:text-white"
     @touchend="handleSwipe"
   >
     <div class="flex">
