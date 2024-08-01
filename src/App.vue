@@ -3,13 +3,14 @@ import ScaleConfig from "./components/ScaleConfig.vue";
 import Scale from "./components/Scale.vue";
 import TempoSelect from "./components/TempoSelect.vue";
 import AudioControls from "./components/AudioControls.vue";
+import SwipePitch from "./components/SwipePitch.vue";
 
 import { ref } from "vue";
 import { Note, Scales } from "./types";
 
 const scaleConfig = ref({
   scaleToDisplay: [] as Note[],
-  originalOrder: [] as string[],
+  selectedNote: "C4" as Note["name"],
   selectedScaleType: "Major" as keyof Scales,
 });
 const scaleComponent = ref({
@@ -18,6 +19,10 @@ const scaleComponent = ref({
   audioIsPlaying: false,
 });
 const tempo = ref("120");
+
+function handlePitchChange(note: Note["name"]) {
+  scaleConfig.value.selectedNote = note;
+}
 
 </script>
 
@@ -39,5 +44,6 @@ const tempo = ref("120");
       :scaleType="scaleConfig.selectedScaleType"
       :tempo="tempo"
     />
+    <swipe-pitch :root-note="scaleConfig.selectedNote" @pitch-change="handlePitchChange" />
   </div>
 </template>
