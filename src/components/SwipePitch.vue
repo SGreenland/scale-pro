@@ -17,7 +17,7 @@
       SWIPE PITCH
     </p>
     <div class="flex">
-      <font-awesome-icon @dragover.prevent="console.log('hiya')" :icon="faChevronRight" size="xl" />
+      <font-awesome-icon :icon="faChevronRight" size="xl" />
       <font-awesome-icon :icon="faChevronRight" size="xl" />
       <font-awesome-icon :icon="faChevronRight" size="xl" />
       <font-awesome-icon :icon="faChevronRight" size="xl" />
