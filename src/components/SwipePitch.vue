@@ -7,7 +7,7 @@
       <font-awesome-icon :icon="faArrowLeft" size="xl" />
       <span class="px-2">DOWN</span>
     </div>
-    <p class="absolute left-0 right-0 m-auto">SWIPE PITCH</p>
+    <p class="absolute w-fit left-0 right-0 m-auto">SWIPE PITCH</p>
     <div class="flex">
       <span class="px-2">UP</span>
       <font-awesome-icon :icon="faArrowRight" size="xl" />
@@ -36,12 +36,14 @@ const handleSwipe = (event: TouchEvent) => {
     event.changedTouches[0].clientX < swipeStartEl.getBoundingClientRect().left
   ) {
     //pitch down
+    console.log("pitch down");
     emit(
       "pitchChange",
       notes[notes.findIndex((note) => note.name === props.rootNote) - 1].name
     );
   } else {
     //pitch up
+    console.log("pitch up");
     emit(
       "pitchChange",
       notes[notes.findIndex((note) => note.name === props.rootNote) + 1].name
