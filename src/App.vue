@@ -6,6 +6,7 @@ import AudioControls from "./components/AudioControls.vue";
 import SwipePitch from "./components/SwipePitch.vue";
 import Tabs from "./components/reuseable/Tabs.vue";
 import { workoutConfig } from "./GlobalState";
+import WorkoutConfig from "./components/WorkoutConfig.vue";
 
 import { ref } from "vue";
 import { Note, Scales } from "./types";
@@ -16,8 +17,8 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const scaleConfig = ref({
   scaleToDisplay: [] as Note[],
-  selectedNote: workoutConfig.startNote ?? ("C4" as Note["name"]),
-  selectedScaleType: workoutConfig.scale ?? ("Major" as keyof Scales),
+  selectedNote: ("C4" as Note["name"]),
+  selectedScaleType: ("Major" as keyof Scales),
 });
 const scaleComponent = ref({
   // @ts-ignore
@@ -97,7 +98,7 @@ function toggleWorkout() {
         <!--dropdown button to configure options-->
         <div class="grid m-auto grid-cols-2 gap-4">
           <div class="font-medium">1. Configure Options</div>
-          <Dropdown>
+          <Dropdown width="full">
             <template #trigger>
               <button class="flex relative w-full justify-center items-center" @click="console.log('configure workout')">
                 Configure
@@ -105,7 +106,7 @@ function toggleWorkout() {
               </button>
             </template>
             <template #content>
-              <div>workout form tbc</div>
+              <WorkoutConfig />
             </template>
           </Dropdown>
           <div class="font-medium">2. Start your workout!</div>
@@ -118,6 +119,7 @@ function toggleWorkout() {
     <scale-config
       class="lg:w-2/3 m-auto"
       v-show="tabsComponent.currentTab === 'practice'"
+      :workoutMode = "tabsComponent.currentTab === 'workout'"
       ref="scaleConfig"
     />
     <scale

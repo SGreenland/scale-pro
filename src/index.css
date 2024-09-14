@@ -68,6 +68,10 @@ select {
   border-radius: 8px;
 }
 
+label {
+  font-weight: 500;
+}
+
 #app {
   width: 100%;
   margin: 0 auto;

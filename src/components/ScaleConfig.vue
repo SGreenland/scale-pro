@@ -2,7 +2,7 @@
   <div class="flex max-sm:flex-wrap w-full gap-2 m-auto">
     <div class="flex items-center gap-2 lg:w-1/2 w-full">
       <div class="flex flex-col w-fit items-start">
-        <label class="font-medium" for="note">Root Note</label>
+        <label for="note">Root Note</label>
         <select id="note" v-model="selectedNote">
           <option v-for="(note, index) in rootNotes" :key="index">
             {{ note.name }}
@@ -10,7 +10,7 @@
         </select>
       </div>
       <div class="flex flex-col w-full items-start">
-        <label class="font-medium" for="scale">Scale</label>
+        <label for="scale">Scale</label>
         <select class="flex w-full" id="scale" v-model="selectedScaleType">
           <option v-for="(name, index) in scaleNames" :key="index">
             {{ name }}
@@ -79,11 +79,17 @@ import scaleManipulator from "../utils/scaleManipulator";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import Dropdown from "./reuseable/Dropdown.vue";
+import { workoutConfig } from "../GlobalState";
 
 const { getScale, reverseScale, shuffleScale, reorderScale } =
   scaleManipulator();
 
+const props = defineProps<{
+  workoutMode: boolean;
+}>();
+
 const scaleNames = Object.keys(scales);
+// to do: need to set as computed property that takes workoutconfig into account
 const selectedNote: Ref<string> = ref("C4");
 const selectedScaleType: Ref<keyof Scales> = ref("Major");
 const btnClass = "flex grow justify-center items-center";
@@ -110,6 +116,17 @@ function applyPreset(event: Event) {
     presetString?.split(" ").map((note: string) => +note) ?? [];
   scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, presetOrder);
 }
+
+watch(
+  () => [workoutConfig.startNote, workoutConfig.scale],
+  () => {
+    if (props.workoutMode) {
+      selectedNote.value = workoutConfig.startNote;
+      selectedScaleType.value = workoutConfig.scale;
+    }
+  },
+  { deep: true }
+);
 
 watch([selectedNote, selectedScaleType], () => {
   //keep old order if same length
