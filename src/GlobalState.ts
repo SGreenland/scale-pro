@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { PresetNoteOrders, PlayBackOptions } from "./types";
+import { PresetNoteOrders, PlayBackOptions, WorkoutConfig } from "./types";
 
 export const presetNoteOrders = reactive<PresetNoteOrders>({
   presets8: [
@@ -27,4 +27,13 @@ export const presetNoteOrders = reactive<PresetNoteOrders>({
 export const playBackOptions = reactive<PlayBackOptions>({
   shouldLoop: false,
   isRoundTrip: true,
+});
+
+export const workoutConfig = reactive<WorkoutConfig>({
+  startNote: "C4",
+  endNote: "D4",
+  scale: "Major",
+  roundTrip: true,
+  multiScale: false,
+  presetOrder: "1 3 5 7 2 4 6 8",
 });

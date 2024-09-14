@@ -1,8 +1,8 @@
 <template>
-  <div class="grid gap-2 m-auto">
-    <div class="flex items-center gap-2 w-full">
+  <div class="flex max-sm:flex-wrap w-full gap-2 m-auto">
+    <div class="flex items-center gap-2 lg:w-1/2 w-full">
       <div class="flex flex-col w-fit items-start">
-        <label class="font-medium" for="note">Root Note:</label>
+        <label class="font-medium" for="note">Root Note</label>
         <select id="note" v-model="selectedNote">
           <option v-for="(note, index) in rootNotes" :key="index">
             {{ note.name }}
@@ -10,7 +10,7 @@
         </select>
       </div>
       <div class="flex flex-col w-full items-start">
-        <label class="font-medium" for="scale">Scale:</label>
+        <label class="font-medium" for="scale">Scale</label>
         <select class="flex w-full" id="scale" v-model="selectedScaleType">
           <option v-for="(name, index) in scaleNames" :key="index">
             {{ name }}
@@ -18,42 +18,53 @@
         </select>
       </div>
     </div>
-    <div class="flex w-full justify-evenly items-center gap-2">
-      <button @click="scaleToDisplay = reverseScale(scaleToDisplay)">
-        Reverse
-      </button>
-      <button @click="scaleToDisplay = shuffleScale(scaleToDisplay)">
-        Shuffle
-      </button>
-      <button
-        @click="scaleToDisplay = getScale(selectedNote, selectedScaleType)"
-      >
-        Reset
-      </button>
-      <dropdown>
-        <template #trigger>
-          <font-awesome-icon
-            class="rotate-90 cursor-pointer"
-            size="lg"
-            :icon="faEllipsis"
-          />
-        </template>
-        <template #content>
-          <div>
-            <label class="mb-1" for="custom-order"><b>Presets: </b></label>
-            <hr />
-          </div>
-          <div class="space-y-2 mt-2 max-h-40 overflow-auto">
-            <button
-              v-for="(preset, index) in presets"
-              :key="index"
-              @click="applyPreset"
-            >
-              {{ preset }}
-            </button>
-          </div>
-        </template>
-      </dropdown>
+    <!--note order-->
+    <div class="flex-col lg:w-1/2 w-full">
+      <div class="font-medium text-left">Note Order</div>
+      <div class="flex w-full justify-evenly items-center gap-2">
+        <button
+          :class="btnClass"
+          @click="scaleToDisplay = reverseScale(scaleToDisplay)"
+        >
+          Reverse
+        </button>
+        <button
+          :class="btnClass"
+          @click="scaleToDisplay = shuffleScale(scaleToDisplay)"
+        >
+          Shuffle
+        </button>
+        <button
+          :class="btnClass"
+          @click="scaleToDisplay = getScale(selectedNote, selectedScaleType)"
+        >
+          Reset
+        </button>
+        <dropdown>
+          <template #trigger>
+            <font-awesome-icon
+              class="rotate-90 cursor-pointer"
+              size="lg"
+              :icon="faEllipsis"
+            />
+          </template>
+          <template #content>
+            <div>
+              <label class="mb-1" for="custom-order"><b>Presets: </b></label>
+              <hr />
+            </div>
+            <div class="space-y-2 mt-2 max-h-40 overflow-auto">
+              <button
+                v-for="(preset, index) in presets"
+                :key="index"
+                @click="applyPreset"
+              >
+                {{ preset }}
+              </button>
+            </div>
+          </template>
+        </dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +86,7 @@ const { getScale, reverseScale, shuffleScale, reorderScale } =
 const scaleNames = Object.keys(scales);
 const selectedNote: Ref<string> = ref("C4");
 const selectedScaleType: Ref<keyof Scales> = ref("Major");
+const btnClass = "flex grow justify-center items-center";
 // root notes can only be up to C6
 // @ts-ignore
 const rootNotes = notes.filter((note, index) => index <= 48);
@@ -86,9 +98,10 @@ const scaleToDisplay: Ref<Note[]> = ref(
 );
 
 const presets = computed(() => {
-   const presetsKey = `presets${scaleToDisplay.value.length.toString()}` as keyof PresetNoteOrders;
-   return presetNoteOrders[presetsKey];
- });
+  const presetsKey =
+    `presets${scaleToDisplay.value.length.toString()}` as keyof PresetNoteOrders;
+  return presetNoteOrders[presetsKey];
+});
 
 function applyPreset(event: Event) {
   const element = event?.target as HTMLButtonElement;
@@ -100,8 +113,11 @@ function applyPreset(event: Event) {
 
 watch([selectedNote, selectedScaleType], () => {
   //keep old order if same length
-  if(selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
-    scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, scaleToDisplay.value.map((note) => note.interval));
+  if (selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
+    scaleToDisplay.value = reorderScale(
+      selectedScaleInOrder.value,
+      scaleToDisplay.value.map((note) => note.interval)
+    );
     return;
   }
   scaleToDisplay.value = selectedScaleInOrder.value;

@@ -22,6 +22,16 @@ interface PlayBackOptions {
     isRoundTrip: boolean;
 }
 
-export type { Note, Scales, PresetNoteOrders, PlayBackOptions };
+interface WorkoutConfig {
+    startNote: string;
+    endNote: string;
+    scale: keyof Scales;
+    roundTrip: boolean;
+    multiScale: boolean;
+    scales?: string[];
+    presetOrder: string;
+}
+
+export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig };
 
 
