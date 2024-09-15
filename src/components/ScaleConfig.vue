@@ -118,7 +118,7 @@ function applyPreset(event: Event) {
 }
 
 watch(
-  () => [workoutConfig.startNote, workoutConfig.scale],
+  () => [workoutConfig.startNote, workoutConfig.scale, props.workoutMode],
   () => {
     if (props.workoutMode) {
       selectedNote.value = workoutConfig.startNote;
@@ -129,7 +129,7 @@ watch(
       selectedScaleType.value = "Major";
     }
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 
 watch([selectedNote, selectedScaleType], () => {
