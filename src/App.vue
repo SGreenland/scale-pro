@@ -17,8 +17,8 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 const scaleConfig = ref({
   scaleToDisplay: [] as Note[],
-  selectedNote: ("C4" as Note["name"]),
-  selectedScaleType: ("Major" as keyof Scales),
+  selectedNote: "C4" as Note["name"],
+  selectedScaleType: "Major" as keyof Scales,
 });
 const scaleComponent = ref({
   // @ts-ignore
@@ -36,52 +36,72 @@ function handlePitchChange(note: Note["name"]) {
 }
 
 function toggleWorkout() {
-  let interval: number;
-  let direction = 1;
   const scaleDuration =
     (scaleConfig.value.scaleToDisplay.length * 2 * 60100) / +tempo.value;
+  let direction = 1;
+  let interval = 0;
+
   workoutInProgress.value = !workoutInProgress.value;
+
   if (workoutInProgress.value) {
     console.log("workout started");
     setTimeout(() => {
       scaleComponent.value.toggleAudio();
     }, 100);
-    //whilst workout config end note is not reached, change note after each scale repitition
+
+    // while selected note is not end note, change note after each scale repitition
     interval = setInterval(() => {
       if (!workoutInProgress.value) {
         clearInterval(interval);
         return;
       }
-      scaleConfig.value.selectedNote =
-        notes[
-          notes.findIndex(
-            (note) => note.name === scaleConfig.value.selectedNote
-          ) + direction
-        ].name;
-      if (scaleConfig.value.selectedNote === workoutConfig.endNote) {
-        // if not roundtrip or have reached end note after round trip stop workout
-        if (!workoutConfig.roundTrip || direction === -1) {
-          clearInterval(interval);
-          workoutInProgress.value = false;
-          // reset to start note after workout is complete
-          setTimeout(() => {
-            scaleConfig.value.selectedNote = workoutConfig.startNote;
-          }, scaleDuration);
-        } else {
-          // if roundtrip and reached ascending end note, reverse direction
-          workoutConfig.endNote = workoutConfig.startNote;
+      // selectedNote index
+      const selectedNoteIndex = notes.findIndex(
+        (note) => note.name === scaleConfig.value.selectedNote
+      );
+      // if selectedNote is not endNote, increment selectedNote
+      if (
+        scaleConfig.value.selectedNote !== workoutConfig.endNote &&
+        direction === 1
+      ) {
+        // change note to current selected note index + 1
+        scaleConfig.value.selectedNote =
+          notes[selectedNoteIndex + direction].name;
+        // change direction if end note reached
+        if (scaleConfig.value.selectedNote === workoutConfig.endNote) {
           direction = -1;
         }
+        //toggle audio
+        setTimeout(() => {
+          scaleComponent.value.toggleAudio();
+        }, 100);
+      } else if (
+        scaleConfig.value.selectedNote !== workoutConfig.startNote &&
+        workoutConfig.roundTrip
+      ) {
+        // if selectedNote is not startNote, decrement selectedNote
+        scaleConfig.value.selectedNote =
+          notes[selectedNoteIndex + direction].name;
+        //toggle audio
+        setTimeout(() => {
+          scaleComponent.value.toggleAudio();
+        }, 100);
+      } else {
+        // if selectedNote is endNote, workout is complete
+        clearInterval(interval);
+        workoutInProgress.value = false;
+        // reset to start note after workout is complete
+        setTimeout(() => {
+          scaleConfig.value.selectedNote = workoutConfig.startNote;
+        }, scaleDuration);
       }
-      //delay to allow for notes to load
-      setTimeout(() => {
-        scaleComponent.value.toggleAudio();
-      }, 100);
     }, scaleDuration);
-  } else {
+  }
+  else {
     console.log("workout stopped");
+    clearInterval(interval);
+    //toggle audio
     scaleComponent.value.toggleAudio();
-    scaleConfig.value.selectedNote = workoutConfig.startNote;
   }
 }
 </script>
@@ -100,9 +120,15 @@ function toggleWorkout() {
           <div class="font-medium">1. Configure Options</div>
           <Dropdown width="full">
             <template #trigger>
-              <button class="flex relative w-full justify-center items-center" @click="console.log('configure workout')">
+              <button
+                class="flex relative w-full justify-center items-center"
+                @click="console.log('configure workout')"
+              >
                 Configure
-                <FontAwesomeIcon class="absolute right-4" :icon="faChevronDown" />
+                <FontAwesomeIcon
+                  class="absolute right-4"
+                  :icon="faChevronDown"
+                />
               </button>
             </template>
             <template #content>
@@ -119,7 +145,7 @@ function toggleWorkout() {
     <scale-config
       class="lg:w-2/3 m-auto"
       v-show="tabsComponent.currentTab === 'practice'"
-      :workoutMode = "tabsComponent.currentTab === 'workout'"
+      :workoutMode="tabsComponent.currentTab === 'workout'"
       ref="scaleConfig"
     />
     <scale

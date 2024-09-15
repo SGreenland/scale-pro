@@ -124,6 +124,10 @@ watch(
       selectedNote.value = workoutConfig.startNote;
       selectedScaleType.value = workoutConfig.scale;
     }
+    else {
+      selectedNote.value = "C4";
+      selectedScaleType.value = "Major";
+    }
   },
   { deep: true }
 );
