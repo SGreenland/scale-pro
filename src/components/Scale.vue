@@ -88,6 +88,8 @@ const preloadAudio = async () => {
     props.scaleToDisplay.map((note) => loadAudioBuffer(note.audioSrc))
   );
 
+  // todo: if workout mode, load all notes from scales in workout.
+
   audioBuffers.value = loadedAudios;
 
   // warm up audioContext by playing a silent buffer
@@ -105,7 +107,6 @@ const playNote = (index: number, time: number) => {
   source.connect(audioContext.destination);
   source.start(time);
 
-  // note very 'vue' way of doing this but it works better than using refs
   const noteElement = document.getElementById(index.toString());
   if (noteElement) {
     noteElement.style.animation = `bounce ${
@@ -220,7 +221,7 @@ const toggleAudio = async () => {
 onMounted(() => {
   window.addEventListener("visibilitychange", preloadAudio);
   window.addEventListener("resize", () => {
-    cellWidth.value = notes.value![0].getBoundingClientRect().width;
+    cellWidth.value = notes.value![0]?.getBoundingClientRect().width;
   });
 
   nextTick(() => {

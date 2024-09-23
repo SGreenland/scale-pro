@@ -11,9 +11,7 @@ import WorkoutConfig from "./components/WorkoutConfig.vue";
 import { ref } from "vue";
 import { Note, Scales } from "./types";
 import { notes } from "./NotesAndScales";
-import Dropdown from "./components/reuseable/Dropdown.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import DropdownButton from "./components/reuseable/DropdownButton.vue";
 
 const scaleConfig = ref({
   scaleToDisplay: [] as Note[],
@@ -118,23 +116,9 @@ function toggleWorkout() {
         <!--dropdown button to configure options-->
         <div class="grid m-auto grid-cols-2 gap-4">
           <div class="font-medium">1. Configure Options</div>
-          <Dropdown width="full">
-            <template #trigger>
-              <button
-                class="flex relative w-full justify-center items-center"
-                @click="console.log('configure workout')"
-              >
-                Configure
-                <FontAwesomeIcon
-                  class="absolute right-4"
-                  :icon="faChevronDown"
-                />
-              </button>
-            </template>
-            <template #content>
-              <WorkoutConfig />
-            </template>
-          </Dropdown>
+          <DropdownButton buttonText="Configure">
+            <WorkoutConfig />
+          </DropdownButton>
           <div class="font-medium">2. Start your workout!</div>
           <button @click="toggleWorkout">
             {{ workoutInProgress ? "Stop" : "Run" }}

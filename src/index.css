@@ -53,10 +53,10 @@ button {
 button:hover {
   border-color: #de9898;
 }
-button:focus,
+/* button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
 
 .card {
   padding: 2em;
@@ -65,6 +65,13 @@ button:focus-visible {
 select {
   padding: 0.6em 1.2em;
   border: 1px solid #6f6b6b;
+  border-radius: 8px;
+}
+
+.input {
+  padding: 0.6em 1.2em;
+  border: 1px solid #6f6b6b;
+  min-height: 43px;
   border-radius: 8px;
 }
 

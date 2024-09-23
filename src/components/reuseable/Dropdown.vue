@@ -7,10 +7,10 @@ const props = withDefaults(defineProps<{
     contentClasses?: string;
     closeContentOnClick?: boolean;
     marginClass?: string;
+    positionClass?: string;
 }>(), {
     align: 'right',
     width: '48',
-    contentClasses: 'py-1 bg-white dark:bg-gray-700',
     closeContentOnClick: false,
     marginClass: 'mt-1',
 });
@@ -63,11 +63,11 @@ defineExpose({ open });
             <div
                 v-show="open"
                 class="absolute z-50 rounded-md shadow-lg"
-                :class="[widthClass, alignmentClasses, marginClass]"
+                :class="[widthClass, alignmentClasses, marginClass, positionClass]"
                 style="display: none"
                 @click="closeContentOnClick && (open = false)"
             >
-                <div class="rounded-md ring-1 ring-black ring-opacity-5 max-h-[60vh] overflow-auto" :class="contentClasses">
+                <div :class="'rounded-md ring-1 ring-black ring-opacity-5 max-h-[60vh] overflow-auto py-1 bg-white dark:bg-gray-700 ' + contentClasses">
                     <slot name="content" />
                 </div>
             </div>

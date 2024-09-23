@@ -33,6 +33,7 @@ export const workoutConfig = reactive<WorkoutConfig>({
   startNote: "C4",
   endNote: "D4",
   scale: "Major",
+  scales: ["Major"],
   roundTrip: true,
   multiScale: false,
   presetOrder: "1 3 5 7 2 4 6 8",
