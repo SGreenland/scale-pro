@@ -25,10 +25,10 @@ interface PlayBackOptions {
 interface WorkoutConfig {
     startNote: string;
     endNote: string;
-    scale: keyof Scales;
+    // scale: keyof Scales;
     roundTrip: boolean;
     multiScale: boolean;
-    scales?: string[];
+    scales: string[];
     presetOrder: string;
 }
 

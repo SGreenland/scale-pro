@@ -118,11 +118,11 @@ function applyPreset(event: Event) {
 }
 
 watch(
-  () => [workoutConfig.startNote, workoutConfig.scale, props.workoutMode],
+  () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],
   () => {
     if (props.workoutMode) {
       selectedNote.value = workoutConfig.startNote;
-      selectedScaleType.value = workoutConfig.scale;
+      selectedScaleType.value = workoutConfig.scales[0] as keyof Scales;
     }
     else {
       selectedNote.value = "C4";

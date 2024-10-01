@@ -3,7 +3,6 @@
     <template #trigger>
       <button
         class="flex relative w-full justify-center items-center"
-        @click="console.log('configure workout')"
       >
         {{ buttonText }}
         <FontAwesomeIcon class="absolute right-4" :class="{'rotate-180' : dropdown?.open}" :icon="faChevronDown" />

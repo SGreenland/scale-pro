@@ -15,6 +15,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const model = defineModel();
@@ -26,6 +30,7 @@ const model = defineModel();
     <div class="flex items-center">
         <input
             :id="label"
+            :disabled="disabled"
             type="checkbox"
             :value="value"
             v-model="model"

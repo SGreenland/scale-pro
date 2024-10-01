@@ -85,18 +85,43 @@ function toggleWorkout() {
           scaleComponent.value.toggleAudio();
         }, 100);
       } else {
-        // if selectedNote is endNote, workout is complete
-        clearInterval(interval);
-        workoutInProgress.value = false;
-        // reset to start note after workout is complete
-        setTimeout(() => {
-          scaleConfig.value.selectedNote = workoutConfig.startNote;
-        }, scaleDuration);
+        // if selectedNote is endNote and no multiple scales, workout is complete
+        if (workoutConfig.scales.length === 1) {
+          clearInterval(interval);
+          workoutInProgress.value = false;
+          // reset to start note after workout is complete
+          setTimeout(() => {
+            scaleConfig.value.selectedNote = workoutConfig.startNote;
+          }, scaleDuration);
+          return;
+        }
+        if (workoutConfig.scales.length > 1) {
+          const currentScaleIndex = workoutConfig.scales.indexOf(
+            scaleConfig.value.selectedScaleType
+          );
+          if (currentScaleIndex + 1 < workoutConfig.scales.length) {
+            //@ts-ignore
+            scaleConfig.value.selectedScaleType =
+              workoutConfig.scales[currentScaleIndex + 1];
+            clearInterval(interval);
+            workoutInProgress.value = false;
+            console.log('toggling workout again')
+            toggleWorkout();
+          } else {
+            workoutInProgress.value = false;
+            clearInterval(interval);
+            //@ts-ignore
+            scaleConfig.value.selectedScaleType = workoutConfig.scales[0];
+          }
+        } else {
+          // reset to start note after workout is complete
+          setTimeout(() => {
+            scaleConfig.value.selectedNote = workoutConfig.startNote;
+          }, scaleDuration);
+        }
       }
     }, scaleDuration);
-  }
-  else {
-    console.log("workout stopped");
+  } else {
     clearInterval(interval);
     //toggle audio
     scaleComponent.value.toggleAudio();
