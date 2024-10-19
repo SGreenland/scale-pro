@@ -71,7 +71,7 @@ select {
 .input {
   padding: 0.6em 1.2em;
   border: 1px solid #6f6b6b;
-  min-height: 43px;
+  height: 43px;
   border-radius: 8px;
 }
 

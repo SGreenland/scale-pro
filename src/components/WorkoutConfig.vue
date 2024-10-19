@@ -1,6 +1,5 @@
 <template>
-    <div class="flex flex-col w-full p-2">
-        <div class="grid lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),minmax(0,2fr)] md:grid-cols-2 grid-cols-1 gap-2">
+        <div class="grid lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),minmax(0,2fr)] grid-cols-2 gap-3">
             <div :class="inputClasses">
                 <label class="text-left" for="startNote">Start Note</label>
                 <select v-model="workoutConfig.startNote">
@@ -22,8 +21,6 @@
                 <MultiSelectInput :items="Object.keys(scales)" v-model="workoutConfig.scales" />
             </div>
         </div>
-
-    </div>
 </template>
 
 <script setup lang="ts">

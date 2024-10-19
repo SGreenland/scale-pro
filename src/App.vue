@@ -105,7 +105,7 @@ function toggleWorkout() {
               workoutConfig.scales[currentScaleIndex + 1];
             clearInterval(interval);
             workoutInProgress.value = false;
-            console.log('toggling workout again')
+            console.log("toggling workout again");
             toggleWorkout();
           } else {
             workoutInProgress.value = false;
@@ -133,22 +133,12 @@ function toggleWorkout() {
   <div class="grid gap-3 w-full">
     <tabs
       ref="tabsComponent"
-      class="lg:w-2/3 w-full m-auto"
+      class="lg:w-2/3 w-full m-auto flex flex-col gap-3"
       :tabs="['practice', 'workout']"
     >
       <template #practice> </template>
       <template #workout>
-        <!--dropdown button to configure options-->
-        <div class="grid m-auto grid-cols-2 gap-4">
-          <div class="font-medium">1. Configure Options</div>
-          <DropdownButton buttonText="Configure">
-            <WorkoutConfig />
-          </DropdownButton>
-          <div class="font-medium">2. Start your workout!</div>
-          <button @click="toggleWorkout">
-            {{ workoutInProgress ? "Stop" : "Run" }}
-          </button>
-        </div>
+          <WorkoutConfig />
       </template>
     </tabs>
     <scale-config
@@ -163,15 +153,17 @@ function toggleWorkout() {
       :scaleType="scaleConfig.selectedScaleType"
       :tempo="tempo"
     />
-    <div v-show="tabsComponent.currentTab === 'practice'">
+    <div>
       <tempo-select
         class="w-60 m-auto"
         v-model="tempo"
         :labels="['Tempo', `${tempo}bpm`]"
       />
       <audio-controls
+        :mode="tabsComponent.currentTab"
         :audioIsPlaying="scaleComponent?.audioIsPlaying || false"
         @toggleAudio="scaleComponent?.toggleAudio"
+        @toggleWorkout="toggleWorkout"
       ></audio-controls>
     </div>
     <!-- <swipe-pitch :root-note="scaleConfig.selectedNote" @pitch-change="handlePitchChange" /> -->
