@@ -2,9 +2,9 @@
   <Dropdown ref="dropdownMultiSelect" width="full">
     <template #trigger>
       <div class="flex items-center w-full input">
-        <div class="grid grid-cols-4">
+        <div class="grid grid-cols-4 gap-1">
           <div
-            class="rounded-lg w-full px-1 truncate border bg-blue-300"
+            class="rounded-lg w-full px-1 truncate bg-blue-300 text-black"
             v-for="selectedItem in model?.filter((item,index) => index <= 2)"
           >
             {{ selectedItem }}

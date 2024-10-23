@@ -5,7 +5,7 @@
       :style="{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }"
     >
       <span
-        class="tab-btn"
+        class="tab-btn dark:text-white"
         :class="{
           'border-b-4 border-blue-500': currentTab === tab,
           'border-b-2 border-grey-300': currentTab !== tab,
@@ -42,7 +42,6 @@ defineExpose({
   text-align: center;
   padding: 1rem;
   font-size: 1.5rem;
-  color: #333;
   text-transform: capitalize;
 }
 </style>
