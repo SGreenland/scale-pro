@@ -1,16 +1,22 @@
 <template>
   <Dropdown ref="dropdownMultiSelect" width="full">
     <template #trigger>
-      <div class="flex items-center w-full input" :class="{ 'max-md:overflow-auto' : model!.length > 1}">
-        <div class="flex flex-wrap pr-2">
+      <div class="flex items-center w-full input">
+        <div class="grid grid-cols-4">
           <div
-            class="rounded-lg w-fit px-1 border bg-blue-300"
-            v-for="selectedItem in model"
+            class="rounded-lg w-full px-1 truncate border bg-blue-300"
+            v-for="selectedItem in model?.filter((item,index) => index <= 2)"
           >
             {{ selectedItem }}
           </div>
+          <div
+            class="w-full px-1 truncate"
+            v-if="model!.length > 3"
+          >
+            +{{ model!.length - 3 }} more
+            </div>
         </div>
-        <FontAwesomeIcon class="absolute right-0 top-2 p-2 size-3" :class="{'rotate-180' : dropdownMultiSelect?.open, 'max-md:right-4' : model!.length > 1 }" :icon="faChevronDown" />
+        <FontAwesomeIcon class="absolute right-0 top-2 p-2 size-3" :class="{'rotate-180' : dropdownMultiSelect?.open}" :icon="faChevronDown" />
       </div>
     </template>
     <template #content>

@@ -13,7 +13,7 @@
                 </select>
             </div>
             <!--scale type-->
-            <div :class="inputClasses + ' z-50 md:col-span-2 lg:col-span-1'">
+            <div :class="inputClasses + ' z-50 col-span-2 lg:col-span-1'">
                 <label class="text-left" for="scaleType">Scale(s)</label>
                 <!-- <select v-model="workoutConfig.scale">
                     <option v-for="scale in Object.keys(scales)" :key="scale" :value="scale">{{ scale }}</option>
