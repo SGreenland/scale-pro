@@ -138,6 +138,8 @@ const scheduleNotes = (startTime: number) => {
   let currentNoteIndex = noteIndex.value;
   let currentDirection = direction.value;
 
+  //something going wrong here with noteSelection
+
   while (currentTime < audioContext.currentTime + 0.1) {
     // Schedule ahead of time (100ms)
 
