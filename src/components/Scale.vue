@@ -47,8 +47,18 @@ import {
 import { Note, Scales } from "../types";
 import { scales } from "../NotesAndScales";
 import DragSelect, { DSInputElement } from "dragselect";
-import { playBackOptions, workoutConfig, scaleConfig, scaleToDisplay, tempo } from "../GlobalState";
+import {
+  playBackOptions,
+  workoutConfig,
+  scaleConfig,
+  scaleToDisplay,
+  tempo,
+} from "../GlobalState";
 import { notes } from "../NotesAndScales";
+
+const props = defineProps<{
+  workoutMode: boolean;
+}>();
 
 const noteElements = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
@@ -138,8 +148,6 @@ const scheduleNotes = (startTime: number) => {
   let currentNoteIndex = noteIndex.value;
   let currentDirection = direction.value;
 
-  //something going wrong here with noteSelection
-
   while (currentTime < audioContext.currentTime + 0.1) {
     // Schedule ahead of time (100ms)
 
@@ -148,15 +156,17 @@ const scheduleNotes = (startTime: number) => {
     currentTime += animationInterval.value;
     currentNoteIndex += currentDirection;
 
-    // reached the end of the scale
+    // reached the end of the scale or selection
     if (
       currentDirection === 1 &&
       (currentNoteIndex === scaleToDisplay.value.length ||
         currentNoteIndex ===
-          scaleToDisplay.value.indexOf(
-            noteSelection.value[noteSelection.value.length - 1]
+          scaleToDisplay.value.findIndex(
+            (note) =>
+              noteSelection.value![noteSelection.value.length - 1]?.name ===
+              note.name
           ) +
-            1) // reached the end of the selection
+            1)
     ) {
       if (playBackOptions.isRoundTrip) {
         currentDirection = -1;
@@ -164,7 +174,7 @@ const scheduleNotes = (startTime: number) => {
       } else if (playBackOptions.shouldLoop) {
         // pause for two beats before looping - maybe make this a setting
         currentTime += animationInterval.value * 2;
-        currentNoteIndex = noteSelection.value.length
+        currentNoteIndex = noteSelection.value?.length
           ? scaleToDisplay.value.indexOf(noteSelection.value[0])
           : 0;
       } else {
@@ -175,14 +185,19 @@ const scheduleNotes = (startTime: number) => {
       currentDirection === -1 &&
       (currentNoteIndex === -1 ||
         currentNoteIndex ===
-          scaleToDisplay.value.indexOf(noteSelection.value[0]) - 1)
+          scaleToDisplay.value.findIndex(
+            (note) => noteSelection.value[0]?.name === note.name
+          ) -
+            1)
     ) {
       if (playBackOptions.isRoundTrip && playBackOptions.shouldLoop) {
         // pause for one beat before looping
         currentTime += animationInterval.value;
         currentDirection = 1;
         currentNoteIndex = noteSelection.value.length
-          ? scaleToDisplay.value.indexOf(noteSelection.value[0])
+          ? scaleToDisplay.value.findIndex(
+              (note) => noteSelection.value[0]?.name === note.name
+            )
           : 0;
       } else if (playBackOptions.shouldLoop) {
         currentNoteIndex = scaleToDisplay.value.length - 1;
@@ -204,8 +219,10 @@ const scheduleNotes = (startTime: number) => {
 const toggleAudio = async () => {
   if (!audioIsPlaying.value) {
     audioIsPlaying.value = true;
-    noteIndex.value = noteSelection.value.length
-      ? scaleToDisplay.value.indexOf(noteSelection.value[0])
+    noteIndex.value = noteSelection.value?.length
+      ? scaleToDisplay.value.filter((note) =>
+          noteSelection.value.includes(note)
+        )[0].interval - 1
       : 0;
     direction.value = 1;
     scheduleNotes(audioContext.currentTime);
@@ -223,8 +240,11 @@ onMounted(() => {
   window.addEventListener("resize", () => {
     cellWidth.value = noteElements.value![0]?.getBoundingClientRect().width;
   });
+});
 
-  nextTick(() => {
+watch(() => props.workoutMode, () => {
+  if (!props.workoutMode){
+    nextTick(() => {
     ds.value = new DragSelect({
       area: dragSelectArea.value,
       draggability: false,
@@ -269,9 +289,15 @@ onMounted(() => {
       });
     });
   });
-});
+  }
+  else {
+    ds.value?.stop();
+  }
+}, { immediate: true });
 
-const scaleDuration = computed(() => (scaleToDisplay.value.length * 2 * 60100) / +tempo.value);
+const scaleDuration = computed(
+  () => (scaleToDisplay.value.length * 2 * 60100) / +tempo.value
+);
 
 function toggleWorkout() {
   let direction = 1;
@@ -342,8 +368,6 @@ function toggleWorkout() {
             console.log(scaleConfig.selectedScale);
             clearInterval(interval);
             workoutInProgress.value = false;
-            //going wrong here
-            console.log("toggling workout again");
             toggleWorkout();
           } else {
             workoutInProgress.value = false;

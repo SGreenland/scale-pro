@@ -54,6 +54,7 @@ const tabsComponent = ref({
     />
     <scale
       ref="scaleComponent"
+      :workoutMode="tabsComponent.currentTab === 'workout'"
     />
     <div>
       <tempo-select
