@@ -1,11 +1,11 @@
 
 import { notes, scales} from '../NotesAndScales.ts';
-import { Note } from '../types.ts';
+import { Note, NoteOrder } from '../types.ts';
 
 
 export default function scaleManipulator() {
 
-    function getScale(root: string, scaleType: keyof typeof scales): Note[] {
+    function getScale(root: string, scaleType: keyof typeof scales, order?: number[]|null): Note[] {
         // get index of root note
         const rootIndex = notes.findIndex(note => note.name === root);
         // get scale intervals
@@ -15,8 +15,10 @@ export default function scaleManipulator() {
             const noteIndex = rootIndex + interval;
             return {...notes[noteIndex], interval: index + 1 };
         });
+        if (order) {
+            return reorderScale(scale, order);
+        }
         return scale;
-
     }
 
     function reverseScale(scale: Note[]) {

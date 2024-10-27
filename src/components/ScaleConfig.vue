@@ -3,7 +3,7 @@
     <div class="flex items-center gap-2 lg:w-1/2 w-full">
       <div class="flex flex-col w-fit items-start">
         <label for="note">Root Note</label>
-        <select id="note" v-model="selectedNote">
+        <select id="note" v-model="scaleConfig.selectedNote">
           <option v-for="(note, index) in rootNotes" :key="index">
             {{ note.name }}
           </option>
@@ -11,7 +11,11 @@
       </div>
       <div class="flex flex-col w-full items-start">
         <label for="scale">Scale</label>
-        <select class="flex w-full" id="scale" v-model="selectedScaleType">
+        <select
+          class="flex w-full"
+          id="scale"
+          v-model="scaleConfig.selectedScale"
+        >
           <option v-for="(name, index) in scaleNames" :key="index">
             {{ name }}
           </option>
@@ -24,19 +28,19 @@
       <div class="flex w-full justify-evenly items-center gap-2">
         <button
           :class="btnClass"
-          @click="scaleToDisplay = reverseScale(scaleToDisplay)"
+          @click="scaleConfig.noteOrder = scaleToDisplay.map((note) => note.interval).reverse()"
         >
           Reverse
         </button>
         <button
           :class="btnClass"
-          @click="scaleToDisplay = shuffleScale(scaleToDisplay)"
+          @click="scaleConfig.noteOrder = scaleToDisplay.map((note) => note.interval).sort(() => Math.random() - 0.5)"
         >
           Shuffle
         </button>
         <button
           :class="btnClass"
-          @click="scaleToDisplay = getScale(selectedNote, selectedScaleType)"
+          @click="scaleConfig.noteOrder = null"
         >
           Reset
         </button>
@@ -79,7 +83,12 @@ import scaleManipulator from "../utils/scaleManipulator";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import Dropdown from "./reuseable/Dropdown.vue";
-import { workoutConfig } from "../GlobalState";
+import {
+  workoutConfig,
+  scaleConfig,
+  scaleToDisplay,
+  selectedPreset,
+} from "../GlobalState";
 
 const { getScale, reverseScale, shuffleScale, reorderScale } =
   scaleManipulator();
@@ -90,18 +99,14 @@ const props = defineProps<{
 
 const scaleNames = Object.keys(scales);
 // to do: need to set as computed property that takes workoutconfig into account
-const selectedNote: Ref<string> = ref("C4");
-const selectedScaleType: Ref<keyof Scales> = ref("Major");
+// const selectedScaleType: Ref<keyof Scales> = ref("Major");
 const btnClass = "flex grow justify-center items-center";
 // root notes can only be up to C6
 // @ts-ignore
 const rootNotes = notes.filter((note, index) => index <= 48);
-const selectedScaleInOrder = computed(() =>
-  getScale(selectedNote.value, selectedScaleType.value)
-);
-const scaleToDisplay: Ref<Note[]> = ref(
-  getScale(selectedNote.value, selectedScaleType.value)
-);
+// const selectedScaleInOrder = computed(() =>
+//   getScale(scaleConfig.selectedNote, scaleConfig.selectedScale)
+// );
 
 const presets = computed(() => {
   const presetsKey =
@@ -112,41 +117,38 @@ const presets = computed(() => {
 function applyPreset(event: Event) {
   const element = event?.target as HTMLButtonElement;
   const presetString = element.textContent;
-  const presetOrder: number[] =
+  selectedPreset.value =
     presetString?.split(" ").map((note: string) => +note) ?? [];
-  scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, presetOrder);
+  // scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, presetOrder);
 }
 
 watch(
   () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],
   () => {
     if (props.workoutMode) {
-      selectedNote.value = workoutConfig.startNote;
-      selectedScaleType.value = workoutConfig.scales[0] as keyof Scales;
-    }
-    else {
-      selectedNote.value = "C4";
-      selectedScaleType.value = "Major";
+      scaleConfig.selectedNote = workoutConfig.startNote;
+      scaleConfig.selectedScale = workoutConfig.scales[0] as keyof Scales;
+    } else {
+      scaleConfig.selectedNote = "C4";
+      scaleConfig.selectedScale = "Major";
     }
   },
   { deep: true, immediate: true }
 );
 
-watch([selectedNote, selectedScaleType], () => {
-  //keep old order if same length
-  if (selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
-    scaleToDisplay.value = reorderScale(
-      selectedScaleInOrder.value,
-      scaleToDisplay.value.map((note) => note.interval)
-    );
-    return;
-  }
-  scaleToDisplay.value = selectedScaleInOrder.value;
-});
+// watch(() => [scaleConfig.selectedNote, scaleConfig.selectedScale], () => {
+//   //keep old order if same length
+//   if (selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
+//     scaleToDisplay.value = reorderScale(
+//       selectedScaleInOrder.value,
+//       scaleToDisplay.value.map((note) => note.interval)
+//     );
+//     return;
+//   }
+//   scaleToDisplay.value = selectedScaleInOrder.value;
+// });
 
 defineExpose({
   scaleToDisplay,
-  selectedScaleType,
-  selectedNote,
 });
 </script>

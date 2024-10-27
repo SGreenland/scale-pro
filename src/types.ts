@@ -11,6 +11,12 @@ interface Scales {
     'Minor Pentatonic': number[];
 }
 
+interface ScaleConfig {
+    selectedScale: keyof Scales;
+    selectedNote: string;
+    noteOrder: number[] | null;
+}
+
 
 interface PresetNoteOrders {
     presets8: string[];
@@ -29,9 +35,11 @@ interface WorkoutConfig {
     roundTrip: boolean;
     multiScale: boolean;
     scales: string[];
-    presetOrder: string;
+    presetOrder?: string;
 }
 
-export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig };
+type NoteOrder = 'Random' | 'Reverse' | 'Normal';
+
+export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig, NoteOrder };
 
 

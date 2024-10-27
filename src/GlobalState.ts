@@ -1,5 +1,8 @@
-import { reactive } from "vue";
-import { PresetNoteOrders, PlayBackOptions, WorkoutConfig } from "./types";
+import { reactive, Ref, ref, computed } from "vue";
+import { PresetNoteOrders, PlayBackOptions, WorkoutConfig, Note, ScaleConfig } from "./types";
+import scaleManipulator from "./utils/scaleManipulator";
+
+const { getScale } = scaleManipulator();
 
 export const presetNoteOrders = reactive<PresetNoteOrders>({
   presets8: [
@@ -29,12 +32,26 @@ export const playBackOptions = reactive<PlayBackOptions>({
   isRoundTrip: true,
 });
 
+export const scaleConfig = reactive<ScaleConfig>({
+  selectedScale: "Major",
+  selectedNote: "C4",
+  noteOrder: null,
+});
+
+export const tempo = ref('120');
+
+export const selectedPreset = ref<number[]|undefined>();
+
+export const scaleToDisplay =  computed(
+  () => getScale(scaleConfig.selectedNote, scaleConfig.selectedScale, scaleConfig.noteOrder)
+);
+
 export const workoutConfig = reactive<WorkoutConfig>({
   startNote: "C4",
   endNote: "D4",
-  scale: "Major",
   scales: ["Major"],
   roundTrip: true,
   multiScale: false,
-  presetOrder: "1 3 5 7 2 4 6 8",
+  // presetOrder: "1 3 5 7 2 4 6 8",
 });
+
