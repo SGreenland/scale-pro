@@ -2,6 +2,8 @@ import { reactive, Ref, ref, computed } from "vue";
 import { PresetNoteOrders, PlayBackOptions, WorkoutConfig, Note, ScaleConfig } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
 
+//todo - fix note selection, import noteSelection and override scaleToDisplay
+
 const { getScale } = scaleManipulator();
 
 export const presetNoteOrders = reactive<PresetNoteOrders>({

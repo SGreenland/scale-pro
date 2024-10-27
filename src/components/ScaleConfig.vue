@@ -74,12 +74,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import type { Ref } from "vue";
-import { Scales, Note, PresetNoteOrders } from "../types";
+import { watch, computed } from "vue";
+import { Scales, PresetNoteOrders } from "../types";
 import { scales, notes } from "../NotesAndScales";
 import { presetNoteOrders } from "../GlobalState";
-import scaleManipulator from "../utils/scaleManipulator";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import Dropdown from "./reuseable/Dropdown.vue";
@@ -90,23 +88,15 @@ import {
   selectedPreset,
 } from "../GlobalState";
 
-const { getScale, reverseScale, shuffleScale, reorderScale } =
-  scaleManipulator();
-
 const props = defineProps<{
   workoutMode: boolean;
 }>();
 
 const scaleNames = Object.keys(scales);
-// to do: need to set as computed property that takes workoutconfig into account
-// const selectedScaleType: Ref<keyof Scales> = ref("Major");
 const btnClass = "flex grow justify-center items-center";
 // root notes can only be up to C6
 // @ts-ignore
 const rootNotes = notes.filter((note, index) => index <= 48);
-// const selectedScaleInOrder = computed(() =>
-//   getScale(scaleConfig.selectedNote, scaleConfig.selectedScale)
-// );
 
 const presets = computed(() => {
   const presetsKey =
@@ -119,7 +109,6 @@ function applyPreset(event: Event) {
   const presetString = element.textContent;
   selectedPreset.value =
     presetString?.split(" ").map((note: string) => +note) ?? [];
-  // scaleToDisplay.value = reorderScale(selectedScaleInOrder.value, presetOrder);
 }
 
 watch(
@@ -135,18 +124,6 @@ watch(
   },
   { deep: true, immediate: true }
 );
-
-// watch(() => [scaleConfig.selectedNote, scaleConfig.selectedScale], () => {
-//   //keep old order if same length
-//   if (selectedScaleInOrder.value.length === scaleToDisplay.value.length) {
-//     scaleToDisplay.value = reorderScale(
-//       selectedScaleInOrder.value,
-//       scaleToDisplay.value.map((note) => note.interval)
-//     );
-//     return;
-//   }
-//   scaleToDisplay.value = selectedScaleInOrder.value;
-// });
 
 defineExpose({
   scaleToDisplay,

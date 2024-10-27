@@ -38,8 +38,6 @@ interface WorkoutConfig {
     presetOrder?: string;
 }
 
-type NoteOrder = 'Random' | 'Reverse' | 'Normal';
-
-export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig, NoteOrder };
+export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig};
 
 
