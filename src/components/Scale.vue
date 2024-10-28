@@ -18,6 +18,7 @@
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="noteElements"
+        @click="playNote(index, 0)"
         :id="index.toString()"
         class="bg-blue-100 border border-blue-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
         :style="{
@@ -306,7 +307,6 @@ function toggleWorkout() {
   workoutInProgress.value = !workoutInProgress.value;
 
   if (workoutInProgress.value) {
-    console.log("workout started");
     setTimeout(() => {
       toggleAudio();
     }, 100);
@@ -365,7 +365,6 @@ function toggleWorkout() {
             //@ts-ignore
             scaleConfig.selectedScale =
               workoutConfig.scales[currentScaleIndex + 1];
-            console.log(scaleConfig.selectedScale);
             clearInterval(interval);
             workoutInProgress.value = false;
             toggleWorkout();

@@ -15,7 +15,7 @@ export default function scaleManipulator() {
             const noteIndex = rootIndex + interval;
             return {...notes[noteIndex], interval: index + 1 };
         });
-        if (order) {
+        if (order && order.length === scale.length) {
             return reorderScale(scale, order);
         }
         return scale;

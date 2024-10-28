@@ -61,9 +61,9 @@
               <button
                 v-for="(preset, index) in presets"
                 :key="index"
-                @click="applyPreset"
+                @click="scaleConfig.noteOrder = preset"
               >
-                {{ preset }}
+                {{ preset.toString().trim() }}
               </button>
             </div>
           </template>
@@ -103,13 +103,6 @@ const presets = computed(() => {
     `presets${scaleToDisplay.value.length.toString()}` as keyof PresetNoteOrders;
   return presetNoteOrders[presetsKey];
 });
-
-function applyPreset(event: Event) {
-  const element = event?.target as HTMLButtonElement;
-  const presetString = element.textContent;
-  selectedPreset.value =
-    presetString?.split(" ").map((note: string) => +note) ?? [];
-}
 
 watch(
   () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],

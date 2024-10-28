@@ -19,8 +19,8 @@ interface ScaleConfig {
 
 
 interface PresetNoteOrders {
-    presets8: string[];
-    presets6: string[];
+    presets8: number[];
+    presets6: number[];
 }
 
 interface PlayBackOptions {
@@ -35,7 +35,6 @@ interface WorkoutConfig {
     roundTrip: boolean;
     multiScale: boolean;
     scales: string[];
-    presetOrder?: string;
 }
 
 export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig};
