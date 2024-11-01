@@ -8,7 +8,7 @@ import Tabs from "./components/reuseable/Tabs.vue";
 import { workoutConfig, tempo } from "./GlobalState";
 import WorkoutConfig from "./components/WorkoutConfig.vue";
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Note, Scales } from "./types";
 import { notes } from "./NotesAndScales";
 import DropdownButton from "./components/reuseable/DropdownButton.vue";
@@ -23,6 +23,7 @@ const scaleComponent = ref({
   toggleAudio: () => {},
   toggleWorkout: () => {},
   audioIsPlaying: false,
+  workoutInProgress: false,
 });
 const tabsComponent = ref({
   currentTab: "practice",
@@ -31,6 +32,11 @@ const tabsComponent = ref({
 // function handlePitchChange(note: Note["name"]) {
 //   scaleConfig.value.selectedNote = note;
 // }
+
+watch(() => tabsComponent.value.currentTab, (value) => {
+    scaleComponent.value.audioIsPlaying = false;
+    scaleComponent.value.workoutInProgress = false;
+});
 
 </script>
 

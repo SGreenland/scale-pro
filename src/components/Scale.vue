@@ -402,6 +402,7 @@ defineExpose({
   toggleAudio,
   toggleWorkout,
   audioIsPlaying,
+  workoutInProgress,
 });
 </script>
 
