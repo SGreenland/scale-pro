@@ -110,9 +110,19 @@ watch(
     if (props.workoutMode) {
       scaleConfig.selectedNote = workoutConfig.startNote;
       scaleConfig.selectedScale = workoutConfig.scales[0] as keyof Scales;
+      // store practice note order in local storage
+      localStorage.setItem(
+        "practiceNoteOrder",
+        JSON.stringify(scaleConfig.noteOrder)
+      );
+      scaleConfig.noteOrder = null;
     } else {
       scaleConfig.selectedNote = "C4";
       scaleConfig.selectedScale = "Major";
+      // get practice note order from local storage
+      scaleConfig.noteOrder = JSON.parse(
+        localStorage.getItem("practiceNoteOrder") || "null"
+      );
     }
   },
   { deep: true, immediate: true }

@@ -1,6 +1,7 @@
-import { reactive, Ref, ref, computed } from "vue";
+import { reactive, Ref, ref, computed, watch } from "vue";
 import { PresetNoteOrders, PlayBackOptions, WorkoutConfig, Note, ScaleConfig } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
+import ScaleConfig from "./components/ScaleConfig.vue";
 
 const { getScale } = scaleManipulator();
 
@@ -32,10 +33,30 @@ export const playBackOptions = reactive<PlayBackOptions>({
   isRoundTrip: true,
 });
 
+export const workoutMode = ref(false);
+
+const computedNoteOrder = computed(() => {
+  return !workoutMode.value ? practiceNoteOrder.value : workoutNoteOrder.value;
+});
+
+export const practiceNoteOrder = computed({
+  get: () => localStorage.getItem('practiceNoteOrder') ? JSON.parse(localStorage.getItem('practiceNoteOrder')!) : null,
+  set: (value: number[]|null) => {
+    localStorage.setItem('practiceNoteOrder', JSON.stringify(value));
+  },
+})
+
+export const workoutNoteOrder = computed({
+  get: () => localStorage.getItem('workoutNoteOrder') ? JSON.parse(localStorage.getItem('workoutNoteOrder')!) : null,
+  set: (value: number[]|null) => {
+    localStorage.setItem('workoutNoteOrder', JSON.stringify(value));
+  },
+})
+
 export const scaleConfig = reactive<ScaleConfig>({
   selectedScale: "Major",
   selectedNote: "C4",
-  noteOrder: null,
+  noteOrder: computedNoteOrder.value,
 });
 
 export const tempo = ref('120');
@@ -52,6 +73,6 @@ export const workoutConfig = reactive<WorkoutConfig>({
   scales: ["Major"],
   roundTrip: true,
   multiScale: false,
-  // presetOrder: "1 3 5 7 2 4 6 8",
+  noteOrder: null,
 });
 

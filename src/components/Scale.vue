@@ -20,7 +20,7 @@
         ref="noteElements"
         @click="playNote(index, 0)"
         :id="index.toString()"
-        class="bg-blue-100 border border-blue-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-blue-700 dark:text-white"
+        class="bg-cyan-100 border border-cyan-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
         :style="{
           gridRowStart:
             13 - scales[scaleConfig.selectedScale][note.interval - 1],
@@ -253,7 +253,7 @@ watch(() => props.workoutMode, () => {
         window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark:bg-orange-700"
-          : "bg-blue-300",
+          : "bg-cyan-300",
     });
     ds.value.addSelectables(noteElements.value!);
     //events

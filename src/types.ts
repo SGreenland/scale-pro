@@ -6,6 +6,7 @@ interface Note {
 
 interface Scales {
     'Major': number[];
+    'Major (1-5)': number[];
     'Minor': number[];
     'Harmonic Minor': number[];
     'Minor Pentatonic': number[];
@@ -35,6 +36,7 @@ interface WorkoutConfig {
     roundTrip: boolean;
     multiScale: boolean;
     scales: string[];
+    noteOrder: number[] | null;
 }
 
 export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig};
