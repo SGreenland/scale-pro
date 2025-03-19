@@ -10,6 +10,10 @@ interface Scales {
     'Minor': number[];
     'Harmonic Minor': number[];
     'Minor Pentatonic': number[];
+    'Major Arpeggio': number[];
+    'Minor Arpeggio': number[];
+    'Diminished Arpeggio': number[];
+    'Augmented Arpeggio': number[];
 }
 
 interface ScaleConfig {

@@ -10,13 +10,13 @@
         </select>
       </div>
       <div class="flex flex-col w-full items-start">
-        <label for="scale">Scale</label>
+        <text-carousel ref="textCarouselComponent" :items="['Scales', 'Arpeggios']"></text-carousel>
         <select
           class="flex w-full"
           id="scale"
           v-model="scaleConfig.selectedScale"
         >
-          <option v-for="(name, index) in scaleNames" :key="index">
+          <option v-for="(name, index) in getScaleOptions" :key="index">
             {{ name }}
           </option>
         </select>
@@ -24,7 +24,7 @@
     </div>
     <!--note order-->
     <div class="flex-col lg:w-1/2 w-full">
-      <div class="font-medium flex justify-between pb-2">Note Order<button class="rounded-full h-8 flex items-center inverted-btn text-sm" @click="scaleConfig.noteOrder = null">Reset</button></div>
+      <div class="font-medium flex justify-between items-end pb-2">Note Order<button class="rounded-full h-8 flex items-center inverted-btn text-sm" @click="scaleConfig.noteOrder = null">Reset</button></div>
       <div class="flex w-full justify-evenly items-center gap-2">
         <button
           :class="btnClass"
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from "vue";
+import { watch, computed, ref } from "vue";
 import { Scales, PresetNoteOrders } from "../types";
 import { scales, notes } from "../NotesAndScales";
 import { presetNoteOrders } from "../GlobalState";
@@ -84,6 +84,7 @@ import {
   scaleToDisplay,
   selectedPreset,
 } from "../GlobalState";
+import TextCarousel from "./reuseable/TextCarousel.vue";
 
 const props = defineProps<{
   workoutMode: boolean;
@@ -99,6 +100,16 @@ const presets = computed(() => {
   const presetsKey =
     `presets${scaleToDisplay.value.length.toString()}` as keyof PresetNoteOrders;
   return presetNoteOrders[presetsKey];
+});
+
+const getScaleOptions = computed(() => {
+  // if carousel is on Scales, return scale names
+  if (textCarouselComponent.value.itemsRef[0] === "Scales") {
+    return scaleNames.filter((scale) => !scale.includes("Arpeggio"));
+  } else {
+    // if carousel is on Arpeggios, return arpeggio names
+    return scaleNames.filter((scale) => scale.includes("Arpeggio"));
+  }
 });
 
 watch(
@@ -124,6 +135,10 @@ watch(
   },
   { deep: true, immediate: true }
 );
+
+const textCarouselComponent = ref({
+  itemsRef: ["Scales", "Arpeggios"],
+});
 
 defineExpose({
   scaleToDisplay,
