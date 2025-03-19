@@ -1,7 +1,6 @@
 import { reactive, Ref, ref, computed, watch } from "vue";
 import { PresetNoteOrders, PlayBackOptions, WorkoutConfig, Note, ScaleConfig } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
-import ScaleConfig from "./components/ScaleConfig.vue";
 
 const { getScale } = scaleManipulator();
 

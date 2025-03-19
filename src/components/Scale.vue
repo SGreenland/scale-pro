@@ -261,7 +261,7 @@ watch(() => props.workoutMode, () => {
       if (!e.isDragging) {
         // @ts-ignore
         // if a note is clicked, play it
-        if (e.items[0]) playNote(e.items[0].id, 0);
+        // if (e.items[0]) playNote(e.items[0].id, 0);
         ds.value?.clearSelection();
       }
     });

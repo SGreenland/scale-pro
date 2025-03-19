@@ -4,7 +4,8 @@
       <div class="flex items-center w-full input">
         <div class="grid w-full grid-cols-4 gap-1">
           <div
-            class="relative flex justify-between rounded-lg w-full px-2 bg-cyan-300 text-black max-sm:text-sm"
+            class="relative flex justify-between rounded-lg w-full px-2 bg-cyan-400 text-black max-sm:text-sm"
+            :class="{'bg-cyan-600 text-gray-50' : selectedItem === scaleConfig.selectedScale && workoutInProgress}"
             v-for="selectedItem in model?.filter((_, index) => index <= 2)"
           >
             <span class="truncate">{{ selectedItem }}</span>
@@ -49,6 +50,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { ref } from "vue";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { workoutConfig, scaleConfig } from "../../GlobalState";
 
 const dropdownMultiSelect = ref<InstanceType<typeof Dropdown>>();
 
@@ -56,6 +58,11 @@ defineProps({
   items: {
     type: Array,
     required: true,
+  },
+  workoutInProgress: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

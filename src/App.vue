@@ -49,7 +49,7 @@ watch(() => tabsComponent.value.currentTab, (value) => {
     >
       <template #practice> </template>
       <template #workout>
-          <WorkoutConfig />
+          <WorkoutConfig :workout-in-progress="scaleComponent.workoutInProgress" />
       </template>
     </tabs>
     <scale-config

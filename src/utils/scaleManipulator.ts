@@ -1,6 +1,6 @@
 
 import { notes, scales} from '../NotesAndScales.ts';
-import { Note, NoteOrder } from '../types.ts';
+import { Note } from '../types.ts';
 
 
 export default function scaleManipulator() {

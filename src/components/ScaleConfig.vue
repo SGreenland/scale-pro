@@ -24,50 +24,47 @@
     </div>
     <!--note order-->
     <div class="flex-col lg:w-1/2 w-full">
-      <div class="font-medium text-left">Note Order</div>
+      <div class="font-medium flex justify-between pb-2">Note Order<button class="rounded-full h-8 flex items-center inverted-btn text-sm" @click="scaleConfig.noteOrder = null">Reset</button></div>
       <div class="flex w-full justify-evenly items-center gap-2">
         <button
           :class="btnClass"
-          @click="scaleConfig.noteOrder = scaleToDisplay.map((note) => note.interval).reverse()"
+          @click="
+            scaleConfig.noteOrder = scaleToDisplay
+              .map((note) => note.interval)
+              .reverse()
+          "
         >
           Reverse
         </button>
         <button
           :class="btnClass"
-          @click="scaleConfig.noteOrder = scaleToDisplay.map((note) => note.interval).sort(() => Math.random() - 0.5)"
+          @click="
+            scaleConfig.noteOrder = scaleToDisplay
+              .map((note) => note.interval)
+              .sort(() => Math.random() - 0.5)
+          "
         >
           Shuffle
         </button>
-        <button
-          :class="btnClass"
-          @click="scaleConfig.noteOrder = null"
-        >
-          Reset
-        </button>
-        <dropdown>
-          <template #trigger>
-            <font-awesome-icon
-              class="rotate-90 cursor-pointer"
-              size="lg"
-              :icon="faEllipsis"
-            />
-          </template>
-          <template #content>
-            <div>
-              <label class="mb-1" for="custom-order"><b>Presets: </b></label>
-              <hr />
-            </div>
+        <!-- <button class="flex">
+          <font-awesome-icon
+            class="size-6"
+            :icon="faRefresh"
+            @click="scaleConfig.noteOrder = null"
+          />
+        </button> -->
+        <dropdown-button :class="btnClass" button-text="Presets">
             <div class="space-y-2 mt-2 max-h-40 overflow-auto">
               <button
                 v-for="(preset, index) in presets"
                 :key="index"
+                class="text-nowrap"
                 @click="scaleConfig.noteOrder = preset"
               >
-                {{ preset.toString().trim() }}
+                {{ preset.toString().replaceAll(',', ' ').trim() }}
               </button>
             </div>
-          </template>
-        </dropdown>
+        </dropdown-button>
       </div>
     </div>
   </div>
@@ -79,8 +76,8 @@ import { Scales, PresetNoteOrders } from "../types";
 import { scales, notes } from "../NotesAndScales";
 import { presetNoteOrders } from "../GlobalState";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-import Dropdown from "./reuseable/Dropdown.vue";
+import { faEllipsis, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import  DropdownButton  from "./reuseable/DropdownButton.vue";
 import {
   workoutConfig,
   scaleConfig,

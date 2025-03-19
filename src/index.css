@@ -41,7 +41,7 @@ h1 {
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -52,6 +52,19 @@ button {
 }
 button:hover {
   border-color: #de9898;
+}
+
+.inverted-btn {
+  background-color: #1a1a1a;
+  color: #ffca6b;
+  transition: all 0.25s;
+  border: none !important;
+
+}
+
+.inverted-btn:hover {
+  color: #1a1a1a;
+  background-color: #ffca6b;
 }
 /* button:focus,
 button:focus-visible {
@@ -77,6 +90,7 @@ select {
 
 label {
   font-weight: 500;
+  padding-block: 0.5em;
 }
 
 #app {
@@ -102,6 +116,6 @@ label {
     color: #747bff;
   }
   button {
-    background-color: #f6e2e2;
+    background-color: #ffca6b;
   }
 }
