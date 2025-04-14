@@ -29,9 +29,9 @@
         <button
           :class="btnClass"
           @click="
-            scaleConfig.noteOrder = scaleToDisplay
-              .map((note) => note.interval)
-              .reverse()
+           scaleConfig.noteOrder = scaleToDisplay
+              .map((note) => note.position)
+              .reverse();
           "
         >
           Reverse
@@ -40,7 +40,7 @@
           :class="btnClass"
           @click="
             scaleConfig.noteOrder = scaleToDisplay
-              .map((note) => note.interval)
+              .map((note) => note.position)
               .sort(() => Math.random() - 0.5)
           "
         >
@@ -54,7 +54,7 @@
           />
         </button> -->
         <dropdown-button :class="btnClass" button-text="Presets">
-            <div class="space-y-2 mt-2 max-h-40 overflow-auto">
+            <div class="grid space-y-2 p-2 mt-2 max-h-40 overflow-auto">
               <button
                 v-for="(preset, index) in presets"
                 :key="index"
@@ -85,10 +85,13 @@ import {
   selectedPreset,
 } from "../GlobalState";
 import TextCarousel from "./reuseable/TextCarousel.vue";
+import  scaleManipulator  from "../utils/scaleManipulator";
 
 const props = defineProps<{
   workoutMode: boolean;
 }>();
+
+console.log(scaleConfig.noteOrder);
 
 const scaleNames = Object.keys(scales);
 const btnClass = "flex grow justify-center items-center";
@@ -105,8 +108,12 @@ const presets = computed(() => {
 const getScaleOptions = computed(() => {
   // if carousel is on Scales, return scale names
   if (textCarouselComponent.value.itemsRef[0] === "Scales") {
+    // set selected scale to first scale in list
+    scaleConfig.selectedScale = scaleNames[0] as keyof Scales;
     return scaleNames.filter((scale) => !scale.includes("Arpeggio"));
   } else {
+    // if carousel is on Arpeggios, set selected scale to first arpeggio in list
+    scaleConfig.selectedScale = scaleNames.filter((scale) => scale.includes("Arpeggio"))[0] as keyof Scales;
     // if carousel is on Arpeggios, return arpeggio names
     return scaleNames.filter((scale) => scale.includes("Arpeggio"));
   }

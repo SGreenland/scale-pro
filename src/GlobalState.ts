@@ -1,5 +1,5 @@
 import { reactive, Ref, ref, computed, watch } from "vue";
-import { PresetNoteOrders, PlayBackOptions, WorkoutConfig, Note, ScaleConfig } from "./types";
+import { PresetNoteOrders, PlayBackOptions, WorkoutConfig, Note, ScaleConfig, LoopGapOption } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
 
 const { getScale } = scaleManipulator();
@@ -25,7 +25,22 @@ export const presetNoteOrders = reactive({
     [1, 5, 3, 6, 4, 2],
     [1, 4, 2, 5, 3, 6],
   ],
+  presets5: [
+    [1, 3, 2, 4, 5],
+    [1, 4, 2, 3, 5],
+    [1, 3, 4, 2, 5],
+    [1, 4, 3, 2, 5],
+  ],
+  presets4: [
+    [1, 3, 2, 4],
+    [1, 4, 2, 3],
+    [1, 3, 4, 2],
+    [1, 4, 3, 2],
+  ],
+
 });
+
+export const isLoadingAudio = ref(true);
 
 export const playBackOptions = reactive<PlayBackOptions>({
   shouldLoop: false,
@@ -74,4 +89,18 @@ export const workoutConfig = reactive<WorkoutConfig>({
   multiScale: false,
   noteOrder: null,
 });
+
+export const computedLoopGap = computed(() => {
+  if(loopGap.value === 'None') return 0;
+  else if(loopGap.value === 'Auto') {
+    if(scaleToDisplay.value.length === 4) return 2;
+    else return 3;
+  }
+  else if(loopGap.value === 'Custom') return loopGapCustom.value * 2 + 1;
+  else return 1;
+});
+
+export const loopGap = ref<LoopGapOption>('Auto');
+export const loopGapCustom = ref<number>(1);
+export const autoShuffle = ref<boolean>(false);
 

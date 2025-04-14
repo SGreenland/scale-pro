@@ -1,6 +1,7 @@
 interface Note {
     name: string;
-    interval: number;
+    interval: IntervalSymbol;
+    position: number;
     audioSrc: string;
 }
 
@@ -16,10 +17,18 @@ interface Scales {
     'Augmented Arpeggio': number[];
 }
 
+type LoopGapOption = 'None' | 'Auto' | 'Custom';
+
 interface ScaleConfig {
     selectedScale: keyof Scales;
     selectedNote: string;
     noteOrder: number[] | null;
+}
+
+type IntervalSymbol = 'P1' | 'm2' | 'M2' | 'm3' | 'M3' | 'P4' | 'd5' | 'P5' | 'm6' | 'M6' | 'm7' | 'M7' | 'P8';
+
+interface IntervalMap {
+    [key: number]: IntervalSymbol;
 }
 
 
@@ -43,6 +52,6 @@ interface WorkoutConfig {
     noteOrder: number[] | null;
 }
 
-export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig};
+export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig, LoopGapOption, IntervalMap, IntervalSymbol };
 
 

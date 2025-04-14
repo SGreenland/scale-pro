@@ -41,7 +41,7 @@ watch(() => tabsComponent.value.currentTab, (value) => {
 </script>
 
 <template>
-  <div class="grid gap-3 w-full">
+  <div class="flex flex-col gap-3 w-full">
     <tabs
       ref="tabsComponent"
       class="lg:w-2/3 w-full m-auto flex flex-col gap-3"

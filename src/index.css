@@ -41,25 +41,28 @@ h1 {
 
 button {
   border-radius: 8px;
-  border: 2px solid transparent;
+  outline: 2px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s;
 }
 button:hover {
-  border-color: #de9898;
+  outline-color: #de9898;
 }
 
 .inverted-btn {
   background-color: #1a1a1a;
   color: #ffca6b;
-  transition: all 0.25s;
+  transition: all 0.10s;
   border: none !important;
+}
 
+.bg-yellow {
+  background-color: #ffca6b;
 }
 
 .inverted-btn:hover {
@@ -104,7 +107,13 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
+}
 
+/* less inline padding for #app on mobile */
+@media (max-width: 640px) {
+  #app {
+    padding: 1rem;
+  }
 }
 
 @media (prefers-color-scheme: light) {

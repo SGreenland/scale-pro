@@ -1,6 +1,6 @@
 
 import { notes, scales} from '../NotesAndScales.ts';
-import { Note } from '../types.ts';
+import { Note, IntervalMap, IntervalSymbol } from '../types.ts';
 
 
 export default function scaleManipulator() {
@@ -13,7 +13,8 @@ export default function scaleManipulator() {
         // get scale notes
         const scale = intervals.map((interval,index) => {
             const noteIndex = rootIndex + interval;
-            return {...notes[noteIndex], interval: index + 1 };
+            //todo: handle intervals for arpeggios and non-standard scales
+            return {...notes[noteIndex], interval: calculateInterval(interval), position: index};
         });
         if (order && order.length === scale.length) {
             return reorderScale(scale, order);
@@ -33,9 +34,27 @@ export default function scaleManipulator() {
     }
 
     function reorderScale(scale: Note[], order: number[]) {
-        // subtract 1 from each order element to make it zero based
-        order = order.map(i => i - 1);
         return order.map(i => scale[i]);
+    }
+
+    //function to calculate interval from the distance to root note (in semitones)
+    function calculateInterval(distance: number): IntervalSymbol {
+        //use symbols e.g m2, M2, P4, etc.
+        const intervals: IntervalMap = {
+            0: 'P1',
+            1: 'm2',
+            2: 'M2',
+            3: 'm3',
+            4: 'M3',
+            5: 'P4',
+            6: 'd5',
+            7: 'P5',
+            8: 'm6',
+            9: 'M6',
+            10: 'm7',
+            11: 'M7'
+        };
+        return intervals[distance] || 'P8';
     }
 
 

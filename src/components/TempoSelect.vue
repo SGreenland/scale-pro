@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 justify-center pb-2">
+  <div class="flex flex-col gap-2 justify-center w-64 pb-2">
     <div>
       <div v-if="labels?.length" class="w-full flex justify-between">
         <span>{{ labels[0] }}</span>

@@ -1,7 +1,9 @@
 <template>
-    <div class="flex justify-between items-center h-10 w-3/4 m-auto">
+    <div class="flex justify-between items-center h-10 w-full px-4 m-auto">
         <!--chevron left-->
-        <font-awesome-icon role="button" @click="shiftLeft" :icon="faChevronLeft"></font-awesome-icon>
+        <div role="button" @click="shiftLeft" class="inverted-btn rounded-full w-8 h-8 flex items-center justify-center">
+            <font-awesome-icon :icon="faChevronLeft"></font-awesome-icon>
+        </div>
         <div class="flex space-x-2 font-medium">
             <span
                 v-for="(item, index) in itemsRef"
@@ -12,9 +14,9 @@
             </span>
         </div>
         <!--chevron right-->
-        <font-awesome-icon role="button" @click="shiftRight" :icon="faChevronRight"></font-awesome-icon>
-
-
+        <div role="button" @click="shiftRight" class="inverted-btn rounded-full w-8 h-8 flex items-center justify-center">
+            <font-awesome-icon :icon="faChevronRight"></font-awesome-icon>
+        </div>
     </div>
 </template>
 

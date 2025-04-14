@@ -23,7 +23,7 @@
         class="bg-cyan-100 border border-cyan-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
         :style="{
           gridRowStart:
-            13 - scales[scaleConfig.selectedScale][note.interval - 1],
+            13 - scales[scaleConfig.selectedScale][note.position],
           gridColumnStart: index + 1,
         }"
       >
@@ -54,6 +54,8 @@ import {
   scaleConfig,
   scaleToDisplay,
   tempo,
+  isLoadingAudio,
+  computedLoopGap,
 } from "../GlobalState";
 import { notes } from "../NotesAndScales";
 
@@ -65,7 +67,7 @@ const noteElements = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
 const audioContext = new window.AudioContext();
-const animationInterval = computed(() => 60000 / +tempo.value / 1000); // Convert to seconds
+const animationInterval = computed(() => (60000 / +tempo.value / 1000)/2); // Convert to seconds
 const noteIndex = ref(0);
 const direction = ref(1);
 let animationFrameId: number | null = null;
@@ -93,6 +95,8 @@ const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
 };
 
 const preloadAudio = async () => {
+  isLoadingAudio.value = true;
+  console.log(scaleToDisplay.value);
   const loadedAudios = await Promise.all(
     scaleToDisplay.value.map((note) => loadAudioBuffer(note.audioSrc))
   );
@@ -107,6 +111,7 @@ const preloadAudio = async () => {
   source.buffer = buffer;
   source.connect(audioContext.destination);
   source.start(0);
+  isLoadingAudio.value = false;
 };
 
 const playNote = (index: number, time: number) => {
@@ -173,8 +178,7 @@ const scheduleNotes = (startTime: number) => {
         currentDirection = -1;
         currentNoteIndex -= 2; // step back to the previous note
       } else if (playBackOptions.shouldLoop) {
-        // pause for two beats before looping - maybe make this a setting
-        currentTime += animationInterval.value * 2;
+        currentTime += animationInterval.value * computedLoopGap.value;
         currentNoteIndex = noteSelection.value?.length
           ? scaleToDisplay.value.indexOf(noteSelection.value[0])
           : 0;
@@ -192,14 +196,13 @@ const scheduleNotes = (startTime: number) => {
             1)
     ) {
       if (playBackOptions.isRoundTrip && playBackOptions.shouldLoop) {
-        // pause for one beat before looping
-        currentTime += animationInterval.value;
+        currentTime += animationInterval.value * computedLoopGap.value;
         currentDirection = 1;
         currentNoteIndex = noteSelection.value.length
           ? scaleToDisplay.value.findIndex(
               (note) => noteSelection.value[0]?.name === note.name
             )
-          : 0;
+          : (!computedLoopGap.value ? 1 : 0);
       } else if (playBackOptions.shouldLoop) {
         currentNoteIndex = scaleToDisplay.value.length - 1;
       } else {
@@ -300,11 +303,16 @@ const scaleDuration = computed(
   () => (scaleToDisplay.value.length * 2 * 60100) / +tempo.value
 );
 
+let interval: number = 0;
+
 function toggleWorkout() {
   let direction = 1;
-  let interval = 0;
 
+  if(interval) {
+    clearInterval(interval);
+  }
   workoutInProgress.value = !workoutInProgress.value;
+
 
   if (workoutInProgress.value) {
     setTimeout(() => {
@@ -313,10 +321,6 @@ function toggleWorkout() {
 
     // while selected note is not end note, change note after each scale repitition
     interval = setInterval(() => {
-      if (!workoutInProgress.value) {
-        clearInterval(interval);
-        return;
-      }
       // selectedNote index
       const selectedNoteIndex = notes.findIndex(
         (note) => note.name === scaleConfig.selectedNote
@@ -348,7 +352,7 @@ function toggleWorkout() {
         }, 100);
       } else {
         // if selectedNote is endNote and no multiple scales, workout is complete
-        if (workoutConfig.scales.length === 1) {
+        if (workoutConfig.scales.length === 1 && interval) {
           clearInterval(interval);
           workoutInProgress.value = false;
           // reset to start note after workout is complete
@@ -365,7 +369,7 @@ function toggleWorkout() {
             //@ts-ignore
             scaleConfig.selectedScale =
               workoutConfig.scales[currentScaleIndex + 1];
-            clearInterval(interval);
+
             workoutInProgress.value = false;
             toggleWorkout();
           } else {
@@ -375,6 +379,8 @@ function toggleWorkout() {
             scaleConfig.selectedScale = workoutConfig.scales[0];
           }
         } else {
+          clearInterval(interval);
+          workoutInProgress.value = false;
           // reset to start note after workout is complete
           setTimeout(() => {
             scaleConfig.selectedNote = workoutConfig.startNote;
@@ -384,8 +390,14 @@ function toggleWorkout() {
     }, scaleDuration.value);
   } else {
     clearInterval(interval);
+    //disable button to give time for timeouts to clear
+    isLoadingAudio.value = true;
+    setTimeout(() => {
+      isLoadingAudio.value = false;
+    }, 500);
     //toggle audio
     toggleAudio();
+
   }
 }
 
