@@ -4,7 +4,7 @@
       class="relative piano-roll grid max-sm:text-xs lg:w-2/3 w-full m-auto"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
-        gridTemplateRows: `repeat(13, minmax(0, 1.8rem))`,
+        gridTemplateRows: `repeat(${gridRows}, minmax(0, 1.8rem))`,
       }"
     >
       <div
@@ -21,16 +21,16 @@
         @click="playNote(index, 0)"
         :id="index.toString()"
         class="bg-cyan-100 border border-cyan-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
+        :class="{'relative bottom-4 w-1/2 h-5/6 m-auto' : guitarMode}"
         :style="{
-          gridRowStart:
-            13 - scales[scaleConfig.selectedScale][note.position],
-          gridColumnStart: index + 1,
+          gridRowStart: !guitarMode ?
+            gridRows - scales[scaleConfig.selectedScale][note.position] : note.guitarPositions[0]['string'],
+          gridColumnStart: index + 1
         }"
       >
         <span class="select-none"
-          >{{ getNoteName(note.name)
-          }}<small>({{ note.interval }})</small></span
-        >
+          >{{ !guitarMode ? getNoteName(note.name): note.guitarPositions[0]['fret'] }}
+        </span>
       </div>
     </div>
   </div>
@@ -62,6 +62,12 @@ import { notes } from "../NotesAndScales";
 const props = defineProps<{
   workoutMode: boolean;
 }>();
+
+const guitarMode = ref(true);
+
+const gridRows = computed(() => {
+  return !guitarMode.value ? 13 : 5;
+});
 
 const noteElements = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
@@ -139,9 +145,9 @@ watch(
     preloadAudio();
     ds.value?.clearSelection();
     nextTick(() => {
-      cellWidth.value = noteElements.value![0].getBoundingClientRect().width;
+      cellWidth.value = !guitarMode ? noteElements.value![0].getBoundingClientRect().width :noteElements.value![0].getBoundingClientRect().width * 2;
       ds.value?.addSelectables(noteElements.value!);
-    });
+   });
   },
   {
     deep: true,
@@ -226,7 +232,7 @@ const toggleAudio = async () => {
     noteIndex.value = noteSelection.value?.length
       ? scaleToDisplay.value.filter((note) =>
           noteSelection.value.includes(note)
-        )[0].interval - 1
+        )[0].position - 1
       : 0;
     direction.value = 1;
     scheduleNotes(audioContext.currentTime);

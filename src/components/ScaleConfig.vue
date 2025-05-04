@@ -59,7 +59,7 @@
                 v-for="(preset, index) in presets"
                 :key="index"
                 class="text-nowrap"
-                @click="scaleConfig.noteOrder = preset"
+                @click="scaleConfig.noteOrder = preset.map((value) => value - 1)"
               >
                 {{ preset.toString().replaceAll(',', ' ').trim() }}
               </button>
@@ -90,8 +90,6 @@ import  scaleManipulator  from "../utils/scaleManipulator";
 const props = defineProps<{
   workoutMode: boolean;
 }>();
-
-console.log(scaleConfig.noteOrder);
 
 const scaleNames = Object.keys(scales);
 const btnClass = "flex grow justify-center items-center";

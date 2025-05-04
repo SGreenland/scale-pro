@@ -91,13 +91,17 @@ export const workoutConfig = reactive<WorkoutConfig>({
 });
 
 export const computedLoopGap = computed(() => {
-  if(loopGap.value === 'None') return 0;
-  else if(loopGap.value === 'Auto') {
-    if(scaleToDisplay.value.length === 4) return 2;
-    else return 3;
+  // refactor to switch statement
+  switch (loopGap.value) {
+    case 'None':
+      return 0;
+    case 'Auto':
+      return scaleToDisplay.value.length === 4 ? 2 : 3;
+    case 'Custom':
+      return loopGapCustom.value * 2 + 1;
+    default:
+      return 1;
   }
-  else if(loopGap.value === 'Custom') return loopGapCustom.value * 2 + 1;
-  else return 1;
 });
 
 export const loopGap = ref<LoopGapOption>('Auto');

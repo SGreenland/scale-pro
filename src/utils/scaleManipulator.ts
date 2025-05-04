@@ -13,8 +13,7 @@ export default function scaleManipulator() {
         // get scale notes
         const scale = intervals.map((interval,index) => {
             const noteIndex = rootIndex + interval;
-            //todo: handle intervals for arpeggios and non-standard scales
-            return {...notes[noteIndex], interval: calculateInterval(interval), position: index};
+            return {...notes[noteIndex], interval: calculateInterval(interval), position: index };
         });
         if (order && order.length === scale.length) {
             return reorderScale(scale, order);
@@ -56,7 +55,6 @@ export default function scaleManipulator() {
         };
         return intervals[distance] || 'P8';
     }
-
 
     return {
         reverseScale,

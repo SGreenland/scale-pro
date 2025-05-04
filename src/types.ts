@@ -2,7 +2,13 @@ interface Note {
     name: string;
     interval: IntervalSymbol;
     position: number;
+    guitarPositions: GuitarPosition[];
     audioSrc: string;
+}
+
+interface GuitarPosition {
+    string: number;
+    fret: number;
 }
 
 interface Scales {
@@ -52,6 +58,10 @@ interface WorkoutConfig {
     noteOrder: number[] | null;
 }
 
-export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig, LoopGapOption, IntervalMap, IntervalSymbol };
+interface FretBoard {
+    [stringNum: number]: string[];
+}
+
+export type { Note, Scales, PresetNoteOrders, PlayBackOptions, WorkoutConfig, ScaleConfig, LoopGapOption, IntervalMap, IntervalSymbol, GuitarPosition, FretBoard };
 
 
