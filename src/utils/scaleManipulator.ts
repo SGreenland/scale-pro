@@ -5,7 +5,7 @@ import { Note, IntervalMap, IntervalSymbol } from '../types.ts';
 
 export default function scaleManipulator() {
 
-    function getScale(root: string, scaleType: keyof typeof scales, order?: number[]|null): Note[] {
+    function getScale(root: string, scaleType: keyof typeof scales, order?: number[]|null, currentGtrPositions?: number[]): Note[] {
         // get index of root note
         const rootIndex = notes.findIndex(note => note.name === root);
         // get scale intervals
@@ -15,6 +15,11 @@ export default function scaleManipulator() {
             const noteIndex = rootIndex + interval;
             return {...notes[noteIndex], interval: calculateInterval(interval), position: index };
         });
+        if(currentGtrPositions!.length){
+            scale.forEach((note, index) => {
+                note.currentGtrPositionIndex = currentGtrPositions![index];
+            });
+        }
         if (order && order.length === scale.length) {
             return reorderScale(scale, order);
         }

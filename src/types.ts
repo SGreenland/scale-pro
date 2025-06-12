@@ -4,6 +4,8 @@ interface Note {
     position: number;
     guitarPositions: GuitarPosition[];
     audioSrc: string;
+    currentGtrPositionIndex: number;
+    frequency: number; // Optional property for frequency
 }
 
 interface GuitarPosition {
@@ -29,6 +31,7 @@ interface ScaleConfig {
     selectedScale: keyof Scales;
     selectedNote: string;
     noteOrder: number[] | null;
+    currentGtrPositions: number[];
 }
 
 type IntervalSymbol = 'P1' | 'm2' | 'M2' | 'm3' | 'M3' | 'P4' | 'd5' | 'P5' | 'm6' | 'M6' | 'm7' | 'M7' | 'P8';

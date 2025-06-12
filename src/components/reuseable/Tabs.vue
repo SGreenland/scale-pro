@@ -54,7 +54,7 @@ defineExpose({
   display: block;
   width: 100%;
   height: 3px;
-  background-color: #0891b2;
+  background-color: #0ea5e9;
   transform: scaleX(0);
   transition: transform 0.3s;
 }

@@ -17,6 +17,7 @@
     "dragselect": "^3.0.5",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",
+    "pitchy": "^4.1.0",
     "vue": "^3.4.29"
   },
   "devDependencies": {

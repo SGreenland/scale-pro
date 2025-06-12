@@ -1,10 +1,17 @@
 <template>
-  <div class="w-full pt-5" ref="dragSelectArea">
+  <div class="w-full relative" :class="{'pt-10': selectedGridType === 'Guitar tab', 'pt-5' : selectedGridType === 'Piano roll' }" ref="dragSelectArea">
+    <!-- for each grid cell create a border top if guitar mode-->
+    <div class="lg:w-2/3 w-full absolute left-0 right-0 m-auto z-10" v-if="selectedGridType === 'Guitar tab'">
+      <div class="border-t border-t-gray-600 h-[1.8rem]" :class="{'border-b border-b-gray-600': index === gridRows - 1}" v-for="index in gridRows - 1" :key="index">
+         </div>
+    </div>
     <div
-      class="relative piano-roll grid max-sm:text-xs lg:w-2/3 w-full m-auto"
+      class="relative grid max-sm:text-xs lg:w-2/3 w-full m-auto"
+      :class="selectedGridType === 'Guitar tab' ? 'fretboard' : 'piano-roll'"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${gridRows}, minmax(0, 1.8rem))`,
+
       }"
     >
       <div
@@ -20,19 +27,30 @@
         ref="noteElements"
         @click="playNote(index, 0)"
         :id="index.toString()"
-        class="bg-cyan-100 border border-cyan-300 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
-        :class="{'relative bottom-4 w-1/2 h-5/6 m-auto' : guitarMode}"
+        class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
+        :class="{'relative bottom-4 w-1/2 h-5/6 m-auto z-50' : selectedGridType === 'Guitar tab'}"
         :style="{
-          gridRowStart: !guitarMode ?
-            gridRows - scales[scaleConfig.selectedScale][note.position] : note.guitarPositions[0]['string'],
+          gridRowStart: selectedGridType !== 'Guitar tab' ?
+            gridRows - scales[scaleConfig.selectedScale][note.position] : note.guitarPositions[note.currentGtrPositionIndex]['string'],
           gridColumnStart: index + 1
         }"
       >
         <span class="select-none"
-          >{{ !guitarMode ? getNoteName(note.name): note.guitarPositions[0]['fret'] }}
+          >{{ selectedGridType !== 'Guitar tab' ? getNoteName(note.name): note.guitarPositions[note.currentGtrPositionIndex]['fret'] }}
         </span>
       </div>
+      <canvas
+        v-if="selectedGridType === 'Piano roll'"
+        ref="pitchCanvas"
+        class="absolute top-0 left-0 w-full h-full pointer-events-none z-50"
+      >
+      </canvas>
     </div>
+    <div class="lg:w-2/3 w-full m-auto flex justify-end" v-if="selectedGridType == 'Guitar tab'">
+      <button :disabled="scaleConfig.noteOrder == null ? false : true" class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full disabled:opacity-50" @click="findAlternateFretPositions">Find alt. frets</button>
+    </div>
+    <button @click="startTrackingWithAnchor">Start Pitch Tracking</button>
+    <button @click="stopTracking">Stop Pitch Tracking</button>
   </div>
 </template>
 
@@ -56,23 +74,30 @@ import {
   tempo,
   isLoadingAudio,
   computedLoopGap,
+  selectedGridType,
+  validGtrPatternsForCurrentScale
 } from "../GlobalState";
 import { notes } from "../NotesAndScales";
+import { usePitchTracker } from '../composables/usePitchTracker';
+
+const audioContext = new window.AudioContext();
+const { pitchData, startTracking, stopTracking } = usePitchTracker(audioContext);
+
 
 const props = defineProps<{
   workoutMode: boolean;
 }>();
 
-const guitarMode = ref(true);
-
 const gridRows = computed(() => {
-  return !guitarMode.value ? 13 : 5;
+  return selectedGridType.value !== 'Guitar tab' ? 13 : 6;
 });
+
+const pitchCanvas = ref<HTMLCanvasElement | null>(null);
+
 
 const noteElements = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
-const audioContext = new window.AudioContext();
 const animationInterval = computed(() => (60000 / +tempo.value / 1000)/2); // Convert to seconds
 const noteIndex = ref(0);
 const direction = ref(1);
@@ -94,6 +119,47 @@ function getNoteName(note: string) {
   return note;
 }
 
+const selectedPattern = ref<number[]>([]);
+
+function findAlternateFretPositions() {
+  if (!selectedPattern.value.length) {
+    selectedPattern.value = validGtrPatternsForCurrentScale.value[validGtrPatternsForCurrentScale.value.length - 1];
+  }
+  else {
+    const currentIndex = validGtrPatternsForCurrentScale.value.findIndex(
+      (pattern) => pattern.toString() === selectedPattern.value.toString()
+    );
+    if (currentIndex === -1) {
+      selectedPattern.value = validGtrPatternsForCurrentScale.value[validGtrPatternsForCurrentScale.value.length - 1];
+    } else {
+      // Move to the next pattern, or loop back to the first
+      selectedPattern.value =
+        validGtrPatternsForCurrentScale.value[
+          (currentIndex + 1) % validGtrPatternsForCurrentScale.value.length
+        ];
+    }
+  }
+    // Step 3: Assign valid positions based on the pattern
+    const newPositions = scaleToDisplay.value.map((note, noteIndex) => {
+        const expectedString = selectedPattern.value[noteIndex];
+        const matchingPositions = note.guitarPositions
+            .map((pos, i) => ({ ...pos, index: i }))
+            .filter(pos => pos.string === expectedString);
+
+        // Should always be non-empty due to pre-filter
+        const random = Math.floor(Math.random() * matchingPositions.length);
+        return matchingPositions[random].index;
+    });
+
+    // Step 4: Apply changes
+    scaleToDisplay.value.forEach((note, i) => {
+        note.currentGtrPositionIndex = newPositions[i];
+    });
+
+    scaleConfig.currentGtrPositions = newPositions;
+}
+
+
 const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
@@ -102,7 +168,6 @@ const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
 
 const preloadAudio = async () => {
   isLoadingAudio.value = true;
-  console.log(scaleToDisplay.value);
   const loadedAudios = await Promise.all(
     scaleToDisplay.value.map((note) => loadAudioBuffer(note.audioSrc))
   );
@@ -139,13 +204,77 @@ const playNote = (index: number, time: number) => {
   }
 };
 
+const startTime = ref<number | null>(null);
+
+function startTrackingWithAnchor() {
+  audioContext.resume();
+  startTime.value = audioContext.currentTime;
+  startTracking();
+}
+
+
+function drawPitchCurve() {
+  if (
+    !pitchCanvas.value ||
+    !scaleToDisplay.value.length ||
+    selectedGridType.value !== 'Piano roll'
+  ) {
+    console.log(pitchCanvas.value, scaleToDisplay.value.length, selectedGridType.value, startTime.value);
+    console.warn("Pitch canvas not ready or no pitch data available.");
+    return;
+  }
+
+  const canvas = pitchCanvas.value;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // Resize canvas to match display size
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.strokeStyle = 'red';
+  ctx.lineWidth = 2;
+  for (const { pitch } of pitchData.value) {
+  const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
+    Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
+      ? curr
+      : prev
+  );
+
+  const colIndex = scaleToDisplay.value.findIndex(n => n.name === closestNote.name);
+  if (colIndex === -1) continue;
+
+  // 1. Use the lowest note in the piano roll as a base
+  const baseFreq = scaleToDisplay.value[0].frequency;
+  const rowHeight = canvas.height / gridRows.value;
+
+  // 2. Calculate semitone offset from the base (e.g., C4)
+  const semitoneOffset = 12 * Math.log2(pitch / baseFreq);
+
+  // 3. Calculate Y from semitone offset
+  const y = canvas.height - semitoneOffset * rowHeight;
+
+  // 4. Calculate X from time as usual (or just position in scale if snapping column-wise)
+  const colWidth = canvas.width / scaleToDisplay.value.length;
+  const x = colWidth * colIndex + colWidth / 2;
+
+
+  ctx.lineTo(x, y);
+}
+  ctx.stroke();
+}
+
+
+
 watch(
-  () => scaleToDisplay.value,
+  () => [scaleToDisplay.value, selectedGridType.value],
   () => {
     preloadAudio();
     ds.value?.clearSelection();
     nextTick(() => {
-      cellWidth.value = !guitarMode ? noteElements.value![0].getBoundingClientRect().width :noteElements.value![0].getBoundingClientRect().width * 2;
+      cellWidth.value = selectedGridType.value !== 'Guitar tab' ? noteElements.value![0].getBoundingClientRect().width :noteElements.value![0].getBoundingClientRect().width * 2;
       ds.value?.addSelectables(noteElements.value!);
    });
   },
@@ -154,6 +283,11 @@ watch(
     immediate: true,
   }
 );
+
+watch(() => pitchData.value, () => {
+  drawPitchCurve();
+}, { deep: true });
+
 
 const scheduleNotes = (startTime: number) => {
   let currentTime = startTime;
@@ -252,58 +386,58 @@ onMounted(() => {
   });
 });
 
-watch(() => props.workoutMode, () => {
-  if (!props.workoutMode){
-    nextTick(() => {
-    ds.value = new DragSelect({
-      area: dragSelectArea.value,
-      draggability: false,
-      selectedClass:
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark:bg-orange-700"
-          : "bg-cyan-300",
-    });
-    ds.value.addSelectables(noteElements.value!);
-    //events
-    ds.value.subscribe("DS:start", (e) => {
-      if (!e.isDragging) {
-        // @ts-ignore
-        // if a note is clicked, play it
-        // if (e.items[0]) playNote(e.items[0].id, 0);
-        ds.value?.clearSelection();
-      }
-    });
-    ds.value.subscribe("DS:end", (e) => {
-      const selected = e.items.map((item) =>
-        item.textContent?.replace(/\(.*\)/, "").trim()
-      );
-      noteSelection.value = selected.map((note) => {
-        return scaleToDisplay.value.find(
-          (n) => getNoteName(n.name) === note
-        ) as Note;
-      });
+// watch(() => props.workoutMode, () => {
+//   if (!props.workoutMode){
+//     nextTick(() => {
+//     ds.value = new DragSelect({
+//       area: dragSelectArea.value,
+//       draggability: false,
+//       selectedClass:
+//         window.matchMedia &&
+//         window.matchMedia("(prefers-color-scheme: dark)").matches
+//           ? "dark:bg-orange-700"
+//           : "bg-cyan-300",
+//     });
+//     ds.value.addSelectables(noteElements.value!);
+//     //events
+//     ds.value.subscribe("DS:start", (e) => {
+//       if (!e.isDragging) {
+//         // @ts-ignore
+//         // if a note is clicked, play it
+//         // if (e.items[0]) playNote(e.items[0].id, 0);
+//         ds.value?.clearSelection();
+//       }
+//     });
+//     ds.value.subscribe("DS:end", (e) => {
+//       const selected = e.items.map((item) =>
+//         item.textContent?.replace(/\(.*\)/, "").trim()
+//       );
+//       noteSelection.value = selected.map((note) => {
+//         return scaleToDisplay.value.find(
+//           (n) => getNoteName(n.name) === note
+//         ) as Note;
+//       });
 
-      //sort in same order as scale
-      noteSelection.value = scaleToDisplay.value.filter((note) =>
-        noteSelection.value.includes(note)
-      );
-    });
+//       //sort in same order as scale
+//       noteSelection.value = scaleToDisplay.value.filter((note) =>
+//         noteSelection.value.includes(note)
+//       );
+//     });
 
-    ds.value?.subscribe("DS:unselect", (e) => {
-      const selected = e.items.map((item) =>
-        item.textContent?.replace(/\(.*\)/, "").trim()
-      );
-      noteSelection.value = noteSelection.value.filter((note) => {
-        return !selected.includes(getNoteName(note.name));
-      });
-    });
-  });
-  }
-  else {
-    ds.value?.stop();
-  }
-}, { immediate: true });
+//     ds.value?.subscribe("DS:unselect", (e) => {
+//       const selected = e.items.map((item) =>
+//         item.textContent?.replace(/\(.*\)/, "").trim()
+//       );
+//       noteSelection.value = noteSelection.value.filter((note) => {
+//         return !selected.includes(getNoteName(note.name));
+//       });
+//     });
+//   });
+//   }
+//   else {
+//     ds.value?.stop();
+//   }
+// }, { immediate: true });
 
 const scaleDuration = computed(
   () => (scaleToDisplay.value.length * 2 * 60100) / +tempo.value

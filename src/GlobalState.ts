@@ -1,6 +1,7 @@
 import { reactive, Ref, ref, computed, watch } from "vue";
 import { PresetNoteOrders, PlayBackOptions, WorkoutConfig, Note, ScaleConfig, LoopGapOption } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
+import { guitarScaleStringPatterns } from "./NotesAndScales";
 
 const { getScale } = scaleManipulator();
 
@@ -71,14 +72,34 @@ export const scaleConfig = reactive<ScaleConfig>({
   selectedScale: "Major",
   selectedNote: "C4",
   noteOrder: computedNoteOrder.value,
+  currentGtrPositions: [],
 });
 
 export const tempo = ref('120');
 
+export const selectedGridType = ref<'Guitar tab'|'Piano roll'>('Piano roll');
+
 export const selectedPreset = ref<number[]|undefined>();
 
 export const scaleToDisplay =  computed(
-  () => getScale(scaleConfig.selectedNote, scaleConfig.selectedScale, scaleConfig.noteOrder)
+  () => getScale(scaleConfig.selectedNote, scaleConfig.selectedScale, scaleConfig.noteOrder, scaleConfig.currentGtrPositions)
+);
+
+export const validGtrPatternsForCurrentScale = computed(() => {
+    return guitarScaleStringPatterns[scaleConfig.selectedScale].filter(pattern => {
+        return pattern.every((stringNumber, noteIndex) => {
+            const note = scaleToDisplay.value[noteIndex];
+            return note.guitarPositions.some(pos => pos.string === stringNumber);
+        });
+    });
+  });
+
+watch(
+  () => [scaleConfig.selectedScale, scaleConfig.selectedNote],
+  () => {
+    // Reset current guitar positions when scale or note changes
+    scaleConfig.currentGtrPositions = []
+  }
 );
 
 export const workoutConfig = reactive<WorkoutConfig>({

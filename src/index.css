@@ -41,7 +41,7 @@ h1 {
 
 button {
   border-radius: 8px;
-  outline: 2px solid transparent;
+  outline: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -51,7 +51,7 @@ button {
   transition: all 0.25s;
 }
 button:hover {
-  outline-color: #de9898;
+  outline-color: #1a1a1a;
 }
 
 .inverted-btn {
@@ -65,7 +65,7 @@ button:hover {
   background-color: #ffca6b;
 }
 
-.inverted-btn:hover {
+.inverted-btn:hover:not(:disabled) {
   color: #1a1a1a;
   background-color: #ffca6b;
 }
@@ -107,6 +107,13 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* less inline padding for #app on mobile */

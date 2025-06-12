@@ -11,7 +11,7 @@
         min="40"
         max="300"
         v-model="model"
-        class="w-full h-2 bg-gray-200 rounded-full outline-none appearance-none"
+        class="w-full h-2 bg-gradient-to-r from-[#ffca6b] to-orange-700 rounded-full outline-none appearance-none"
       />
     </div>
   </div>
@@ -35,11 +35,11 @@ const model = defineModel<string>();
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  background: rgb(6 182 212);
+  width: 25px;
+  height: 25px;
+  background: #1a1a1a;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgb(21 94 117);
+  /* box-shadow: 0 1px 2px #1a1a1a; */
   border-radius: 5px;
 }
 </style>

@@ -1,13 +1,15 @@
 <template>
-    <div class="flex flex-col gap-2 p-2">
+    <div class="absolute right-6 w-72 bg-white shadow rounded z-50 flex flex-col gap-2 p-4">
         <div class="flex justify-between items-center">
           <label class="me-1" for="loop-gap">Loop Gap </label>
-          <select v-model="loopGap" name="" id="loop-gap" class="w-fit px-1 h-10">
-            <option v-for="option in LoopGapOptions" :key="option" :value="option">
-              {{ option }}
-            </option>
-          </select>
-          <input :disabled="loopGap !== 'Custom'" type="number" v-model="loopGapCustom" class="text-center border size-10 rounded-lg" min="1" max="8" />
+          <div>
+            <select v-model="loopGap" name="" id="loop-gap" class="w-fit px-1 h-10 me-2">
+              <option v-for="option in LoopGapOptions" :key="option" :value="option">
+                {{ option }}
+              </option>
+            </select>
+            <input v-if="loopGap === 'Custom'" type="number" v-model="loopGapCustom" class="text-center border size-10 rounded-lg" min="1" max="8" />
+          </div>
         </div>
         <div class="flex w-full justify-between items-center">
           <label for="auto-shuffle">Auto Shuffle </label>
