@@ -69,8 +69,8 @@ export const workoutNoteOrder = computed({
 })
 
 export const scaleConfig = reactive<ScaleConfig>({
-  selectedScale: "Major",
-  selectedNote: "C4",
+  selectedScale: "Major (1-5)",
+  selectedNote: "C3",
   noteOrder: computedNoteOrder.value,
   currentGtrPositions: [],
 });

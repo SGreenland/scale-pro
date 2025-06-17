@@ -141,9 +141,8 @@ const presets = computed(() => {
 const getScaleOptions = computed(() => {
   // if carousel is on Scales, return scale names
   if (textCarouselComponent.value.itemsRef[0] === "Scales") {
-    // set selected scale to first scale in list
-    scaleConfig.selectedScale = scaleNames[0] as keyof Scales;
-    return scaleNames.filter((scale) => !scale.includes("Arpeggio"));
+    scaleConfig.selectedScale = 'Major (1-5)' as keyof Scales;
+    return scaleNames.filter((scaleName) => !scaleName.includes("Arpeggio"));
   } else {
     // if carousel is on Arpeggios, set selected scale to first arpeggio in list
     scaleConfig.selectedScale = scaleNames.filter((scale) =>
@@ -167,8 +166,8 @@ watch(
       );
       scaleConfig.noteOrder = null;
     } else {
-      scaleConfig.selectedNote = "C4";
-      scaleConfig.selectedScale = "Major";
+      scaleConfig.selectedNote = "C3";
+      scaleConfig.selectedScale = "Major (1-5)";
       // get practice note order from session storage
       scaleConfig.noteOrder = JSON.parse(
         sessionStorage.getItem("practiceNoteOrder") || "null"

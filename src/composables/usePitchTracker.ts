@@ -31,14 +31,12 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
     console.log('Analyzing pitch...');
 
     const [pitch, clarity] = detector.findPitch(micBuffer, audioContext.sampleRate);
-    if (clarity > 0.4 && pitch > 0) {
+    if (clarity > 0.8 && pitch > 40) {
       pitchData.value.push({
         pitch,
         clarity,
         time: audioContext.currentTime,
       });
-
-      console.log(`Detected pitch: ${pitch} Hz, Clarity: ${clarity}`);
 
       if (pitchData.value.length > 2000) {
         pitchData.value.shift(); // trim

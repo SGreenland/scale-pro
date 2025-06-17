@@ -1,9 +1,29 @@
 <template>
-  <div class="w-full relative" :class="{'pt-10': selectedGridType === 'Guitar tab', 'pt-5' : selectedGridType === 'Piano roll' }" ref="dragSelectArea">
+  <PitchAccuracyModal
+  v-if="showPitchModal"
+  :averageDeviation="pitchStats.averageDeviation"
+  :inTunePercentage="pitchStats.inTunePercentage"
+  @close="showPitchModal = false"
+/>
+  <div
+    class="w-full relative"
+    :class="{
+      'pt-8': selectedGridType === 'Guitar tab',
+      'pt-4': selectedGridType === 'Piano roll',
+    }"
+    ref="dragSelectArea"
+  >
     <!-- for each grid cell create a border top if guitar mode-->
-    <div class="lg:w-2/3 w-full absolute left-0 right-0 m-auto z-10" v-if="selectedGridType === 'Guitar tab'">
-      <div class="border-t border-t-gray-600 h-[1.8rem]" :class="{'border-b border-b-gray-600': index === gridRows - 1}" v-for="index in gridRows - 1" :key="index">
-         </div>
+    <div
+      class="lg:w-2/3 w-full absolute left-0 right-0 m-auto z-10"
+      v-if="selectedGridType === 'Guitar tab'"
+    >
+      <div
+        class="border-t border-t-gray-600 h-[1.8rem]"
+        :class="{ 'border-b border-b-gray-600': index === gridRows - 1 }"
+        v-for="index in gridRows - 1"
+        :key="index"
+      ></div>
     </div>
     <div
       class="relative grid max-sm:text-xs lg:w-2/3 w-full m-auto"
@@ -11,7 +31,6 @@
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${gridRows}, minmax(0, 1.8rem))`,
-
       }"
     >
       <div
@@ -28,15 +47,24 @@
         @click="playNote(index, 0)"
         :id="index.toString()"
         class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
-        :class="{'relative bottom-4 w-1/2 h-5/6 m-auto z-50' : selectedGridType === 'Guitar tab'}"
+        :class="{
+          'relative bottom-4 w-1/2 h-5/6 m-auto z-50':
+            selectedGridType === 'Guitar tab',
+        }"
         :style="{
-          gridRowStart: selectedGridType !== 'Guitar tab' ?
-            gridRows - scales[scaleConfig.selectedScale][note.position] : note.guitarPositions[note.currentGtrPositionIndex]['string'],
-          gridColumnStart: index + 1
+          gridRowStart:
+            selectedGridType !== 'Guitar tab'
+              ? gridRows - scales[scaleConfig.selectedScale][note.position]
+              : note.guitarPositions[note.currentGtrPositionIndex]['string'],
+          gridColumnStart: index + 1,
         }"
       >
         <span class="select-none"
-          >{{ selectedGridType !== 'Guitar tab' ? getNoteName(note.name): note.guitarPositions[note.currentGtrPositionIndex]['fret'] }}
+          >{{
+            selectedGridType !== "Guitar tab"
+              ? getNoteName(note.name)
+              : note.guitarPositions[note.currentGtrPositionIndex]["fret"]
+          }}
         </span>
       </div>
       <canvas
@@ -46,11 +74,32 @@
       >
       </canvas>
     </div>
-    <div class="lg:w-2/3 w-full m-auto flex justify-end" v-if="selectedGridType == 'Guitar tab'">
-      <button :disabled="scaleConfig.noteOrder == null ? false : true" class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full disabled:opacity-50" @click="findAlternateFretPositions">Find alt. frets</button>
+    <div class="lg:w-2/3 w-full m-auto flex justify-end">
+      <button
+        v-if="selectedGridType == 'Guitar tab'"
+        :disabled="scaleConfig.noteOrder == null ? false : true"
+        class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full disabled:opacity-50"
+        @click="findAlternateFretPositions"
+      >
+        Find alt. frets
+      </button>
+      <div v-else class="mt-4 flex gap-2 max-sm:mx-auto">
+        <button class="flex items-center gap-2" @click="togglePitchTracking">
+          <div
+            class="bg-red-500 size-4 rounded-full"
+            :class="{ 'animate-pulse': isPitchTracking }"
+          ></div>
+          {{ (isPitchTracking ? "Stop " : "Start ") + "Pitch Tracking" }}
+        </button>
+        <button
+          class="inverted-btn rounded-full"
+          v-if="!isPitchTracking && pitchData.length"
+          @click="clearPitchData"
+        >
+          Clear pitch data
+        </button>
+      </div>
     </div>
-    <button @click="startTrackingWithAnchor">Start Pitch Tracking</button>
-    <button @click="stopTracking">Stop Pitch Tracking</button>
   </div>
 </template>
 
@@ -75,30 +124,34 @@ import {
   isLoadingAudio,
   computedLoopGap,
   selectedGridType,
-  validGtrPatternsForCurrentScale
+  validGtrPatternsForCurrentScale,
 } from "../GlobalState";
 import { notes } from "../NotesAndScales";
-import { usePitchTracker } from '../composables/usePitchTracker';
+import { usePitchTracker } from "../composables/usePitchTracker";
+import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
+
+//font-awesome recording icon
+// import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+// import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 
 const audioContext = new window.AudioContext();
-const { pitchData, startTracking, stopTracking } = usePitchTracker(audioContext);
-
+const { pitchData, startTracking, stopTracking } =
+  usePitchTracker(audioContext);
 
 const props = defineProps<{
   workoutMode: boolean;
 }>();
 
 const gridRows = computed(() => {
-  return selectedGridType.value !== 'Guitar tab' ? 13 : 6;
+  return selectedGridType.value !== "Guitar tab" ? 13 : 6;
 });
 
 const pitchCanvas = ref<HTMLCanvasElement | null>(null);
 
-
 const noteElements = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
-const animationInterval = computed(() => (60000 / +tempo.value / 1000)/2); // Convert to seconds
+const animationInterval = computed(() => 60000 / +tempo.value / 1000 / 2); // Convert to seconds
 const noteIndex = ref(0);
 const direction = ref(1);
 let animationFrameId: number | null = null;
@@ -123,14 +176,19 @@ const selectedPattern = ref<number[]>([]);
 
 function findAlternateFretPositions() {
   if (!selectedPattern.value.length) {
-    selectedPattern.value = validGtrPatternsForCurrentScale.value[validGtrPatternsForCurrentScale.value.length - 1];
-  }
-  else {
+    selectedPattern.value =
+      validGtrPatternsForCurrentScale.value[
+        validGtrPatternsForCurrentScale.value.length - 1
+      ];
+  } else {
     const currentIndex = validGtrPatternsForCurrentScale.value.findIndex(
       (pattern) => pattern.toString() === selectedPattern.value.toString()
     );
     if (currentIndex === -1) {
-      selectedPattern.value = validGtrPatternsForCurrentScale.value[validGtrPatternsForCurrentScale.value.length - 1];
+      selectedPattern.value =
+        validGtrPatternsForCurrentScale.value[
+          validGtrPatternsForCurrentScale.value.length - 1
+        ];
     } else {
       // Move to the next pattern, or loop back to the first
       selectedPattern.value =
@@ -139,26 +197,25 @@ function findAlternateFretPositions() {
         ];
     }
   }
-    // Step 3: Assign valid positions based on the pattern
-    const newPositions = scaleToDisplay.value.map((note, noteIndex) => {
-        const expectedString = selectedPattern.value[noteIndex];
-        const matchingPositions = note.guitarPositions
-            .map((pos, i) => ({ ...pos, index: i }))
-            .filter(pos => pos.string === expectedString);
+  // Step 3: Assign valid positions based on the pattern
+  const newPositions = scaleToDisplay.value.map((note, noteIndex) => {
+    const expectedString = selectedPattern.value[noteIndex];
+    const matchingPositions = note.guitarPositions
+      .map((pos, i) => ({ ...pos, index: i }))
+      .filter((pos) => pos.string === expectedString);
 
-        // Should always be non-empty due to pre-filter
-        const random = Math.floor(Math.random() * matchingPositions.length);
-        return matchingPositions[random].index;
-    });
+    // Should always be non-empty due to pre-filter
+    const random = Math.floor(Math.random() * matchingPositions.length);
+    return matchingPositions[random].index;
+  });
 
-    // Step 4: Apply changes
-    scaleToDisplay.value.forEach((note, i) => {
-        note.currentGtrPositionIndex = newPositions[i];
-    });
+  // Step 4: Apply changes
+  scaleToDisplay.value.forEach((note, i) => {
+    note.currentGtrPositionIndex = newPositions[i];
+  });
 
-    scaleConfig.currentGtrPositions = newPositions;
+  scaleConfig.currentGtrPositions = newPositions;
 }
-
 
 const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
   const response = await fetch(url);
@@ -205,6 +262,63 @@ const playNote = (index: number, time: number) => {
 };
 
 const startTime = ref<number | null>(null);
+const isPitchTracking = ref(false);
+const showPitchModal = ref(false);
+const pitchStats = ref({ averageDeviation: 0, inTunePercentage: 0 });
+
+function togglePitchTracking() {
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+
+  isPitchTracking.value = !isPitchTracking.value;
+
+  if (startTime.value === null) {
+    startTrackingWithAnchor();
+  } else {
+    stopTracking();
+    startTime.value = null;
+
+    const processed = pitchData.value.map((data) => {
+      const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
+        Math.abs(curr.frequency - data.pitch) <
+        Math.abs(prev.frequency - data.pitch)
+          ? curr
+          : prev
+      );
+
+      const centsOff = 1200 * Math.log2(data.pitch / closestNote.frequency);
+      const absCents = Math.abs(centsOff);
+
+      const accuracy = Math.max(0, 1 - absCents / 50); // 0 = 50+ cents off, 1 = perfect
+
+      return {
+        ...data,
+        note: closestNote.name,
+        deviationCents: centsOff,
+        absCents,
+        accuracy,
+      };
+    });
+
+    // Calculate overall average
+    const averageDeviation =
+      processed.reduce((sum, d) => sum + d.absCents, 0) / processed.length;
+    const inTuneCount = processed.filter((d) => d.absCents < 25).length;
+    const inTunePercentage = (inTuneCount / processed.length) * 100;
+
+    console.table(processed);
+    console.log(`🎯 Pitch Accuracy:
+  • Avg deviation: ${averageDeviation.toFixed(1)} cents
+  • In tune: ${inTunePercentage.toFixed(1)}%`);
+
+    pitchStats.value = {
+      averageDeviation,
+      inTunePercentage,
+    };
+    showPitchModal.value = true;
+  }
+}
 
 function startTrackingWithAnchor() {
   audioContext.resume();
@@ -212,20 +326,18 @@ function startTrackingWithAnchor() {
   startTracking();
 }
 
-
 function drawPitchCurve() {
   if (
     !pitchCanvas.value ||
     !scaleToDisplay.value.length ||
-    selectedGridType.value !== 'Piano roll'
+    selectedGridType.value !== "Piano roll"
   ) {
-    console.log(pitchCanvas.value, scaleToDisplay.value.length, selectedGridType.value, startTime.value);
     console.warn("Pitch canvas not ready or no pitch data available.");
     return;
   }
 
   const canvas = pitchCanvas.value;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
   // Resize canvas to match display size
@@ -234,39 +346,57 @@ function drawPitchCurve() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.beginPath();
-  ctx.strokeStyle = 'red';
+  ctx.strokeStyle = "red";
   ctx.lineWidth = 2;
   for (const { pitch } of pitchData.value) {
-  const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
-    Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
-      ? curr
-      : prev
-  );
+    const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
+      Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
+        ? curr
+        : prev
+    );
 
-  const colIndex = scaleToDisplay.value.findIndex(n => n.name === closestNote.name);
-  if (colIndex === -1) continue;
+    const colIndex = scaleToDisplay.value.findIndex(
+      (n) => n.name === closestNote.name
+    );
+    if (colIndex === -1) continue;
 
-  // 1. Use the lowest note in the piano roll as a base
-  const baseFreq = scaleToDisplay.value[0].frequency;
-  const rowHeight = canvas.height / gridRows.value;
+    // 1. Use the lowest note in the piano roll as a base
+    const baseFreq = Math.min(...scaleToDisplay.value.map((n) => n.frequency));
 
-  // 2. Calculate semitone offset from the base (e.g., C4)
-  const semitoneOffset = 12 * Math.log2(pitch / baseFreq);
+    const rowHeight = canvas.height / gridRows.value;
 
-  // 3. Calculate Y from semitone offset
-  const y = canvas.height - semitoneOffset * rowHeight;
+    // 2. Calculate semitone offset from the base (e.g., C4)
+    const semitoneOffset = 12 * Math.log2(pitch / baseFreq);
 
-  // 4. Calculate X from time as usual (or just position in scale if snapping column-wise)
-  const colWidth = canvas.width / scaleToDisplay.value.length;
-  const x = colWidth * colIndex + colWidth / 2;
+    // 3. Calculate Y from semitone offset
+    const y = canvas.height - semitoneOffset * rowHeight;
 
+    // 4. Calculate X from time as usual (or just position in scale if snapping column-wise)
+    const colWidth = canvas.width / scaleToDisplay.value.length;
+    const x = colWidth * colIndex + colWidth / 2;
 
-  ctx.lineTo(x, y);
-}
+    ctx.lineTo(x, y);
+  }
   ctx.stroke();
 }
 
+watch(
+  () => pitchData.value,
+  () => {
+    drawPitchCurve();
+  },
+  { deep: true }
+);
 
+function clearPitchData() {
+  pitchData.value = [];
+  if (pitchCanvas.value) {
+    const ctx = pitchCanvas.value.getContext("2d");
+    if (ctx) {
+      ctx.clearRect(0, 0, pitchCanvas.value.width, pitchCanvas.value.height);
+    }
+  }
+}
 
 watch(
   () => [scaleToDisplay.value, selectedGridType.value],
@@ -274,20 +404,18 @@ watch(
     preloadAudio();
     ds.value?.clearSelection();
     nextTick(() => {
-      cellWidth.value = selectedGridType.value !== 'Guitar tab' ? noteElements.value![0].getBoundingClientRect().width :noteElements.value![0].getBoundingClientRect().width * 2;
+      cellWidth.value =
+        selectedGridType.value !== "Guitar tab"
+          ? noteElements.value![0].getBoundingClientRect().width
+          : noteElements.value![0].getBoundingClientRect().width * 2;
       ds.value?.addSelectables(noteElements.value!);
-   });
+    });
   },
   {
     deep: true,
     immediate: true,
   }
 );
-
-watch(() => pitchData.value, () => {
-  drawPitchCurve();
-}, { deep: true });
-
 
 const scheduleNotes = (startTime: number) => {
   let currentTime = startTime;
@@ -342,7 +470,9 @@ const scheduleNotes = (startTime: number) => {
           ? scaleToDisplay.value.findIndex(
               (note) => noteSelection.value[0]?.name === note.name
             )
-          : (!computedLoopGap.value ? 1 : 0);
+          : !computedLoopGap.value
+          ? 1
+          : 0;
       } else if (playBackOptions.shouldLoop) {
         currentNoteIndex = scaleToDisplay.value.length - 1;
       } else {
@@ -448,11 +578,10 @@ let interval: number = 0;
 function toggleWorkout() {
   let direction = 1;
 
-  if(interval) {
+  if (interval) {
     clearInterval(interval);
   }
   workoutInProgress.value = !workoutInProgress.value;
-
 
   if (workoutInProgress.value) {
     setTimeout(() => {
@@ -537,7 +666,6 @@ function toggleWorkout() {
     }, 500);
     //toggle audio
     toggleAudio();
-
   }
 }
 
