@@ -307,10 +307,11 @@ function togglePitchTracking() {
     const inTuneCount = processed.filter((d) => d.absCents < 25).length;
     const inTunePercentage = (inTuneCount / processed.length) * 100;
 
-    console.table(processed);
-    console.log(`🎯 Pitch Accuracy:
-  • Avg deviation: ${averageDeviation.toFixed(1)} cents
-  • In tune: ${inTunePercentage.toFixed(1)}%`);
+    // if no data, show a warning
+    if (processed.length === 0) {
+      console.warn("No pitch data available. Please try again.");
+      return;
+    }
 
     pitchStats.value = {
       averageDeviation,
