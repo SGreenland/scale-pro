@@ -9,7 +9,7 @@
             v-for="selectedItem in model?.filter((_, index) => index <= 2)"
           >
             <span class="truncate">{{ selectedItem }}</span>
-            <span role="button" @click.prevent.stop="model.length > 1 && model?.splice(model?.findIndex((item) => item === selectedItem), 1)">
+            <span role="button" @click.prevent.stop="model!.length > 1 && model?.splice(model?.findIndex((item) => item === selectedItem), 1)">
               <font-awesome-icon :icon="faXmark" size="sm"></font-awesome-icon>
             </span>
           </div>
@@ -44,13 +44,12 @@
 </template>
 
 <script setup lang="ts">
-import Dropdown from "./Dropdown.vue";
-import Checkbox from "./Checkbox.vue";
+import { faChevronDown, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { ref } from "vue";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { workoutConfig, scaleConfig } from "../../GlobalState";
+import { scaleConfig } from "../../GlobalState";
+import Checkbox from "./Checkbox.vue";
+import Dropdown from "./Dropdown.vue";
 
 const dropdownMultiSelect = ref<InstanceType<typeof Dropdown>>();
 

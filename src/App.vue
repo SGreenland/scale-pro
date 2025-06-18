@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import ScaleConfig from "./components/ScaleConfig.vue";
-import Scale from "./components/Scale.vue";
-import TempoSelect from "./components/TempoSelect.vue";
+import { tempo } from "./GlobalState";
 import AudioControls from "./components/AudioControls.vue";
-import SwipePitch from "./components/SwipePitch.vue";
-import Tabs from "./components/reuseable/Tabs.vue";
-import { workoutConfig, tempo } from "./GlobalState";
+import Scale from "./components/Scale.vue";
+import ScaleConfig from "./components/ScaleConfig.vue";
+import TempoSelect from "./components/TempoSelect.vue";
 import WorkoutConfig from "./components/WorkoutConfig.vue";
+import Tabs from "./components/reuseable/Tabs.vue";
 
 import { ref, watch } from "vue";
-import { Note, Scales } from "./types";
-import { notes } from "./NotesAndScales";
-import DropdownButton from "./components/reuseable/DropdownButton.vue";
 
 // const scaleConfig = ref({
 //   scaleToDisplay: [] as Note[],

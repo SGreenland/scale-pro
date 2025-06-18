@@ -33,7 +33,8 @@ const props = withDefaults(defineProps<{
 const open = ref(false);
 
 function toggleContent(e: MouseEvent) {
-  if(!props.closeOnClick && e.target?.closest("#dropdown-content")) {
+  const triggerElement = e.target as HTMLElement;
+  if(!props.closeOnClick && triggerElement?.closest("#dropdown-content")) {
     return;
   }
   open.value = !open.value;

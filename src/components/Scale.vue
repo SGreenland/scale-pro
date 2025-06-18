@@ -104,31 +104,30 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-} from "vue";
-import { Note, Scales } from "../types";
-import { scales } from "../NotesAndScales";
 import DragSelect, { DSInputElement } from "dragselect";
 import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
+import {
+  computedLoopGap,
+  isLoadingAudio,
   playBackOptions,
-  workoutConfig,
   scaleConfig,
   scaleToDisplay,
-  tempo,
-  isLoadingAudio,
-  computedLoopGap,
   selectedGridType,
+  tempo,
   validGtrPatternsForCurrentScale,
+  workoutConfig,
 } from "../GlobalState";
-import { notes } from "../NotesAndScales";
-import { usePitchTracker } from "../composables/usePitchTracker";
+import { notes, scales } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
+import { usePitchTracker } from "../composables/usePitchTracker";
+import { Note } from "../types";
 
 //font-awesome recording icon
 // import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -138,9 +137,9 @@ const audioContext = new window.AudioContext();
 const { pitchData, startTracking, stopTracking } =
   usePitchTracker(audioContext);
 
-const props = defineProps<{
-  workoutMode: boolean;
-}>();
+// const props = defineProps<{
+//   workoutMode: boolean;
+// }>();
 
 const gridRows = computed(() => {
   return selectedGridType.value !== "Guitar tab" ? 13 : 6;

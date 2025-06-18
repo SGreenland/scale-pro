@@ -29,12 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { playBackOptions, isLoadingAudio } from "../GlobalState";
+import { faArrowsLeftRight, faPlay, faRepeat, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faArrowsLeftRight, faCog } from "@fortawesome/free-solid-svg-icons";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { faStop } from "@fortawesome/free-solid-svg-icons";
-import { faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { isLoadingAudio, playBackOptions } from "../GlobalState";
 
 defineProps<{
   audioIsPlaying: boolean;

@@ -94,23 +94,21 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed, ref } from "vue";
-import { Scales, PresetNoteOrders } from "../types";
-import { scales, notes, guitarScaleStringPatterns } from "../NotesAndScales";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faEllipsis, faRefresh, faCog } from "@fortawesome/free-solid-svg-icons";
-import DropdownButton from "./reuseable/DropdownButton.vue";
-import PlaybackSettings from "./PlayBackSettings.vue";
+import { computed, ref, watch } from "vue";
 import {
-  workoutConfig,
+  presetNoteOrders,
   scaleConfig,
   scaleToDisplay,
-  selectedPreset,
-  presetNoteOrders,
-  selectedGridType
+  selectedGridType,
+  workoutConfig
 } from "../GlobalState";
+import { notes, scales } from "../NotesAndScales";
+import { PresetNoteOrders, Scales } from "../types";
+import PlaybackSettings from "./PlayBackSettings.vue";
+import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
-import scaleManipulator from "../utils/scaleManipulator";
 
 const props = defineProps<{
   workoutMode: boolean;

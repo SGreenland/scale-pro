@@ -1,5 +1,5 @@
-import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { PitchDetector } from 'pitchy';
+import { ref } from 'vue';
 
 export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
   const pitchData = ref<{ pitch: number; clarity: number; time: number }[]>([]);
