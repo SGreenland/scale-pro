@@ -43,7 +43,7 @@ function toggleContent(e: MouseEvent) {
 
 document.addEventListener("click", (e: MouseEvent) => {
   const triggerElement = e.target as HTMLElement;
-  if (triggerElement?.closest("#dropdown-btn")) {
+  if (!triggerElement?.closest("#dropdown-btn")) {
     open.value = false;
   }
 
