@@ -1,10 +1,4 @@
 <template>
-  <PitchAccuracyModal
-  v-if="showPitchModal"
-  :averageDeviation="pitchStats.averageDeviation"
-  :inTunePercentage="pitchStats.inTunePercentage"
-  @close="showPitchModal = false"
-/>
   <div
     class="w-full relative"
     :class="{
@@ -13,6 +7,12 @@
     }"
     ref="dragSelectArea"
   >
+    <PitchAccuracyModal
+    v-if="showPitchModal"
+    :averageDeviation="pitchStats.averageDeviation"
+    :inTunePercentage="pitchStats.inTunePercentage"
+    @close="showPitchModal = false"
+  />
     <!-- for each grid cell create a border top if guitar mode-->
     <div
       class="lg:w-2/3 w-full absolute left-0 right-0 m-auto z-10"
