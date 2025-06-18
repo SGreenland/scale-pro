@@ -9,7 +9,7 @@
       </div>
       <span class="px-2">{{ buttonText }}</span>
       <FontAwesomeIcon class="absolute right-3" :class="{ 'rotate-180': open }" :icon="!dropUp ? faChevronDown : faChevronUp" />
-      <div id="dropdown-content" class="absolute min-w-full right-0 p-2 z-50 bg-white rounded-xl shadow border" :class="{'bottom-full mb-2': dropUp, 'top-full mt-2' : !dropUp}" v-show="open">
+      <div id="dropdown-content" class="absolute min-w-full right-0 p-2 z-50 bg-white dark:bg-indigo-900 rounded-xl shadow border" :class="{'bottom-full mb-2': dropUp, 'top-full mt-2' : !dropUp}" v-show="open">
         <slot />
       </div>
     </button>
