@@ -84,8 +84,8 @@
     <div class="relative flex mt-4 w-full justify-between items-center">
       <div class="flex gap-2 items-center">
           <label for="grid-type">Grid type: </label>
-          <div @click="() => selectedGridType = 'Guitar tab'" role="button" class="border py-1 px-2 rounded-lg" :class="{'bg-teal-200' : selectedGridType == 'Guitar tab'}">Guitar tab</div>
-          <div @click="() => selectedGridType = 'Piano roll'" role="button" class="border py-1 px-2 rounded-lg" :class="{'bg-teal-200' : selectedGridType == 'Piano roll'}">Piano roll</div>
+          <div @click="() => selectedGridType = 'Guitar tab'" role="button" class="border py-1 px-2 rounded-lg" :class="{'bg-teal-200 border-teal-900' : selectedGridType == 'Guitar tab'}">Guitar tab</div>
+          <div @click="() => selectedGridType = 'Piano roll'" role="button" class="border py-1 px-2 rounded-lg" :class="{'bg-teal-200 border-teal-900' : selectedGridType == 'Piano roll'}">Piano roll</div>
       </div>
         <font-awesome-icon role="button" @click="showSettings = !showSettings" size="lg" :icon="faCog"></font-awesome-icon>
       <playback-settings v-if="showSettings"></playback-settings>
