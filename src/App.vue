@@ -29,7 +29,7 @@ const tabsComponent = ref({
 //   scaleConfig.value.selectedNote = note;
 // }
 
-watch(() => tabsComponent.value.currentTab, (value) => {
+watch(() => tabsComponent.value.currentTab, () => {
     scaleComponent.value.audioIsPlaying = false;
     scaleComponent.value.workoutInProgress = false;
 });
