@@ -125,7 +125,7 @@ export const computedLoopGap = computed(() => {
   }
 });
 
-export const loopGap = ref<LoopGapOption>('Auto');
+export const loopGap = ref<LoopGapOption>('None');
 export const loopGapCustom = ref<number>(1);
 export const autoShuffle = ref<boolean>(false);
 

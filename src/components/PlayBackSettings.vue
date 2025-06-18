@@ -11,17 +11,17 @@
             <input v-if="loopGap === 'Custom'" type="number" v-model="loopGapCustom" class="text-center border size-10 rounded-lg" min="1" max="8" />
           </div>
         </div>
-        <div class="flex w-full justify-between items-center">
+        <!-- <div class="flex w-full justify-between items-center">
           <label for="auto-shuffle">Auto Shuffle </label>
           <toggle-switch id="auto-shuffle" v-model="autoShuffle"></toggle-switch>
-        </div>
+        </div> -->
       </div>
 </template>
 
 <script setup lang="ts">
-import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
+// import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
 import { LoopGapOption } from "../types";
-import { loopGap, loopGapCustom, autoShuffle } from "../GlobalState";
+import { loopGap, loopGapCustom } from "../GlobalState";
 
 const LoopGapOptions: LoopGapOption[] = ['Auto', 'None', 'Custom'];
 
