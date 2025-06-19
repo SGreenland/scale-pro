@@ -45,7 +45,7 @@ export const isLoadingAudio = ref(true);
 
 export const playBackOptions = reactive<PlayBackOptions>({
   shouldLoop: false,
-  isRoundTrip: true,
+  isRoundTrip: false,
 });
 
 export const workoutMode = ref(false);
