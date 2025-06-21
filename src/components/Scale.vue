@@ -279,7 +279,7 @@ function togglePitchTracking() {
     startTime.value = null;
 
     // Define time and cents thresholds
-    const sampleDuration = 0.06; // ~60ms per pitch sample
+    // const sampleDuration = 0.06;
     const maxCents = 50;
 
     const noteBuckets = new Map<
