@@ -278,47 +278,79 @@ function togglePitchTracking() {
     stopTracking();
     startTime.value = null;
 
-    const processed = pitchData.value.map((data) => {
+    // Define time and cents thresholds
+    const sampleDuration = 0.06; // ~60ms per pitch sample
+    const maxCents = 50;
+
+    const noteBuckets = new Map<
+      string,
+      { accuracySum: number; duration: number; count: number }
+    >();
+
+    for (const data of pitchData.value) {
+      const pitch = data.pitch;
+      const volume = data.volume ?? 1;
+
       const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
-        Math.abs(curr.frequency - data.pitch) <
-        Math.abs(prev.frequency - data.pitch)
+        Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
           ? curr
           : prev
       );
 
-      const centsOff = 1200 * Math.log2(data.pitch / closestNote.frequency);
+      const centsOff = 1200 * Math.log2(pitch / closestNote.frequency);
       const absCents = Math.abs(centsOff);
+      const accuracy = Math.max(0, 1 - absCents / maxCents);
+      const weight = volume;
 
-      const accuracy = Math.max(0, 1 - absCents / 50); // 0 = 50+ cents off, 1 = perfect
+      if (!noteBuckets.has(closestNote.name)) {
+        noteBuckets.set(closestNote.name, {
+          accuracySum: 0,
+          duration: 0,
+          count: 0,
+        });
+      }
 
-      return {
-        ...data,
-        note: closestNote.name,
-        deviationCents: centsOff,
-        absCents,
-        accuracy,
-      };
-    });
+      const entry = noteBuckets.get(closestNote.name)!;
+      entry.accuracySum += accuracy * weight;
+      entry.duration += weight;
+      entry.count += 1;
+    }
 
-    // Calculate overall average
-    const averageDeviation =
-      processed.reduce((sum, d) => sum + d.absCents, 0) / processed.length;
-    const inTuneCount = processed.filter((d) => d.absCents < 25).length;
-    const inTunePercentage = (inTuneCount / processed.length) * 100;
-
-    // if no data, show a warning
-    if (processed.length === 0) {
+    if (noteBuckets.size === 0) {
       console.warn("No pitch data available. Please try again.");
       return;
     }
 
+    const perNote = Array.from(noteBuckets.entries()).map(
+      ([note, { accuracySum, duration }]) => ({
+        note,
+        avgAccuracy: accuracySum / duration,
+        duration,
+      })
+    );
+
+    const totalDuration = perNote.reduce((sum, n) => sum + n.duration, 0);
+    const weightedAccuracy =
+      perNote.reduce((sum, n) => sum + n.avgAccuracy * n.duration, 0) /
+      totalDuration;
+
+    const noteCoverage =
+      (perNote.length / scaleToDisplay.value.length) * 100;
+
+    const finalInTuneScore = Math.round(
+      (weightedAccuracy * 0.7 + noteCoverage / 100 * 0.3) * 100
+    );
+
+    // Use this for a simple visual modal now
     pitchStats.value = {
-      averageDeviation,
-      inTunePercentage,
+      averageDeviation: Math.round((1 - weightedAccuracy) * maxCents),
+      inTunePercentage: finalInTuneScore,
     };
+
     showPitchModal.value = true;
   }
 }
+
 
 function startTrackingWithAnchor() {
   audioContext.resume();

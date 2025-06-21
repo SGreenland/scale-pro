@@ -1,10 +1,12 @@
-import { PitchDetector } from 'pitchy';
-import { ref } from 'vue';
+import { PitchDetector } from "pitchy";
+import { ref } from "vue";
 
 export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
-  const pitchData = ref<{ pitch: number; clarity: number; time: number }[]>([]);
+  const pitchData = ref<
+    { pitch: number; clarity: number; time: number; volume: number }[]
+  >([]);
   const detector = PitchDetector.forFloat32Array(bufferSize);
-  detector.minVolumeAbsolute = 0.08;
+  detector.minVolumeAbsolute = 0.085;
   const micBuffer = new Float32Array(bufferSize);
   let analyser: AnalyserNode | null = null;
   let animationId: number | null = null;
@@ -28,14 +30,23 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
     if (!analyser) return;
     analyser.getFloatTimeDomainData(micBuffer);
 
-    console.log('Analyzing pitch...');
+    const rms = Math.sqrt(
+      micBuffer.reduce((sum, sample) => sum + sample ** 2, 0) / micBuffer.length
+    );
 
-    const [pitch, clarity] = detector.findPitch(micBuffer, audioContext.sampleRate);
-    if (clarity > 0.8 && pitch > 40) {
+    // Optional: scale RMS to something like 0–1
+    const volume = rms;
+
+    const [pitch, clarity] = detector.findPitch(
+      micBuffer,
+      audioContext.sampleRate
+    );
+    if (clarity > 0.8 && pitch > 85 && volume > 0.1) {
       pitchData.value.push({
         pitch,
         clarity,
         time: audioContext.currentTime,
+        volume: volume,
       });
 
       if (pitchData.value.length > 2000) {
