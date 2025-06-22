@@ -8,12 +8,16 @@
     ref="dragSelectArea"
   >
     <PitchAccuracyModal
-    v-if="showPitchModal"
+    v-if="showPitchModal && !showInfoModal"
     :isNoData="!pitchData.length"
     :averageDeviation="pitchStats.averageDeviation"
     :inTunePercentage="pitchStats.inTunePercentage"
     @close="showPitchModal = false"
   />
+   <PitchTrackingInfoModal
+      v-if="showInfoModal && !showPitchModal"
+      @close="showInfoModal = false"
+    />
     <!-- for each grid cell create a border top if guitar mode-->
     <div
       class="lg:w-2/3 w-full absolute left-0 right-0 m-auto z-10"
@@ -82,9 +86,16 @@
         class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full"
         @click="findAlternateFretPositions"
       >
-        Find alt. frets
+        Find Alt. Frets
       </button>
-      <div v-else class="mt-4 flex gap-2 max-sm:mx-auto">
+      <div v-else class="mt-4 flex items-center gap-2 max-sm:mx-auto">
+        <FontAwesomeIcon
+          v-if="!pitchData.length"
+          :icon="faCircleQuestion"
+          class="text-indigo-400 hover:text-indigo-600 cursor-pointer"
+          @click="showInfoModal = true"
+          size="xl"
+        />
         <button :disabled="!isPitchTracking && pitchData.length > 0" class="flex items-center gap-2" @click="togglePitchTracking">
           <div
             class="bg-red-500 size-4 rounded-full"
@@ -97,7 +108,7 @@
           v-if="!isPitchTracking && pitchData.length"
           @click="clearPitchData"
         >
-          Clear pitch data
+          Clear Pitch Data
         </button>
       </div>
     </div>
@@ -129,10 +140,9 @@ import { notes, scales } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
 import { usePitchTracker } from "../composables/usePitchTracker";
 import { Note } from "../types";
-
-//font-awesome recording icon
-// import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-// import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
+import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
 
 const audioContext = new window.AudioContext();
 const { pitchData, startTracking, stopTracking } =
@@ -164,6 +174,7 @@ const gridLineColor: string =
     : "white";
 const cellWidth = ref<number>(0);
 const workoutInProgress = ref(false);
+const showInfoModal = ref(false);
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {

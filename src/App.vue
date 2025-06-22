@@ -38,7 +38,7 @@ watch(() => tabsComponent.value.currentTab, () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 w-full">
+  <div class="flex flex-col gap-3 w-full max-sm:text-[0.9rem]">
     <tabs
       ref="tabsComponent"
       class="lg:w-2/3 w-full m-auto flex flex-col gap-3"
