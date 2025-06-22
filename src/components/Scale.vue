@@ -2,8 +2,7 @@
   <div
     class="w-full relative"
     :class="{
-      'pt-8': selectedGridType === 'Guitar tab',
-      'pt-4': selectedGridType === 'Piano roll',
+      'pt-4': selectedGridType === 'Guitar tab',
     }"
     ref="dragSelectArea"
   >

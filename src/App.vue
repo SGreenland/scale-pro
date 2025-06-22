@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { tempo } from "./GlobalState";
 import AudioControls from "./components/AudioControls.vue";
+import QuickTranspose from "./components/QuickTranspose.vue";
 import Scale from "./components/Scale.vue";
 import ScaleConfig from "./components/ScaleConfig.vue";
 import TempoSelect from "./components/TempoSelect.vue";
@@ -9,11 +10,7 @@ import Tabs from "./components/reuseable/Tabs.vue";
 
 import { ref, watch } from "vue";
 
-// const scaleConfig = ref({
-//   scaleToDisplay: [] as Note[],
-//   selectedNote: "C4" as Note["name"],
-//   selectedScaleType: "Major" as keyof Scales,
-// });
+const scaleConfigComponent = ref<InstanceType<typeof ScaleConfig> | undefined>(undefined);
 const scaleComponent = ref({
   // @ts-ignore
   toggleAudio: () => {},
@@ -53,8 +50,13 @@ watch(() => tabsComponent.value.currentTab, () => {
       class="lg:w-2/3 m-auto"
       v-show="tabsComponent.currentTab === 'practice'"
       :workoutMode="tabsComponent.currentTab === 'workout'"
-      ref="scaleConfig"
+      ref="scaleConfigComponent"
     />
+    <quick-transpose
+      class="lg:w-2/3 m-auto"
+      v-show="tabsComponent.currentTab === 'practice'"
+      :availableRootNotes="scaleConfigComponent?.availableRootNotes"
+      />
     <scale
       ref="scaleComponent"
       :workoutMode="tabsComponent.currentTab === 'workout'"

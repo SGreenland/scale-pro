@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="flex gap-2 items-center mt-1">
-        <FontAwesomeIcon @click="model && model--" role="button" :icon="faMinus" size="lg" class="text-black" />
+        <FontAwesomeIcon @click="model && model--" role="button" :icon="faMinus" size="lg" class="text-black dark:text-white" />
         <input
           type="range"
           :disabled="disabled"
@@ -27,7 +27,7 @@
           v-model="model"
           class="w-full h-2 bg-gradient-to-r from-[#ffca6b] to-orange-700 rounded-full outline-none appearance-none"
         />
-        <FontAwesomeIcon @click="model && model++" role="button" :icon="faPlus" size="lg" class="text-black" />
+        <FontAwesomeIcon @click="model && model++" role="button" :icon="faPlus" size="lg" class="text-black dark:text-white" />
       </div>
 
       <!-- error message if tempo selection invalid-->

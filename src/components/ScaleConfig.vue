@@ -181,5 +181,6 @@ const textCarouselComponent = ref({
 
 defineExpose({
   scaleToDisplay,
+  availableRootNotes
 });
 </script>
