@@ -6,10 +6,9 @@
         <div class="relative inline-block">
           <input
             pattern="^(40|[4-9][0-9]|1[0-9]{2}|2[0-9]{2}|300)$"
-            type="text"
+            type="number"
             v-model="model"
-            size="1"
-            class="text-right pr-8 bg-transparent border-b border-gray-300 dark:border-gray-600 outline-none invalid:text-red-500 me-1"
+            class="text-right w-16 pr-8 bg-transparent border-b border-gray-300 dark:border-gray-600 outline-none invalid:text-red-500 me-1"
           />
           <span
             class="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-sm"
@@ -72,5 +71,17 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   /* box-shadow: 0 1px 2px #1a1a1a; */
   border-radius: 5px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 </style>
