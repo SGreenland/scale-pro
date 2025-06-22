@@ -9,6 +9,7 @@
   >
     <PitchAccuracyModal
     v-if="showPitchModal"
+    :isNoData="!pitchData.length"
     :averageDeviation="pitchStats.averageDeviation"
     :inTunePercentage="pitchStats.inTunePercentage"
     @close="showPitchModal = false"
@@ -317,7 +318,7 @@ function togglePitchTracking() {
     }
 
     if (noteBuckets.size === 0) {
-      console.warn("No pitch data available. Please try again.");
+      showPitchModal.value = true;
       return;
     }
 
