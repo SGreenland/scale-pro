@@ -75,7 +75,7 @@ export const scaleConfig = reactive<ScaleConfig>({
   currentGtrPositions: [],
 });
 
-export const tempo = ref('120');
+export const tempo = ref(120);
 
 export const selectedGridType = ref<'Guitar tab'|'Piano roll'>('Piano roll');
 

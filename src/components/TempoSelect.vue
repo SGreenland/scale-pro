@@ -17,14 +17,19 @@
           </span>
         </div>
       </div>
-      <input
-        type="range"
-        :disabled="disabled"
-        :min="min"
-        :max="max"
-        v-model="model"
-        class="w-full h-2 bg-gradient-to-r from-[#ffca6b] to-orange-700 rounded-full outline-none appearance-none"
-      />
+      <div class="flex gap-2 items-center mt-1">
+        <FontAwesomeIcon @click="model && model--" role="button" :icon="faMinus" size="lg" class="text-black" />
+        <input
+          type="range"
+          :disabled="disabled"
+          :min="min"
+          :max="max"
+          v-model="model"
+          class="w-full h-2 bg-gradient-to-r from-[#ffca6b] to-orange-700 rounded-full outline-none appearance-none"
+        />
+        <FontAwesomeIcon @click="model && model++" role="button" :icon="faPlus" size="lg" class="text-black" />
+      </div>
+
       <!-- error message if tempo selection invalid-->
       <div v-if="isInvalidTempo" class="text-red-500 text-sm pt-1">
         Tempo must be between {{ min }} and {{ max }}.
@@ -34,6 +39,8 @@
 </template>
 
 <script setup lang="ts">
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed } from "vue";
 
 const props = withDefaults(
@@ -50,11 +57,11 @@ const props = withDefaults(
 );
 
 const isInvalidTempo = computed(() => {
-  const value = parseInt(model.value!, 10);
+  const value = model.value!;
   return isNaN(value) || value < props.min || value > props.max;
 });
 
-const model = defineModel<string>();
+const model = defineModel<number|undefined>();
 
 defineExpose({
   isInvalidTempo,

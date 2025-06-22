@@ -161,7 +161,7 @@ const pitchCanvas = ref<HTMLCanvasElement | null>(null);
 const noteElements = ref<HTMLElement[]>();
 const audioIsPlaying = ref(false);
 const audioBuffers = ref<AudioBuffer[]>([]);
-const animationInterval = computed(() => 60000 / +tempo.value / 1000 / 2); // Convert to seconds
+const animationInterval = computed(() => 60000 / tempo.value / 1000 / 2); // Convert to seconds
 const noteIndex = ref(0);
 const direction = ref(1);
 let animationFrameId: number | null = null;
