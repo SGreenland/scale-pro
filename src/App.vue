@@ -24,6 +24,7 @@ const scaleComponent = ref({
 const tabsComponent = ref({
   currentTab: "practice",
 });
+const tempoSelect = ref<InstanceType<typeof TempoSelect> | null>(null);
 
 // function handlePitchChange(note: Note["name"]) {
 //   scaleConfig.value.selectedNote = note;
@@ -60,11 +61,16 @@ watch(() => tabsComponent.value.currentTab, () => {
     />
     <div>
       <tempo-select
+        ref="tempoSelect"
         class="w-60 m-auto"
         v-model="tempo"
-        :labels="['Tempo', `${tempo}bpm`]"
+        label="Tempo"
+        labelSuffix="BPM"
+        :min="40"
+        :max="300"
       />
       <audio-controls
+        :isInvalidTempo="tempoSelect?.isInvalidTempo"
         :mode="tabsComponent.currentTab"
         :audioIsPlaying="scaleComponent?.audioIsPlaying || false"
         @toggleAudio="scaleComponent?.toggleAudio"

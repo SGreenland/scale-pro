@@ -14,7 +14,7 @@
       </div>
       <button
         class="disabled:opacity-50 h-10 flex items-center drop-shadow-md focus:outline-none"
-        :disabled="isLoadingAudio"
+        :disabled="isLoadingAudio || isInvalidTempo"
         :class="{ 'border-[#de9898]': audioIsPlaying }"
         @click="mode === 'practice' ? $emit('toggleAudio') : $emit('toggleWorkout')"
       >
@@ -42,6 +42,7 @@ import { isLoadingAudio, playBackOptions } from "../GlobalState";
 defineProps<{
   audioIsPlaying: boolean;
   mode: string;
+  isInvalidTempo: boolean | undefined;
 }>();
 
 </script>
