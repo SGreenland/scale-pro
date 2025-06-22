@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-between items-center h-10 w-full px-4 m-auto">
         <!--chevron left-->
-        <div role="button" @click="shiftLeft" class="size-8 flex items-center justify-center">
+        <div role="button" @click="shiftLeft" class="size-6 flex items-center justify-center">
             <font-awesome-icon :icon="faChevronLeft"></font-awesome-icon>
         </div>
         <div class="flex space-x-2 font-medium">
@@ -14,7 +14,7 @@
             </span>
         </div>
         <!--chevron right-->
-        <div role="button" @click="shiftRight" class="size-8 flex items-center justify-center">
+        <div role="button" @click="shiftRight" class="size-6 flex items-center justify-center">
             <font-awesome-icon :icon="faChevronRight"></font-awesome-icon>
         </div>
     </div>

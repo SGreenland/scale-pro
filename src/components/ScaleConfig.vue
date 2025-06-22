@@ -27,10 +27,10 @@
         </div>
       </div>
       <!--note order-->
-      <div class="flex-col lg:w-1/2 w-full">
+      <div class="flex flex-col justify-end lg:w-1/2 w-full">
         <div class="font-medium flex justify-between items-end pb-2">
           Note Order<button
-            class="rounded-full h-8 flex items-center inverted-btn text-sm"
+            class="rounded-full h-6 flex items-center inverted-btn text-sm"
             @click="scaleConfig.noteOrder = null"
           >
             Reset
