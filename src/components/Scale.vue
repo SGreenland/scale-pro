@@ -78,13 +78,13 @@
       <button
         v-if="selectedGridType == 'Guitar tab'"
         :disabled="scaleConfig.noteOrder == null ? false : true"
-        class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full disabled:opacity-50"
+        class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full"
         @click="findAlternateFretPositions"
       >
         Find alt. frets
       </button>
       <div v-else class="mt-4 flex gap-2 max-sm:mx-auto">
-        <button class="flex items-center gap-2" @click="togglePitchTracking">
+        <button :disabled="!isPitchTracking && pitchData.length > 0" class="flex items-center gap-2" @click="togglePitchTracking">
           <div
             class="bg-red-500 size-4 rounded-full"
             :class="{ 'animate-pulse': isPitchTracking }"

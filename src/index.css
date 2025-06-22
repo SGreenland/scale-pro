@@ -61,6 +61,11 @@ button:hover {
   border: none !important;
 }
 
+button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .bg-yellow {
   background-color: #ffca6b;
 }
