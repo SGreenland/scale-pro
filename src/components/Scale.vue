@@ -87,7 +87,7 @@
         <button :disabled="!isPitchTracking && pitchData.length > 0" class="flex items-center gap-2" @click="togglePitchTracking">
           <div
             class="bg-red-500 size-4 rounded-full"
-            :class="{ 'animate-pulse': isPitchTracking }"
+            :class="{ 'animate-ping': isPitchTracking }"
           ></div>
           {{ (isPitchTracking ? "Stop " : "Start ") + "Pitch Tracking" }}
         </button>
