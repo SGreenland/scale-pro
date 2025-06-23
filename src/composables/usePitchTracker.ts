@@ -6,7 +6,7 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
     { pitch: number; clarity: number; time: number; volume: number }[]
   >([]);
   const detector = PitchDetector.forFloat32Array(bufferSize);
-  detector.minVolumeAbsolute = 0.085;
+  detector.minVolumeAbsolute = 0.05;
   const micBuffer = new Float32Array(bufferSize);
   let analyser: AnalyserNode | null = null;
   let animationId: number | null = null;
