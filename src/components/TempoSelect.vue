@@ -8,7 +8,7 @@
             pattern="^(40|[4-9][0-9]|1[0-9]{2}|2[0-9]{2}|300)$"
             type="number"
             v-model="model"
-            class="text-right w-16 pr-8 bg-transparent border-b border-gray-300 dark:border-gray-600 outline-none invalid:text-red-500 me-1"
+            class="text-right w-16 pr-8 bg-transparent border-b border-gray-300 dark:border-gray-600 outline-none invalid:text-red-500 me-1 tempo"
           />
           <span
             class="absolute right-1 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-sm"

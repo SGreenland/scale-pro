@@ -134,6 +134,7 @@ import {
   tempo,
   validGtrPatternsForCurrentScale,
   workoutConfig,
+  computedMaxCents,
 } from "../GlobalState";
 import { notes, scales } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
@@ -291,7 +292,7 @@ function togglePitchTracking() {
 
     // Define time and cents thresholds
     // const sampleDuration = 0.06;
-    const maxCents = 50;
+    const maxCents: number = computedMaxCents.value
 
     const noteBuckets = new Map<
       string,

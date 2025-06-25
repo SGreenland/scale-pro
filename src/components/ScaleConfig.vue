@@ -33,7 +33,7 @@
             class="rounded-full h-6 flex items-center inverted-btn text-sm"
             @click="scaleConfig.noteOrder = null"
           >
-            Reset
+            Reset Order
           </button>
         </div>
         <div class="flex w-full justify-evenly items-center gap-2">
@@ -88,7 +88,7 @@
           <div @click="() => selectedGridType = 'Piano roll'" role="button" class="border py-1 px-2 rounded-lg dark:text-[#242424]" :class="{'bg-teal-200 border-teal-900' : selectedGridType == 'Piano roll'}">Piano Roll</div>
       </div>
         <font-awesome-icon role="button" @click="showSettings = !showSettings" size="lg" :icon="faCog"></font-awesome-icon>
-      <playback-settings v-if="showSettings"></playback-settings>
+      <settings @close="showSettings = false" v-if="showSettings"></settings>
     </div>
   </div>
 </template>
@@ -106,7 +106,7 @@ import {
 } from "../GlobalState";
 import { notes, scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
-import PlaybackSettings from "./PlayBackSettings.vue";
+import Settings from "./Settings.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
 

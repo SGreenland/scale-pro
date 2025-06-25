@@ -93,11 +93,20 @@ select {
   border-radius: 8px;
 }
 
-.input {
+input[type="text"] {
   padding: 0.6em 1.2em;
   border: 1px solid #6f6b6b;
   height: 43px;
   border-radius: 8px;
+}
+
+input[type="number"]:not(.tempo) {
+  padding-inline-start: 0.6em;
+  width: 3rem;
+  border: 1px solid #6f6b6b;
+  height: 43px;
+  border-radius: 8px;
+  text-align: center;
 }
 
 label {
