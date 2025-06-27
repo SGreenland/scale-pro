@@ -8,7 +8,7 @@
       :step="step"
     />
     <!-- up down buttons-->
-    <div class="grid h-full grid-rows-2">
+    <div class="grid h-full grid-rows-2 w-6">
       <button
         @click="model = parseFloat(Math.min(max, model + step).toFixed(1))"
         class="p-1 hover:bg-gray-300 bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-none rounded-tr-lg flex items-center justify-center border border-black dark:border-gray-600"

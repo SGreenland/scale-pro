@@ -52,11 +52,6 @@ watch(() => tabsComponent.value.currentTab, () => {
       :workoutMode="tabsComponent.currentTab === 'workout'"
       ref="scaleConfigComponent"
     />
-    <quick-transpose
-      class="lg:w-2/3 m-auto"
-      v-show="tabsComponent.currentTab === 'practice'"
-      :availableRootNotes="scaleConfigComponent?.availableRootNotes"
-      />
     <scale
       ref="scaleComponent"
       :workoutMode="tabsComponent.currentTab === 'workout'"

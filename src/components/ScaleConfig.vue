@@ -81,13 +81,19 @@
         </div>
       </div>
     </div>
-    <div class="relative flex mt-4 w-full justify-between items-center">
-      <div class="flex gap-2 items-center">
-          <label for="grid-type">Grid Type: </label>
-          <div @click="() => selectedGridType = 'Guitar tab'" role="button" class="border py-1 px-2 rounded-lg dark:text-[#242424]" :class="{'bg-teal-200 border-teal-900' : selectedGridType == 'Guitar tab'}">Guitar Tab</div>
-          <div @click="() => selectedGridType = 'Piano roll'" role="button" class="border py-1 px-2 rounded-lg dark:text-[#242424]" :class="{'bg-teal-200 border-teal-900' : selectedGridType == 'Piano roll'}">Piano Roll</div>
+    <div class="relative flex mt-3 lg:gap-4 gap-3 items-center">
+       <quick-transpose
+        v-show="!props.workoutMode"
+        :availableRootNotes="availableRootNotes"
+      />
+      <div class="flex flex-col items-start">
+        <label>Grid Type</label>
+        <div class="flex gap-2 max-sm:text-sm">
+            <div @click="() => selectedGridType = 'Guitar tab'" role="button" class="border py-1 px-2 rounded-lg dark:text-[#242424]" :class="{'bg-teal-200 border-teal-900' : selectedGridType == 'Guitar tab'}">Guitar Tab</div>
+            <div @click="() => selectedGridType = 'Piano roll'" role="button" class="border py-1 px-2 rounded-lg dark:text-[#242424]" :class="{'bg-teal-200 border-teal-900' : selectedGridType == 'Piano roll'}">Piano Roll</div>
+        </div>
       </div>
-        <font-awesome-icon role="button" @click="showSettings = !showSettings" size="lg" :icon="faCog"></font-awesome-icon>
+        <font-awesome-icon class="absolute right-0 bottom-2" role="button" @click="showSettings = !showSettings" size="lg" :icon="faCog"></font-awesome-icon>
       <settings @close="showSettings = false" v-if="showSettings"></settings>
     </div>
   </div>
@@ -109,6 +115,7 @@ import { PresetNoteOrders, Scales } from "../types";
 import Settings from "./Settings.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
+import QuickTranspose from "./QuickTranspose.vue";
 
 const props = defineProps<{
   workoutMode: boolean;

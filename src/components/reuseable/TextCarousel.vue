@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-between items-center h-10 w-full px-4 m-auto">
+    <div class="flex justify-between items-center mb-2 w-full px-4 m-auto">
         <!--chevron left-->
         <div role="button" @click="shiftLeft" class="size-6 flex items-center justify-center">
             <font-awesome-icon :icon="faChevronLeft"></font-awesome-icon>

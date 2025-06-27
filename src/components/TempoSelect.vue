@@ -80,10 +80,4 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 5px;
 }
 
-@media (prefers-color-scheme: dark) {
-  input[type="range"]::-webkit-slider-thumb {
-    background: #f3f4f6; /* light gray */
-  }
-}
-
 </style>

@@ -1,42 +1,43 @@
 <template>
-  <div class="flex gap-2 justify-end items-center w-full">
-    <!--info icon with tooltip-->
-    <div class="relative">
-      <FontAwesomeIcon
-        ref="transposeInfoIcon"
-        :icon="faInfoCircle"
-        class="text-indigo-500 ps-2"
-        size="lg"
-      />
-      <Tooltip :trigger="transposeInfoIcon">
-        <p class="text-sm">
-          Click the arrows to transpose the scale up or down by a semitone.
-          Shift-click to transpose by an octave. (Press and hold on mobile)
-        </p>
-      </Tooltip>
+  <div class="flex flex-col">
+    <div class="flex">
+      <label>Quick Transpose</label>
+      <!--info icon with tooltip-->
+      <div class="relative">
+        <FontAwesomeIcon
+          ref="transposeInfoIcon"
+          :icon="faInfoCircle"
+          class="text-indigo-500 ps-1 lg:text-lg text-sm"
+        />
+        <Tooltip :trigger="transposeInfoIcon">
+          <p class="text-sm">
+            Click the arrows to transpose the scale up or down by a semitone.
+            Shift-click to transpose by an octave. (Press and hold on mobile)
+          </p>
+        </Tooltip>
+      </div>
     </div>
-
-    Quick Transpose:
-    <button
-      class="inverted-btn size-9 flex items-center justify-center"
-      @click="(e) => handleClick('down', e)"
-      @touchstart="() => handleLongPressStart('down')"
-      @touchend="cancelHold"
-    >
-      <FontAwesomeIcon :icon="faCaretDown" size="2xl" />
-    </button>
-
-    <button
-      class="inverted-btn size-9 flex items-center justify-center"
-      @click="(e) => handleClick('up', e)"
-      @touchstart="() => handleLongPressStart('up')"
-      @touchend="cancelHold"
-    >
-      <FontAwesomeIcon
-        :icon="faCaretUp"
-        size="2xl"
-      />
-    </button>
+    <div class="flex gap-2">
+      <button
+        class="inverted-btn size-[30px] flex items-center justify-center"
+        @click="(e) => handleClick('down', e)"
+        @touchstart="() => handleLongPressStart('down')"
+        @touchend="cancelHold"
+      >
+        <FontAwesomeIcon :icon="faCaretDown" size="2xl" />
+      </button>
+      <button
+        class="inverted-btn size-[30px] flex items-center justify-center"
+        @click="(e) => handleClick('up', e)"
+        @touchstart="() => handleLongPressStart('up')"
+        @touchend="cancelHold"
+      >
+        <FontAwesomeIcon
+          :icon="faCaretUp"
+          size="2xl"
+        />
+      </button>
+    </div>
   </div>
 </template>
 
