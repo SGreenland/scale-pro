@@ -98,17 +98,26 @@ select {
 input[type="text"], .input {
   padding: 0.6em 1.2em;
   border: 1px solid #6f6b6b;
-  height: 43px;
+  height: 42px;
   border-radius: 8px;
 }
 
 input[type="number"]:not(.tempo) {
-  padding-inline-start: 0.6em;
   width: 3rem;
   border: 1px solid #6f6b6b;
-  height: 43px;
+  height: 42px;
   border-radius: 8px;
   text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"].tempo {
+  -moz-appearance: textfield;
 }
 
 label {
