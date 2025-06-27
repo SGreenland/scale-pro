@@ -74,10 +74,16 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 25px;
   height: 25px;
-  background: #1a1a1a;
+  background: #312e81;
   cursor: pointer;
   /* box-shadow: 0 1px 2px #1a1a1a; */
   border-radius: 5px;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="range"]::-webkit-slider-thumb {
+    background: #f3f4f6; /* light gray */
+  }
 }
 
 /* Chrome, Safari, Edge, Opera */

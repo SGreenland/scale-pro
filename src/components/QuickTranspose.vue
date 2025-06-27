@@ -5,7 +5,7 @@
       <FontAwesomeIcon
         ref="transposeInfoIcon"
         :icon="faInfoCircle"
-        class="text-black dark:text-white cursor-pointer"
+        class="text-indigo-500 ps-2"
         size="lg"
       />
       <Tooltip :trigger="transposeInfoIcon">
@@ -17,23 +17,26 @@
     </div>
 
     Quick Transpose:
-    <FontAwesomeIcon
-      :icon="faCaretDown"
-      class="text-red-500/50 cursor-pointer border border-red-500/50 rounded-lg px-2"
+    <button
+      class="inverted-btn size-9 flex items-center justify-center"
       @click="(e) => handleClick('down', e)"
       @touchstart="() => handleLongPressStart('down')"
       @touchend="cancelHold"
-      size="2xl"
-    />
+    >
+      <FontAwesomeIcon :icon="faCaretDown" size="2xl" />
+    </button>
 
-    <FontAwesomeIcon
-      :icon="faCaretUp"
-      class="text-red-500/50 cursor-pointer border border-red-500/50 rounded-lg px-2"
+    <button
+      class="inverted-btn size-9 flex items-center justify-center"
       @click="(e) => handleClick('up', e)"
       @touchstart="() => handleLongPressStart('up')"
       @touchend="cancelHold"
-      size="2xl"
-    />
+    >
+      <FontAwesomeIcon
+        :icon="faCaretUp"
+        size="2xl"
+      />
+    </button>
   </div>
 </template>
 

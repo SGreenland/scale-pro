@@ -2,7 +2,7 @@
   <modal-wrapper>
     <div class="text-start">
       <h2 class="text-2xl relative bottom-4">Settings</h2>
-      <h3 class="bg-sky-100 dark:bg-sky-900">Looping</h3>
+      <h3 :class="sectionHeaderClasses">Looping</h3>
       <div class="flex justify-between">
         <label class="me-1" for="loop-gap">Loop Gap </label>
         <div class="flex items-center gap-2">
@@ -31,7 +31,7 @@
         <toggle-switch id="auto-shuffle" v-model="autoShuffle"></toggle-switch>
       </div>
       <!--pitch settings-->
-      <h3 class="bg-sky-100 dark:bg-sky-900">Pitch Tracking</h3>
+      <h3 :class="sectionHeaderClasses">Pitch Tracking</h3>
       <div class="flex justify-between items-center">
         <label for="minDetectionVolume">Min. Detection Volume</label>
         <input
@@ -72,7 +72,7 @@ import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
 import { ref } from "vue";
 
 const autoShuffle = ref(false);
-
+const sectionHeaderClasses: string = "bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
 </script>
 
@@ -96,5 +96,11 @@ hr {
   width: calc(100% + 3rem);
   margin-left: -1.5rem;
   margin-block: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  hr {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
 }
 </style>

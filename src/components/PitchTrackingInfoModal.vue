@@ -9,8 +9,8 @@
                 your singing or playing accuracy.
             </p>
             <div class="text-lg text-gray-800 dark:text-gray-200 mb-4">
-                <p>Simply click 'Start Pitch Tracking' and sing the selected scale or arpeggio. For best results make sure you are singing at a moderate level and close to your device's microphone.</p> <br>
-                <b>Tip:</b> <i>First listen to the scale for reference, then try to match the pitch as closely as possible. You can sing/play the scale at any speed.</i>
+                <p>Simply click 'Start Pitch Tracking' and sing the selected scale or arpeggio. For best results make sure you are singing at a moderate level and close to your device's microphone. (You can adjust the min recording volume in settings.)</p> <br>
+                <div class="bg-yellow text-black rounded-xl p-4"><b>Tip:</b> <i>First listen to the scale for reference, then try to match the pitch as closely as possible. You can sing/play the scale at any speed.</i></div>
             </div>
         </div>
       </ModalWrapper>

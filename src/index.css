@@ -41,24 +41,26 @@ h1 {
 
 button {
   border-radius: 8px;
-  outline: 1px solid transparent;
+  outline: 2px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #082f49;
   cursor: pointer;
   transition: all 0.25s;
 }
 button:hover {
-  outline-color: #1a1a1a;
+  outline-color: #0369a1;
 }
 
 .inverted-btn {
-  background-color: #1a1a1a;
+  background-color: #312e81;
   color: #ffca6b;
   transition: all 0.10s;
-  border: none !important;
+}
+.inverted-btn:hover {
+  outline-color: #747bff;
 }
 
 button:disabled {
@@ -70,10 +72,10 @@ button:disabled {
   background-color: #ffca6b;
 }
 
-.inverted-btn:hover:not(:disabled) {
-  color: #1a1a1a;
+/* .inverted-btn:hover:not(:disabled) {
+  color: #312e81;
   background-color: #ffca6b;
-}
+} */
 /* button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -93,7 +95,7 @@ select {
   border-radius: 8px;
 }
 
-input[type="text"] {
+input[type="text"], .input {
   padding: 0.6em 1.2em;
   border: 1px solid #6f6b6b;
   height: 43px;
@@ -151,6 +153,10 @@ label {
   }
   button {
     background-color: #ffca6b;
+    color: #312e81;
+  }
+  button:hover {
+    outline-color: inherit;
   }
 }
 

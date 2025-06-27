@@ -39,8 +39,8 @@
     >
       <div
         class="grid col-[2_/_-1] row-span-full"
+        :class="{'grid-pattern': selectedGridType === 'Piano roll'}"
         :style="{
-          background: `linear-gradient(90deg, ${gridLineColor} 1px, transparent 1px)`,
           backgroundSize: `${cellWidth}px 100%`,
         }"
       ></div>
@@ -91,7 +91,7 @@
         <FontAwesomeIcon
           v-if="!pitchData.length"
           :icon="faCircleQuestion"
-          class="text-indigo-400 hover:text-indigo-600 cursor-pointer"
+          class="text-indigo-500 hover:text-indigo-600 cursor-pointer"
           @click="showInfoModal = true"
           size="xl"
         />
@@ -140,7 +140,7 @@ import { notes, scales } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
 import { usePitchTracker } from "../composables/usePitchTracker";
 import { Note } from "../types";
-import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
 
@@ -168,10 +168,6 @@ let animationFrameId: number | null = null;
 const ds = ref<DragSelect<DSInputElement> | null>(null);
 const noteSelection = ref<Note[]>([]);
 const dragSelectArea = ref<HTMLElement | undefined>();
-const gridLineColor: string =
-  window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "rgb(17 24 39)"
-    : "white";
 const cellWidth = ref<number>(0);
 const workoutInProgress = ref(false);
 const showInfoModal = ref(false);
@@ -753,6 +749,10 @@ defineExpose({
   );
 }
 
+.grid-pattern {
+  background: linear-gradient(90deg, white, 1px, transparent 1px);
+}
+
 @media (prefers-color-scheme: dark) {
   .piano-roll {
     background: repeating-linear-gradient(
@@ -762,6 +762,10 @@ defineExpose({
       #2d3748 1.8rem,
       #2d3748 3.6rem
     );
+  }
+
+  .grid-pattern {
+    background: linear-gradient(90deg, rgb(17 24 39), 1px, transparent 1px);
   }
 }
 </style>
