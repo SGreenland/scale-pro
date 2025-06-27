@@ -61,7 +61,7 @@ watch(() => tabsComponent.value.currentTab, () => {
       ref="scaleComponent"
       :workoutMode="tabsComponent.currentTab === 'workout'"
     />
-    <div>
+    <div class="flex flex-col gap-3">
       <tempo-select
         ref="tempoSelect"
         class="w-60 m-auto"
