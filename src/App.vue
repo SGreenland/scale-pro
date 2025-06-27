@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { tempo } from "./GlobalState";
 import AudioControls from "./components/AudioControls.vue";
-import QuickTranspose from "./components/QuickTranspose.vue";
 import Scale from "./components/Scale.vue";
 import ScaleConfig from "./components/ScaleConfig.vue";
 import TempoSelect from "./components/TempoSelect.vue";
@@ -37,6 +36,7 @@ watch(() => tabsComponent.value.currentTab, () => {
 <template>
   <div class="flex flex-col gap-3 w-full max-sm:text-[0.9rem]">
     <tabs
+      v-show="false"
       ref="tabsComponent"
       class="lg:w-2/3 w-full m-auto flex flex-col gap-3"
       :tabs="['practice', 'workout']"
