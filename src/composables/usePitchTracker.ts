@@ -1,6 +1,6 @@
 import { PitchDetector } from "pitchy";
 import { ref, watch } from "vue";
-import { minDetectionVolume } from "../GlobalState";
+import { computedMinDetectionVolume } from "../GlobalState";
 
 export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
   const pitchData = ref<
@@ -12,7 +12,7 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
   let analyser: AnalyserNode | null = null;
   let animationId: number | null = null;
 
-  watch(minDetectionVolume, (newValue) => {
+  watch(computedMinDetectionVolume, (newValue) => {
     if (detector) {
       detector.minVolumeAbsolute = newValue;
     };

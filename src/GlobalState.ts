@@ -129,14 +129,23 @@ export const computedLoopGap = computed(() => {
 export const loopGap = ref<LoopGapOption>('None');
 export const loopGapCustom = ref<number>(1);
 export const autoShuffle = ref<boolean>(false);
-export const minDetectionVolume = ref<number>(0.5);
+export const minDetectionVolume = ref<'sensitive' | 'normal'>('normal');
 export const pitchToleranceLevel = ref<'loose' | 'standard' | 'precise'>('standard');
+
+const minDetectionVolumeMap = {
+  sensitive: 0.03,
+  normal: 0.06,
+};
 
 const maxCentsMap = {
   loose: 75,
   standard: 50,
   precise: 25,
 };
+
+export const computedMinDetectionVolume = computed(() => {
+  return minDetectionVolumeMap[minDetectionVolume.value];
+});
 
 export const computedMaxCents = computed(() => {
   return maxCentsMap[pitchToleranceLevel.value];

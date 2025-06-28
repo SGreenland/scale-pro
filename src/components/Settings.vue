@@ -35,16 +35,18 @@
       </div>
       <!--pitch settings-->
       <h3 :class="sectionHeaderClasses">Pitch Tracking</h3>
-      <div class="flex justify-between items-center">
-        <label for="minDetectionVolume">Min. Detection Volume</label>
-        <NumberInput
-          id="minDetectionVolume"
-          name="minDetectionVolume"
-          v-model="minDetectionVolume"
-          :min=0.1
-          :max=1
-          :step="0.1"
-        />
+      <div class="flex flex-col gap-2">
+        <label for="minDetectionVolume">Volume Detection</label>
+        <div class="flex items-center">
+          <div class="flex w-1/3 items-center gap-2">
+            <input type="radio" v-model="minDetectionVolume" value="sensitive" />
+            Sensitive
+          </div>
+          <div class="flex w-1/3 items-center gap-2">
+            <input type="radio" v-model="minDetectionVolume" value="normal" />
+            Normal
+          </div>
+        </div>
       </div>
       <hr />
       <label class="block font-medium mb-3">Pitch Tolerance</label>
