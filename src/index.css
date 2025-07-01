@@ -168,6 +168,11 @@ label {
     outline-color: inherit;
   }
 }
+@media (prefers-color-scheme: dark) {
+  select, input {
+    background-color: #3B3B3B;
+  }
+}
 
 @keyframes radar {
   75%, 100% {
