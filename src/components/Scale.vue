@@ -135,6 +135,7 @@ import {
   validGtrPatternsForCurrentScale,
   workoutConfig,
   computedMaxCents,
+  settings,
 } from "../GlobalState";
 import { notes, scales } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
@@ -143,10 +144,12 @@ import { Note } from "../types";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
+import useReorderNotes from "../composables/useReorderNotes";
 
 const audioContext = new window.AudioContext();
 const { pitchData, startTracking, stopTracking } =
   usePitchTracker(audioContext);
+const { shuffle } = useReorderNotes();
 
 // const props = defineProps<{
 //   workoutMode: boolean;
@@ -504,6 +507,7 @@ const scheduleNotes = (startTime: number) => {
             1)
     ) {
       if (playBackOptions.isRoundTrip && playBackOptions.shouldLoop) {
+        settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value));
         currentTime += animationInterval.value * computedLoopGap.value;
         currentDirection = 1;
         currentNoteIndex = noteSelection.value.length
@@ -514,6 +518,7 @@ const scheduleNotes = (startTime: number) => {
           ? 1
           : 0;
       } else if (playBackOptions.shouldLoop) {
+        settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value));
         currentNoteIndex = scaleToDisplay.value.length - 1;
       } else {
         audioIsPlaying.value = false;

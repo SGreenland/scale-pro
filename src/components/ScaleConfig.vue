@@ -40,9 +40,7 @@
           <button
             :class="btnClass"
             @click="
-              scaleConfig.noteOrder = scaleToDisplay
-                .map((note) => note.position)
-                .reverse()
+              scaleConfig.noteOrder = reverse(scaleToDisplay);
             "
           >
             Reverse
@@ -50,9 +48,7 @@
           <button
             :class="btnClass"
             @click="
-              scaleConfig.noteOrder = scaleToDisplay
-                .map((note) => note.position)
-                .sort(() => Math.random() - 0.5)
+              scaleConfig.noteOrder = shuffle(scaleToDisplay);
             "
           >
             Shuffle
@@ -116,6 +112,9 @@ import Settings from "./Settings.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
 import QuickTranspose from "./QuickTranspose.vue";
+import useReorderNotes from "../composables/useReorderNotes";
+
+const { shuffle, reverse } = useReorderNotes();
 
 const props = defineProps<{
   workoutMode: boolean;
@@ -145,7 +144,7 @@ const presets = computed(() => {
 
 const getScaleOptions = computed(() => {
   // if carousel is on Scales, return scale names
-  if (textCarouselComponent.value.itemsRef[0] === "Scales") {
+  if (textCarouselComponent.value?.itemsRef[0] === "Scales") {
     scaleConfig.selectedScale = 'Major (1-5)' as keyof Scales;
     return scaleNames.filter((scaleName) => !scaleName.includes("Arpeggio"));
   } else {

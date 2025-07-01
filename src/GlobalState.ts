@@ -1,6 +1,6 @@
 import { computed, reactive, ref, watch } from "vue";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
-import { LoopGapOption, PlayBackOptions, ScaleConfig, WorkoutConfig } from "./types";
+import { LoopGapOption, PlayBackOptions, ScaleConfig, WorkoutConfig, Settings } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
 
 const { getScale } = scaleManipulator();
@@ -113,24 +113,26 @@ export const workoutConfig = reactive<WorkoutConfig>({
 
 export const computedLoopGap = computed(() => {
   // refactor to switch statement
-  switch (loopGap.value) {
+  switch (settings.loopGap) {
     case 'None':
       return 0;
     case 'Auto':
       return scaleToDisplay.value.length === 4 ? 2 : 3;
     case 'Custom':
-      return loopGapCustom.value * 2 + 1;
+      return settings.loopGapCustom * 2 + 1;
     default:
       return 1;
   }
 });
 
 //settings
-export const loopGap = ref<LoopGapOption>('None');
-export const loopGapCustom = ref<number>(1);
-export const autoShuffle = ref<boolean>(false);
-export const minDetectionVolume = ref<'sensitive' | 'normal'>('normal');
-export const pitchToleranceLevel = ref<'loose' | 'standard' | 'precise'>('standard');
+export const settings = reactive<Settings>({
+  loopGap: 'None',
+  loopGapCustom: 1,
+  autoShuffle: false,
+  minDetectionVolume: 'normal',
+  pitchToleranceLevel: 'standard',
+});
 
 const minDetectionVolumeMap = {
   sensitive: 0.03,
@@ -144,10 +146,10 @@ const maxCentsMap = {
 };
 
 export const computedMinDetectionVolume = computed(() => {
-  return minDetectionVolumeMap[minDetectionVolume.value];
+  return minDetectionVolumeMap[settings.minDetectionVolume];
 });
 
 export const computedMaxCents = computed(() => {
-  return maxCentsMap[pitchToleranceLevel.value];
+  return maxCentsMap[settings.pitchToleranceLevel];
 });
 

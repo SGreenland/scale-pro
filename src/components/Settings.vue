@@ -7,7 +7,7 @@
         <label class="me-1" for="loop-gap">Loop Gap </label>
         <div class="flex items-center gap-2">
           <select
-            v-model="loopGap"
+            v-model="settings.loopGap"
             name="loop-gap"
             id="loop-gap"
             class="w-fit px-1 h-[42px]"
@@ -21,8 +21,8 @@
             </option>
           </select>
           <NumberInput
-            v-if="loopGap === 'Custom'"
-            v-model="loopGapCustom"
+            v-if="settings.loopGap === 'Custom'"
+            v-model="settings.loopGapCustom"
             :min="1"
             :max="8"
           />
@@ -31,7 +31,7 @@
       <hr />
       <div class="flex w-full justify-between items-center">
         <label for="auto-shuffle">Auto Shuffle </label>
-        <toggle-switch id="auto-shuffle" v-model="autoShuffle"></toggle-switch>
+        <toggle-switch id="auto-shuffle" v-model="settings.autoShuffle"></toggle-switch>
       </div>
       <!--pitch settings-->
       <h3 :class="sectionHeaderClasses">Pitch Tracking</h3>
@@ -39,11 +39,15 @@
         <label for="minDetectionVolume">Volume Detection</label>
         <div class="flex items-center">
           <div class="flex w-1/3 items-center gap-2">
-            <input type="radio" v-model="minDetectionVolume" value="sensitive" />
+            <input
+              type="radio"
+              v-model="settings.minDetectionVolume"
+              value="sensitive"
+            />
             Sensitive
           </div>
           <div class="flex w-1/3 items-center gap-2">
-            <input type="radio" v-model="minDetectionVolume" value="normal" />
+            <input type="radio" v-model="settings.minDetectionVolume" value="normal" />
             Normal
           </div>
         </div>
@@ -52,15 +56,15 @@
       <label class="block font-medium mb-3">Pitch Tolerance</label>
       <div class="flex justify-between items-center">
         <div class="flex items-center gap-2">
-          <input type="radio" v-model="pitchToleranceLevel" value="loose" />
+          <input type="radio" v-model="settings.pitchToleranceLevel" value="loose" />
           🎵 Loose
         </div>
         <div class="flex items-center gap-2">
-          <input type="radio" v-model="pitchToleranceLevel" value="standard" />
+          <input type="radio" v-model="settings.pitchToleranceLevel" value="standard" />
           🎶 Standard
         </div>
         <div class="flex items-center gap-2">
-          <input type="radio" v-model="pitchToleranceLevel" value="precise" />
+          <input type="radio" v-model="settings.pitchToleranceLevel" value="precise" />
           🎼 Precise
         </div>
       </div>
@@ -71,17 +75,10 @@
 <script setup lang="ts">
 import ModalWrapper from "./reuseable/ModalWrapper.vue";
 import { LoopGapOption } from "../types";
-import {
-  loopGap,
-  loopGapCustom,
-  minDetectionVolume,
-  pitchToleranceLevel,
-} from "../GlobalState";
+import { settings } from "../GlobalState";
 import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
-import { ref } from "vue";
 import NumberInput from "./reuseable/NumberInput.vue";
 
-const autoShuffle = ref(false);
 const sectionHeaderClasses: string =
   "bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
