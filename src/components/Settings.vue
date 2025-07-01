@@ -10,7 +10,7 @@
             v-model="loopGap"
             name="loop-gap"
             id="loop-gap"
-            class="w-fit px-1"
+            class="w-fit px-1 h-[42px]"
           >
             <option
               v-for="option in LoopGapOptions"
