@@ -1,6 +1,6 @@
 import { computed, reactive, ref, watch } from "vue";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
-import { LoopGapOption, PlayBackOptions, ScaleConfig, WorkoutConfig, Settings } from "./types";
+import { PlayBackOptions, ScaleConfig, WorkoutConfig, Settings } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
 
 const { getScale } = scaleManipulator();
