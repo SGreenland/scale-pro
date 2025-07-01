@@ -2,22 +2,8 @@
   <div class="flex flex-col">
     <div class="flex">
       <label>Quick Transpose</label>
-      <!--info icon with tooltip-->
-      <div class="relative">
-        <FontAwesomeIcon
-          ref="transposeInfoIcon"
-          :icon="faInfoCircle"
-          class="text-indigo-500 ps-1 lg:text-lg text-sm dark:text-white"
-        />
-        <Tooltip :trigger="transposeInfoIcon">
-          <p class="text-sm">
-            Click the arrows to transpose the scale up or down by a semitone.
-            Shift-click to transpose by an octave. (Press and hold on mobile)
-          </p>
-        </Tooltip>
-      </div>
     </div>
-    <div class="flex gap-2">
+    <div class="flex gap-2 items-center">
       <button
         class="inverted-btn size-[30px] flex items-center justify-center"
         @click="(e) => handleClick('down', e)"
@@ -37,6 +23,20 @@
           size="2xl"
         />
       </button>
+      <!--info icon with tooltip-->
+      <div class="relative">
+        <FontAwesomeIcon
+          ref="transposeInfoIcon"
+          :icon="faInfoCircle"
+          class="text-indigo-500 ps-1 lg:text-xl text-lg dark:text-white"
+        />
+        <Tooltip :trigger="transposeInfoIcon">
+          <p class="text-sm">
+            Click the arrows to transpose the scale up or down by a semitone.
+            Shift-click to transpose by an octave. (Press and hold on mobile)
+          </p>
+        </Tooltip>
+      </div>
     </div>
   </div>
 </template>

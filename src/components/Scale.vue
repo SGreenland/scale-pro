@@ -91,11 +91,11 @@
         <FontAwesomeIcon
           v-if="!pitchData.length"
           :icon="faCircleQuestion"
-          class="text-indigo-500 hover:text-indigo-600 cursor-pointer"
+          class="text-indigo-500 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-200 cursor-pointer"
           @click="showInfoModal = true"
           size="xl"
         />
-        <button :disabled="!isPitchTracking && pitchData.length > 0" class="flex items-center gap-2" @click="togglePitchTracking">
+        <button :disabled="!isPitchTracking && pitchData.length > 0" class="flex items-center gap-2 dark:shadow-sm dark:shadow-indigo-200" @click="togglePitchTracking">
           <div
             class="bg-red-500 size-4 rounded-full"
             :class="{ 'animate-[radar_1s_ease-in-out_infinite]': isPitchTracking }"
