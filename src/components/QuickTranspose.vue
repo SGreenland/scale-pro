@@ -28,7 +28,7 @@
         <FontAwesomeIcon
           ref="transposeInfoIcon"
           :icon="faInfoCircle"
-          class="text-indigo-500 ps-1 lg:text-xl text-lg dark:text-white"
+          class="text-indigo-950 ps-1 lg:text-xl text-lg dark:text-white"
         />
         <Tooltip :trigger="transposeInfoIcon">
           <p class="text-sm">

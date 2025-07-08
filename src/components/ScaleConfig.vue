@@ -77,19 +77,19 @@
         </div>
       </div>
     </div>
-    <div class="relative flex mt-3 gap-4 items-center">
+    <div class="relative flex mt-3 gap-2 items-center">
        <quick-transpose
         v-show="!props.workoutMode"
         :availableRootNotes="availableRootNotes"
       />
-      <div class="flex flex-col items-start">
+      <div class="flex flex-col items-start border-l dark:border-white border-indigo-950 pl-2">
         <label>Grid Type</label>
         <div class="flex gap-2 max-sm:text-sm">
-            <div @click="() => selectedGridType = 'Guitar tab'" role="button" class="border py-1 px-2 rounded-lg" :class="{'bg-teal-200 border-teal-900 dark:text-[#242424]' : selectedGridType == 'Guitar tab'}">Guitar Tab</div>
-            <div @click="() => selectedGridType = 'Piano roll'" role="button" class="border py-1 px-2 rounded-lg" :class="{'bg-teal-200 border-teal-900 dark:text-[#242424]' : selectedGridType == 'Piano roll'}">Piano Roll</div>
+            <div @click="() => selectedGridType = 'Guitar tab'" role="button" class="center-xy border py-1 px-2 rounded-lg h-[30px]" :class="{'bg-teal-200 border-teal-900 dark:text-[#242424]' : selectedGridType == 'Guitar tab'}">Guitar Tab</div>
+            <div @click="() => selectedGridType = 'Piano roll'" role="button" class="center-xy border py-1 px-2 rounded-lg h-[30px]" :class="{'bg-teal-200 border-teal-900 dark:text-[#242424]' : selectedGridType == 'Piano roll'}">Piano Roll</div>
         </div>
       </div>
-        <font-awesome-icon class="absolute right-0 bottom-2" role="button" @click="showSettings = !showSettings" size="lg" :icon="faCog"></font-awesome-icon>
+        <font-awesome-icon class="absolute right-0 bottom-1 text-indigo-950 dark:text-white" role="button" @click="showSettings = !showSettings" size="xl" :icon="faCog"></font-awesome-icon>
       <settings @close="showSettings = false" v-if="showSettings"></settings>
     </div>
   </div>

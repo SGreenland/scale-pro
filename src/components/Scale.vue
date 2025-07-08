@@ -88,13 +88,6 @@
         Find Alt. Frets
       </button>
       <div v-else class="mt-4 flex items-center gap-2 max-sm:mx-auto">
-        <FontAwesomeIcon
-          v-if="!pitchData.length"
-          :icon="faCircleQuestion"
-          class="text-indigo-500 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-200 cursor-pointer"
-          @click="showInfoModal = true"
-          size="xl"
-        />
         <button :disabled="!isPitchTracking && pitchData.length > 0" class="flex items-center gap-2 dark:shadow-sm dark:shadow-indigo-200" @click="togglePitchTracking">
           <div
             class="bg-red-500 size-4 rounded-full"
@@ -102,6 +95,13 @@
           ></div>
           {{ (isPitchTracking ? "Stop " : "Start ") + "Pitch Tracking" }}
         </button>
+        <FontAwesomeIcon
+          v-if="!pitchData.length"
+          :icon="faInfoCircle"
+          class="text-indigo-500 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-200 cursor-pointer"
+          @click="showInfoModal = true"
+          size="xl"
+        />
         <button
           class="inverted-btn rounded-full"
           v-if="!isPitchTracking && pitchData.length"
@@ -115,6 +115,8 @@
 </template>
 
 <script setup lang="ts">
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import DragSelect, { DSInputElement } from "dragselect";
 import {
   computed,
@@ -126,25 +128,23 @@ import {
 } from "vue";
 import {
   computedLoopGap,
+  computedMaxCents,
   isLoadingAudio,
   playBackOptions,
   scaleConfig,
   scaleToDisplay,
   selectedGridType,
+  settings,
   tempo,
   validGtrPatternsForCurrentScale,
   workoutConfig,
-  computedMaxCents,
-  settings,
 } from "../GlobalState";
 import { notes, scales } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
 import { usePitchTracker } from "../composables/usePitchTracker";
-import { Note } from "../types";
-import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
 import useReorderNotes from "../composables/useReorderNotes";
+import { Note } from "../types";
+import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
 
 const audioContext = new window.AudioContext();
 const { pitchData, startTracking, stopTracking } =
@@ -493,6 +493,7 @@ const scheduleNotes = (startTime: number) => {
         currentNoteIndex = noteSelection.value?.length
           ? scaleToDisplay.value.indexOf(noteSelection.value[0])
           : 0;
+        setTimeout(() => settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)), computedLoopGap.value * animationInterval.value * 1000);
       } else {
         audioIsPlaying.value = false;
         break;
@@ -507,7 +508,6 @@ const scheduleNotes = (startTime: number) => {
             1)
     ) {
       if (playBackOptions.isRoundTrip && playBackOptions.shouldLoop) {
-        settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value));
         currentTime += animationInterval.value * computedLoopGap.value;
         currentDirection = 1;
         currentNoteIndex = noteSelection.value.length
@@ -517,9 +517,7 @@ const scheduleNotes = (startTime: number) => {
           : !computedLoopGap.value
           ? 1
           : 0;
-      } else if (playBackOptions.shouldLoop) {
-        settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value));
-        currentNoteIndex = scaleToDisplay.value.length - 1;
+        setTimeout(() => settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)), computedLoopGap.value * animationInterval.value * 1000);
       } else {
         audioIsPlaying.value = false;
         break;
