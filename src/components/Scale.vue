@@ -7,13 +7,13 @@
     ref="dragSelectArea"
   >
     <PitchAccuracyModal
-    v-if="showPitchModal && !showInfoModal"
-    :isNoData="!pitchData.length"
-    :averageDeviation="pitchStats.averageDeviation"
-    :inTunePercentage="pitchStats.inTunePercentage"
-    @close="showPitchModal = false"
-  />
-   <PitchTrackingInfoModal
+      v-if="showPitchModal && !showInfoModal"
+      :isNoData="!pitchData.length"
+      :averageDeviation="pitchStats.averageDeviation"
+      :inTunePercentage="pitchStats.inTunePercentage"
+      @close="showPitchModal = false"
+    />
+    <PitchTrackingInfoModal
       v-if="showInfoModal && !showPitchModal"
       @close="showInfoModal = false"
     />
@@ -39,15 +39,34 @@
     >
       <div
         class="grid col-[2_/_-1] row-span-full"
-        :class="{'grid-pattern': selectedGridType === 'Piano roll'}"
+        :class="{ 'grid-pattern': selectedGridType === 'Piano roll' }"
         :style="{
           backgroundSize: `${cellWidth}px 100%`,
         }"
       ></div>
       <div
+        v-if="ghostNote"
+        class="fixed pointer-events-none z-50 rounded-2xl px-3 py-2 bg-sky-200 border border-indigo-500 shadow-lg text-black dark:bg-cyan-700 dark:text-white opacity-50"
+        :style="{
+          top: ghostNote.y + 'px',
+          left: ghostNote.x + 'px',
+          transform: 'translate(-50%, -50%)',
+          position: 'fixed',
+          width: ghostNote.width + 'px',
+          height: ghostNote.height + 'px',
+        }"
+      >
+        {{ ghostNote.noteContent }}
+      </div>
+
+      <div
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="noteElements"
+        draggable="true"
+        @dragend="handleDragOrTouchEnd"
+        @touchstart="handleTouchStart($event, note.name)"
+        @touchend="handleDragOrTouchEnd"
         @click="playNote(index, 0)"
         :id="index.toString()"
         class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
@@ -63,7 +82,7 @@
           gridColumnStart: index + 1,
         }"
       >
-        <span class="select-none"
+        <span class="select-none" draggable="false"
           >{{
             selectedGridType !== "Guitar tab"
               ? getNoteName(note.name)
@@ -88,10 +107,16 @@
         Find Alt. Frets
       </button>
       <div v-else class="mt-4 flex items-center gap-2 max-sm:mx-auto">
-        <button :disabled="!isPitchTracking && pitchData.length > 0" class="flex items-center gap-2 dark:shadow-sm dark:shadow-indigo-200" @click="togglePitchTracking">
+        <button
+          :disabled="!isPitchTracking && pitchData.length > 0"
+          class="flex items-center gap-2 dark:shadow-sm dark:shadow-indigo-200"
+          @click="togglePitchTracking"
+        >
           <div
             class="bg-red-500 size-4 rounded-full"
-            :class="{ 'animate-[radar_1s_ease-in-out_infinite]': isPitchTracking }"
+            :class="{
+              'animate-[radar_1s_ease-in-out_infinite]': isPitchTracking,
+            }"
           ></div>
           {{ (isPitchTracking ? "Stop " : "Start ") + "Pitch Tracking" }}
         </button>
@@ -145,6 +170,114 @@ import { usePitchTracker } from "../composables/usePitchTracker";
 import useReorderNotes from "../composables/useReorderNotes";
 import { Note } from "../types";
 import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
+
+const draggedNoteId = ref<string | null>(null);
+const ghostNote = ref<{
+  noteContent: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+} | null>(null);
+
+function handleTouchStart(event: TouchEvent, noteContent: string) {
+  const touch = event.touches[0];
+  let target = event.target as HTMLElement;
+  if (target.tagName === 'SPAN') {
+    // If the target is a span, get its parent element
+    const parent = target.parentElement;
+    if (parent) {
+      target = parent;
+    }
+  }
+  const rect = target.getBoundingClientRect();
+  ghostNote.value = {
+    noteContent,
+    x: touch.clientX,
+    y: touch.clientY,
+    width: rect.width,
+    height: rect.height,
+  };
+  if (target?.id) {
+    draggedNoteId.value = target.id;
+  }
+  window.addEventListener("touchmove", handleTouchMove, { passive: false });
+  window.addEventListener("touchend", handleDragOrTouchEnd);
+}
+
+function handleTouchMove(event: TouchEvent) {
+  if (!ghostNote.value) return;
+  const touch = event.touches[0];
+  ghostNote.value.x = touch.clientX;
+  ghostNote.value.y = touch.clientY;
+
+  event.preventDefault(); // prevents unwanted scrolling
+}
+
+function handleDragOrTouchEnd(event: DragEvent | TouchEvent) {
+  let clientX = 0;
+  let clientY = 0;
+  let targetId = "";
+
+  if (event instanceof DragEvent) {
+    clientX = event.clientX;
+    clientY = event.clientY;
+    targetId = (event.target as HTMLElement)?.id ?? "";
+  } else if (event instanceof TouchEvent) {
+    const touch = event.changedTouches[0];
+    clientX = touch.clientX;
+    clientY = touch.clientY;
+    targetId = draggedNoteId.value ?? ""; // Use stored ID
+  } else {
+    return;
+  }
+
+  if (!targetId) return;
+
+  const closestNote = scaleToDisplay.value.reduce(
+    (closest, note, index) => {
+      const noteElement = document.getElementById(index.toString());
+      if (!noteElement) return closest;
+
+      const rect = noteElement.getBoundingClientRect();
+      const distance = Math.sqrt(
+        Math.pow(clientX - (rect.left + rect.width / 2), 2) +
+          Math.pow(clientY - (rect.top + rect.height / 2), 2)
+      );
+
+      if (distance < closest.distance) {
+        return { note, element: noteElement, distance };
+      }
+      return closest;
+    },
+    {
+      note: null as Note | null,
+      element: null as HTMLElement | null,
+      distance: Infinity,
+    }
+  );
+
+  if (closestNote.element) {
+    const targetIndex = parseInt(targetId);
+    const closestIndex = parseInt(closestNote.element.id);
+
+    const order = scaleConfig.noteOrder
+      ? [...scaleConfig.noteOrder]
+      : scaleToDisplay.value.map((note) => note.position);
+
+    [order[targetIndex], order[closestIndex]] = [
+      order[closestIndex],
+      order[targetIndex],
+    ];
+
+    scaleConfig.noteOrder = order;
+  }
+
+  draggedNoteId.value = null;
+  ghostNote.value = null;
+  window.removeEventListener("touchmove", handleTouchMove);
+  window.removeEventListener("touchend", handleDragOrTouchEnd);
+}
 
 const audioContext = new window.AudioContext();
 const { pitchData, startTracking, stopTracking } =
@@ -291,7 +424,7 @@ function togglePitchTracking() {
 
     // Define time and cents thresholds
     // const sampleDuration = 0.06;
-    const maxCents: number = computedMaxCents.value
+    const maxCents: number = computedMaxCents.value;
 
     const noteBuckets = new Map<
       string,
@@ -345,11 +478,10 @@ function togglePitchTracking() {
       perNote.reduce((sum, n) => sum + n.avgAccuracy * n.duration, 0) /
       totalDuration;
 
-    const noteCoverage =
-      (perNote.length / scaleToDisplay.value.length) * 100;
+    const noteCoverage = (perNote.length / scaleToDisplay.value.length) * 100;
 
     const finalInTuneScore = Math.round(
-      (weightedAccuracy * 0.7 + noteCoverage / 100 * 0.3) * 100
+      (weightedAccuracy * 0.7 + (noteCoverage / 100) * 0.3) * 100
     );
 
     // Use this for a simple visual modal now
@@ -361,7 +493,6 @@ function togglePitchTracking() {
     showPitchModal.value = true;
   }
 }
-
 
 function startTrackingWithAnchor() {
   audioContext.resume();
@@ -493,7 +624,12 @@ const scheduleNotes = (startTime: number) => {
         currentNoteIndex = noteSelection.value?.length
           ? scaleToDisplay.value.indexOf(noteSelection.value[0])
           : 0;
-        setTimeout(() => settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)), computedLoopGap.value * animationInterval.value * 1000);
+        setTimeout(
+          () =>
+            settings.autoShuffle &&
+            (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)),
+          computedLoopGap.value * animationInterval.value * 1000
+        );
       } else {
         audioIsPlaying.value = false;
         break;
@@ -517,7 +653,12 @@ const scheduleNotes = (startTime: number) => {
           : !computedLoopGap.value
           ? 1
           : 0;
-        setTimeout(() => settings.autoShuffle && (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)), computedLoopGap.value * animationInterval.value * 1000);
+        setTimeout(
+          () =>
+            settings.autoShuffle &&
+            (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)),
+          computedLoopGap.value * animationInterval.value * 1000
+        );
       } else {
         audioIsPlaying.value = false;
         break;
