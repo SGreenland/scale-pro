@@ -5,6 +5,8 @@
       'pt-4': selectedGridType === 'Guitar tab',
     }"
     ref="dragSelectArea"
+    @dragover.prevent
+    @drop.prevent
   >
     <PitchAccuracyModal
       v-if="showPitchModal && !showInfoModal"
@@ -46,7 +48,7 @@
       ></div>
       <div
         v-if="ghostNote"
-        class="fixed pointer-events-none z-50 rounded-2xl px-3 py-2 bg-sky-200 border border-indigo-500 shadow-lg text-black dark:bg-cyan-700 dark:text-white opacity-50"
+        class="fixed pointer-events-none z-50 rounded-2xl px-3 py-2 bg-sky-200 border border-indigo-500 shadow-lg text-black dark:bg-cyan-700 dark:text-white opacity-80"
         :style="{
           top: ghostNote.y + 'px',
           left: ghostNote.x + 'px',
@@ -54,6 +56,7 @@
           position: 'fixed',
           width: ghostNote.width + 'px',
           height: ghostNote.height + 'px',
+          scale: '1.1',
         }"
       >
         {{ ghostNote.noteContent }}
