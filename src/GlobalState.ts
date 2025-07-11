@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch } from "vue";
+import { computed, nextTick, reactive, ref, watch } from "vue";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
 import { PlayBackOptions, ScaleConfig, WorkoutConfig, Settings } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
@@ -101,6 +101,13 @@ watch(
     scaleConfig.currentGtrPositions = []
   }
 );
+
+watch(scaleToDisplay, (newScale, oldScale) => {
+  if (newScale.length !== oldScale.length) {
+    // Reset the note order if the scale length changes
+    scaleConfig.noteOrder = null;
+  }
+})
 
 export const workoutConfig = reactive<WorkoutConfig>({
   startNote: "C4",
