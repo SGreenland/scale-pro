@@ -46,8 +46,8 @@
           <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
             This may happen if the note isn’t held steadily, or if there’s
             background noise. Sighing or exhaling can also cause erratic
-            readings. Try singing or playing more smoothly, or increase the
-            pitch tolerance in the settings.
+            readings. Experiment with different distances from the microphone to find the sweet spot,
+            and try not to 'slide' into notes.
           </p>
         </details>
 
@@ -57,8 +57,7 @@
           </summary>
           <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
             Even small pitch shifts can affect the score. Check that you're
-            singing or playing in the correct octave and consider lowering the
-            difficulty level for more leniency.
+            singing or playing in the correct octave and consider setting the pitch tolerance to 'Loose' for a more forgiving evaluation.
           </p>
         </details>
 
