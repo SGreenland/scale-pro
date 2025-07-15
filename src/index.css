@@ -148,7 +148,7 @@ label {
 /* less inline padding for #app on mobile */
 @media (max-width: 640px) {
   #app {
-    padding: 0.5rem;
+    padding: 0.25rem;
   }
 }
 

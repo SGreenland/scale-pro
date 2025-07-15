@@ -3,6 +3,7 @@
     <button
       @click="toggleContent($event)"
       class="flex relative w-full items-center justify-center"
+      :class="buttonClass"
     >
       <div class="absolute left-3">
         <slot name="left-icon" />
@@ -23,6 +24,7 @@ import { ref } from "vue";
 
 const props = withDefaults(defineProps<{
   buttonText: string;
+  buttonClass?: string;
   dropUp?: boolean;
   closeOnClick?: boolean;
 }>(),{

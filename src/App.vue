@@ -6,6 +6,7 @@ import ScaleConfig from "./components/ScaleConfig.vue";
 import TempoSelect from "./components/TempoSelect.vue";
 import WorkoutConfig from "./components/WorkoutConfig.vue";
 import Tabs from "./components/reuseable/Tabs.vue";
+import Menu from "./components/Menu.vue";
 
 import { ref, watch } from "vue";
 
@@ -46,6 +47,7 @@ watch(() => tabsComponent.value.currentTab, () => {
           <WorkoutConfig :workout-in-progress="scaleComponent.workoutInProgress" />
       </template>
     </tabs>
+    <Menu />
     <scale-config
       class="lg:w-2/3 m-auto"
       v-show="tabsComponent.currentTab === 'practice'"
