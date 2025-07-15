@@ -56,7 +56,7 @@
           position: 'fixed',
           width: ghostNote.width + 'px',
           height: ghostNote.height + 'px',
-          scale: '1.1',
+          scale: '1.2',
         }"
       >
         {{ ghostNote.noteContent }}
