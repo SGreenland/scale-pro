@@ -1,19 +1,20 @@
 <template>
   <div class="flex flex-col">
-    <div class="flex">
+    <!-- <div class="flex">
       <label>Quick Transpose</label>
-    </div>
+    </div> -->
     <div class="flex gap-2 items-center">
       <button
-        class="inverted-btn size-[30px] flex items-center justify-center"
+        class="inverted-btn w-10 input flex items-center justify-center"
         @click="(e) => handleClick('down', e)"
         @touchstart="() => handleLongPressStart('down')"
         @touchend="cancelHold"
       >
         <FontAwesomeIcon :icon="faCaretDown" size="2xl" />
       </button>
+      <slot></slot>
       <button
-        class="inverted-btn size-[30px] flex items-center justify-center"
+        class="inverted-btn w-10 input flex items-center justify-center"
         @click="(e) => handleClick('up', e)"
         @touchstart="() => handleLongPressStart('up')"
         @touchend="cancelHold"

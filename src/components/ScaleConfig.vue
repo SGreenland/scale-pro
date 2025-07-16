@@ -4,11 +4,15 @@
       <div class="flex items-center gap-2 lg:w-1/2 w-full">
         <div class="flex flex-col w-fit h-full justify-end items-start">
           <label for="note">Root Note</label>
+          <quick-transpose
+            v-show="!props.workoutMode"
+            :availableRootNotes="availableRootNotes">
           <select id="note" v-model="scaleConfig.selectedNote">
             <option v-for="(note, index) in availableRootNotes" :key="index">
               {{ note.name }}
             </option>
           </select>
+          </quick-transpose>
         </div>
         <div class="flex flex-col w-full items-start">
           <text-carousel
@@ -77,7 +81,7 @@
         </div>
       </div>
     </div>
-    <div class="relative flex mt-3 gap-2 items-center">
+    <!-- <div class="relative flex mt-3 gap-2 items-center">
        <quick-transpose
         v-show="!props.workoutMode"
         :availableRootNotes="availableRootNotes"
@@ -91,7 +95,7 @@
       </div>
         <font-awesome-icon class="absolute right-0 bottom-1 text-indigo-950 dark:text-white" role="button" @click="showSettings = !showSettings" size="xl" :icon="faCog"></font-awesome-icon>
       <settings @close="showSettings = false" v-if="showSettings"></settings>
-    </div>
+    </div> -->
   </div>
 </template>
 
