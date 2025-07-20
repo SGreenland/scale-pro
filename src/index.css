@@ -17,6 +17,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* index.css */
+html.dark body {
+  background-color: #111;
+  color: #eee;
+}
+
+html.dark input,
+html.dark select {
+  background-color: #222;
+  color: #fff;
+  border-color: #444;
+}
+
+
 a {
   font-weight: 500;
   color: #646cff;

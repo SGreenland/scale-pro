@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch} from "vue";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
 import { PlayBackOptions, ScaleConfig, Settings, WorkoutConfig } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
@@ -134,12 +134,29 @@ export const computedLoopGap = computed(() => {
 
 //settings
 export const settings = reactive<Settings>({
+  theme: 'auto',
   loopGap: 'None',
   loopGapCustom: 1,
   autoShuffle: false,
   minDetectionVolume: 'normal',
   pitchToleranceLevel: 'standard',
 });
+
+export const computedTheme = computed(() => {
+  return settings.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : settings.theme;
+});
+
+watch(() => settings.theme, () => {
+  const html = document.documentElement;
+
+  if (computedTheme.value === 'dark') {
+    html.classList.add('dark');
+  } else {
+    html.classList.remove('dark');
+  }
+}, { immediate: true });
+
+
 
 const minDetectionVolumeMap = {
   sensitive: 0.03,

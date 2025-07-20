@@ -18,6 +18,7 @@
         <li>Workout Mode (Beta)</li>
         <li>My Pitch Data</li>
         <li>My Account</li>
+        <router-link to="/settings">Settings</router-link>
       </ul>
     </div>
   </div>
@@ -27,6 +28,7 @@
 import { ref } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { RouterLink } from "vue-router";
 
 const isOpen = ref(false);
 </script>

@@ -54,6 +54,7 @@ interface IntervalMap {
 }
 
 interface Settings {
+  theme: "auto" | "dark" | "light";
   loopGap: LoopGapOption;
   loopGapCustom: number;
   autoShuffle: boolean;

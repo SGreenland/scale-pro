@@ -9,8 +9,9 @@ export default {
       colors: {
         black: '#1a1a1a',
       }
-    },
+    }
   },
+  darkMode: 'class', // Enable dark mode support
   plugins: [],
 }
 

@@ -900,6 +900,20 @@ defineExpose({
   background: linear-gradient(90deg, white, 1px, transparent 1px);
 }
 
+.dark .piano-roll {
+  background: repeating-linear-gradient(
+    180deg,
+    #1a202c,
+    #1a202c 1.8rem,
+    #2d3748 1.8rem,
+    #2d3748 3.6rem
+  );
+}
+
+.dark .grid-pattern {
+  background: linear-gradient(90deg, rgb(17 24 39), 1px, transparent 1px);
+}
+
 @media (prefers-color-scheme: dark) {
   .piano-roll {
     background: repeating-linear-gradient(
