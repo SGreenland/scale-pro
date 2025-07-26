@@ -54,7 +54,10 @@ interface IntervalMap {
 }
 
 interface Settings {
+  startingRootNote: string;
+  startingScale: keyof Scales;
   theme: "auto" | "dark" | "light";
+  gridType: "Guitar tab" | "Piano roll";
   loopGap: LoopGapOption;
   loopGapCustom: number;
   autoShuffle: boolean;

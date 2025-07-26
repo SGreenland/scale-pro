@@ -1,6 +1,9 @@
 <template>
   <details>
-    <summary class="flex justify-between items-center w-full p-2 border cursor-pointer" :class="extraSummaryClasses">
+    <summary
+      class="flex justify-between items-center w-full p-2 border cursor-pointer"
+      :class="extraSummaryClasses"
+    >
       <h3>{{ title }}</h3>
       <font-awesome-icon :icon="faChevronDown"></font-awesome-icon>
     </summary>
@@ -12,7 +15,7 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { defineProps } from "vue";
-const props = defineProps<{
+defineProps<{
   title: string;
   extraSummaryClasses?: string;
 }>();

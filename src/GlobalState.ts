@@ -77,8 +77,6 @@ export const scaleConfig = reactive<ScaleConfig>({
 
 export const tempo = ref(120);
 
-export const selectedGridType = ref<'Guitar tab'|'Piano roll'>('Piano roll');
-
 export const selectedPreset = ref<number[]|undefined>();
 
 export const scaleToDisplay =  computed(
@@ -132,9 +130,14 @@ export const computedLoopGap = computed(() => {
   }
 });
 
+
+
 //settings
 export const settings = reactive<Settings>({
+  startingRootNote: "C3",
+  startingScale: "Major",
   theme: 'auto',
+  gridType: 'Piano roll',
   loopGap: 'None',
   loopGapCustom: 1,
   autoShuffle: false,

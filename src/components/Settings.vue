@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-col h-screen p-4 lg:w-1/2 w-full mt-4 m-auto rounded border shadow"
+    class="flex-col h-fit p-4 lg:w-1/2 w-full mt-4 m-auto rounded border shadow"
   >
     <div class="w-full text-start">
       <div class="flex relative items-center py-4 border-b">
@@ -12,11 +12,26 @@
         ></font-awesome-icon>
         <h2 class="text-2xl absolute w-fit left-0 right-0 m-auto">Settings</h2>
       </div>
+      <accordion-single title="General" :extra-summary-classes="sectionHeaderClasses">
+        <div :class="optionClasses">
+          <label for="startingNote">Starting Note</label>
+          <root-note-selector v-model="settings.startingRootNote"></root-note-selector>
+        </div>
+        <hr />
+        <div :class="optionClasses">
+          <label for="startingScale">Starting Scale</label>
+          <select v-model="settings.startingScale" name="startingScale" id="startingScale">
+            <option v-for="scale in Object.keys(scales)" :value="scale">
+              {{ scale }}
+            </option>
+          </select>
+        </div>
+      </accordion-single>
       <accordion-single
         title="Display"
         :extra-summary-classes="sectionHeaderClasses"
-        >
-        <div class="grid gap-2 mx-2 mb-2">
+      >
+        <div :class="optionClasses">
           <div class="flex justify-between items-center mt-2">
             <label for="theme">Theme</label>
             <select
@@ -31,7 +46,15 @@
             </select>
           </div>
         </div>
-
+        <hr>
+        <div :class="optionClasses">
+          <label for="grid-type">Grid Type</label>
+          <custom-radio-chips
+            id="grid-type"
+            :options="['Guitar tab', 'Piano roll']"
+            v-model="settings.gridType"
+          ></custom-radio-chips>
+        </div>
       </accordion-single>
 
       <accordion-single
@@ -78,7 +101,7 @@
         :extra-summary-classes="sectionHeaderClasses"
       >
         <div>
-          <div class="grid gap-2 mx-2 mb-2">
+          <div :class="optionClasses">
             <label for="minDetectionVolume">Volume Detection</label>
             <div class="flex items-center">
               <div class="flex w-1/3 items-center gap-2">
@@ -100,7 +123,7 @@
             </div>
           </div>
           <hr />
-          <div class="grid gap-2 mx-2 mb-2">
+          <div :class="optionClasses">
             <label>Pitch Tolerance</label>
             <div class="flex justify-between items-center mx-2">
               <div class="flex items-center gap-2">
@@ -143,8 +166,12 @@ import { LoopGapOption } from "../types";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import NumberInput from "./reuseable/NumberInput.vue";
 import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
+import CustomRadioChips from "./reuseable/CustomRadioChips.vue";
+import { scales } from "../NotesAndScales";
+import RootNoteSelector from "./RootNoteSelector.vue";
 
 const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50`;
+const optionClasses: string = "grid gap-2 mx-2 mb-2";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
 function goBack() {
   window.history.back();

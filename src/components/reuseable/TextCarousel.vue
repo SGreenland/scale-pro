@@ -32,14 +32,34 @@ const props = defineProps<{
 
 const itemsRef = ref<string[]>(props.items)
 
+const emit = defineEmits<{
+    (event: 'item-changed', item: string): void;
+}>();
+
+
+const setActiveItem = (item: string) => {
+    if (itemsRef.value[0] !== item) {
+        //swap the first itme with the passed item
+        const index = itemsRef.value.indexOf(item);
+        if (index !== -1) {
+            const temp = itemsRef.value[0];
+            itemsRef.value[0] = itemsRef.value[index];
+            itemsRef.value[index] = temp;
+        }
+        emit('item-changed', itemsRef.value[0]);
+    }
+};
+
 const shiftRight = () => {
     itemsRef.value.push(itemsRef.value.shift() as string);
+    emit('item-changed', itemsRef.value[0]);
 };
 
 const shiftLeft = () => {
     itemsRef.value.unshift(itemsRef.value.pop() as string);
+    emit('item-changed', itemsRef.value[0]);
 };
 
-defineExpose({ itemsRef });
+defineExpose({ itemsRef, setActiveItem });
 
 </script>

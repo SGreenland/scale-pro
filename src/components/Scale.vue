@@ -2,7 +2,7 @@
   <div
     class="w-full relative"
     :class="{
-      'pt-4': selectedGridType === 'Guitar tab',
+      'pt-4': settings.gridType === 'Guitar tab',
     }"
     ref="dragSelectArea"
     @dragover.prevent
@@ -22,7 +22,7 @@
     <!-- for each grid cell create a border top if guitar mode-->
     <div
       class="lg:w-2/3 w-full absolute left-0 right-0 m-auto z-10"
-      v-if="selectedGridType === 'Guitar tab'"
+      v-if="settings.gridType === 'Guitar tab'"
     >
       <div
         class="border-t border-t-gray-600 h-[1.8rem]"
@@ -33,7 +33,7 @@
     </div>
     <div
       class="relative grid max-sm:text-xs lg:w-2/3 w-full m-auto"
-      :class="selectedGridType === 'Guitar tab' ? 'fretboard' : 'piano-roll'"
+      :class="settings.gridType === 'Guitar tab' ? 'fretboard' : 'piano-roll'"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${gridRows}, minmax(0, 1.8rem))`,
@@ -41,7 +41,7 @@
     >
       <div
         class="grid col-[2_/_-1] row-span-full"
-        :class="{ 'grid-pattern': selectedGridType === 'Piano roll' }"
+        :class="{ 'grid-pattern': settings.gridType === 'Piano roll' }"
         :style="{
           backgroundSize: `${cellWidth}px 100%`,
         }"
@@ -75,11 +75,11 @@
         class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-cyan-700 dark:text-white"
         :class="{
           'relative bottom-4 w-1/2 h-5/6 m-auto z-50':
-            selectedGridType === 'Guitar tab',
+            settings.gridType === 'Guitar tab',
         }"
         :style="{
           gridRowStart:
-            selectedGridType !== 'Guitar tab'
+            settings.gridType !== 'Guitar tab'
               ? gridRows - scales[scaleConfig.selectedScale][note.position]
               : note.guitarPositions[note.currentGtrPositionIndex]['string'],
           gridColumnStart: index + 1,
@@ -87,14 +87,14 @@
       >
         <span class="select-none" draggable="false"
           >{{
-            selectedGridType !== "Guitar tab"
+            settings.gridType !== "Guitar tab"
               ? getNoteName(note.name)
               : note.guitarPositions[note.currentGtrPositionIndex]["fret"]
           }}
         </span>
       </div>
       <canvas
-        v-if="selectedGridType === 'Piano roll'"
+        v-if="settings.gridType === 'Piano roll'"
         ref="pitchCanvas"
         class="absolute top-0 left-0 w-full h-full pointer-events-none z-50"
       >
@@ -102,7 +102,7 @@
     </div>
     <div class="lg:w-2/3 w-full m-auto flex justify-end">
       <button
-        v-if="selectedGridType == 'Guitar tab'"
+        v-if="settings.gridType == 'Guitar tab'"
         :disabled="scaleConfig.noteOrder == null ? false : true"
         class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full"
         @click="findAlternateFretPositions"
@@ -161,7 +161,6 @@ import {
   playBackOptions,
   scaleConfig,
   scaleToDisplay,
-  selectedGridType,
   settings,
   tempo,
   validGtrPatternsForCurrentScale,
@@ -292,7 +291,7 @@ const { shuffle } = useReorderNotes();
 // }>();
 
 const gridRows = computed(() => {
-  return selectedGridType.value !== "Guitar tab" ? 13 : 6;
+  return settings.gridType !== "Guitar tab" ? 13 : 6;
 });
 
 const pitchCanvas = ref<HTMLCanvasElement | null>(null);
@@ -507,7 +506,7 @@ function drawPitchCurve() {
   if (
     !pitchCanvas.value ||
     !scaleToDisplay.value.length ||
-    selectedGridType.value !== "Piano roll"
+    settings.gridType !== "Piano roll"
   ) {
     console.warn("Pitch canvas not ready or no pitch data available.");
     return;
@@ -576,13 +575,13 @@ function clearPitchData() {
 }
 
 watch(
-  () => [scaleToDisplay.value, selectedGridType.value],
+  () => [scaleToDisplay.value, settings.gridType],
   () => {
     preloadAudio();
     ds.value?.clearSelection();
     nextTick(() => {
       cellWidth.value =
-        selectedGridType.value !== "Guitar tab"
+        settings.gridType !== "Guitar tab"
           ? noteElements.value![0].getBoundingClientRect().width
           : noteElements.value![0].getBoundingClientRect().width * 2;
       ds.value?.addSelectables(noteElements.value!);

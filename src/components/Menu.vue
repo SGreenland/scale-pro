@@ -18,7 +18,7 @@
         <li>Workout Mode (Beta)</li>
         <li>My Pitch Data</li>
         <li>My Account</li>
-        <router-link to="/settings">Settings</router-link>
+        <router-link @click="isOpen = false" to="/settings">Settings</router-link>
       </ul>
     </div>
   </div>

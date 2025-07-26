@@ -106,8 +106,17 @@ button:focus-visible {
 select {
   padding: 0.6em 1.2em;
   border: 1px solid #6f6b6b;
-  border-radius: 8px;
+  background-color: #fff;
+    &, &::picker(select) {
+    appearance: base-select;
+    margin-top: 0.25rem;
+    border-radius: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    max-height: 300px;
+    scrollbar-color: #6f6b6b transparent;
+  }
 }
+
 
 input[type="text"], .input {
   padding: 0.6em 1.2em;
@@ -131,7 +140,7 @@ input::-webkit-inner-spin-button {
 }
 
 input[type="number"].tempo {
-  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 label {

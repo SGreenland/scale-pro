@@ -6,18 +6,15 @@
           <label for="note">Root Note</label>
           <quick-transpose
             v-show="!props.workoutMode"
-            :availableRootNotes="availableRootNotes">
-          <select id="note" v-model="scaleConfig.selectedNote">
-            <option v-for="(note, index) in availableRootNotes" :key="index">
-              {{ note.name }}
-            </option>
-          </select>
+            :availableRootNotes="rootNoteSelector?.availableRootNotes">
+          <root-note-selector ref="rootNoteSelector" v-model="scaleConfig.selectedNote"></root-note-selector>
           </quick-transpose>
         </div>
         <div class="flex flex-col w-full items-start">
           <text-carousel
             ref="textCarouselComponent"
             :items="['Scales', 'Arpeggios']"
+            @item-changed="handleScaleTypeChange"
           ></text-carousel>
           <select
             class="flex w-full"
@@ -81,64 +78,45 @@
         </div>
       </div>
     </div>
-    <!-- <div class="relative flex mt-3 gap-2 items-center">
-       <quick-transpose
-        v-show="!props.workoutMode"
-        :availableRootNotes="availableRootNotes"
-      />
-      <div class="flex flex-col items-start border-l dark:border-white border-indigo-950 pl-2">
-        <label>Grid Type</label>
-        <div class="flex gap-2 max-sm:text-sm">
-            <div @click="() => selectedGridType = 'Guitar tab'" role="button" class="center-xy border py-1 px-2 rounded-lg h-[30px]" :class="{'bg-teal-200 border-teal-900 dark:text-[#242424]' : selectedGridType == 'Guitar tab'}">Guitar Tab</div>
-            <div @click="() => selectedGridType = 'Piano roll'" role="button" class="center-xy border py-1 px-2 rounded-lg h-[30px]" :class="{'bg-teal-200 border-teal-900 dark:text-[#242424]' : selectedGridType == 'Piano roll'}">Piano Roll</div>
-        </div>
-      </div>
-        <font-awesome-icon class="absolute right-0 bottom-1 text-indigo-950 dark:text-white" role="button" @click="showSettings = !showSettings" size="xl" :icon="faCog"></font-awesome-icon>
-      <settings @close="showSettings = false" v-if="showSettings"></settings>
-    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { faCog } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
+import useReorderNotes from "../composables/useReorderNotes";
 import {
   presetNoteOrders,
   scaleConfig,
   scaleToDisplay,
-  selectedGridType,
-  workoutConfig
+  settings
 } from "../GlobalState";
-import { notes, scales } from "../NotesAndScales";
-import { PresetNoteOrders, Scales } from "../types";
-import Settings from "./Settings.vue";
+import { scales } from "../NotesAndScales";
+import { PresetNoteOrders } from "../types";
+import QuickTranspose from "./QuickTranspose.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
-import QuickTranspose from "./QuickTranspose.vue";
-import useReorderNotes from "../composables/useReorderNotes";
+import RootNoteSelector from "./RootNoteSelector.vue";
 
 const { shuffle, reverse } = useReorderNotes();
+
+const rootNoteSelector = ref<InstanceType<typeof RootNoteSelector> | null>(null);
+
 
 const props = defineProps<{
   workoutMode: boolean;
 }>();
 
-const showSettings = ref(false);
 const scaleNames = Object.keys(scales);
 const btnClass = "flex grow justify-center items-center";
-// root notes can only be up to C6
-// @ts-ignore
-const rootNotes = notes.filter((note, index) => index <= 48);
 
-const availableRootNotes = computed(() => {
-  if(selectedGridType.value === "Guitar tab") {
-    const rootNotesCopy = [...rootNotes];
-    return rootNotesCopy.splice(4, 30);
+const handleScaleTypeChange = (item: string) => {
+  if (item === "Scales") {
+    scaleConfig.selectedScale = "Major (1-5)";
   } else {
-    return rootNotes;
+    scaleConfig.selectedScale = "Major Arpeggio";
   }
-});
+};
+
 
 const presets = computed(() => {
   const presetsKey =
@@ -149,48 +127,52 @@ const presets = computed(() => {
 const getScaleOptions = computed(() => {
   // if carousel is on Scales, return scale names
   if (textCarouselComponent.value?.itemsRef[0] === "Scales") {
-    scaleConfig.selectedScale = 'Major (1-5)' as keyof Scales;
     return scaleNames.filter((scaleName) => !scaleName.includes("Arpeggio"));
   } else {
-    // if carousel is on Arpeggios, set selected scale to first arpeggio in list
-    scaleConfig.selectedScale = scaleNames.filter((scale) =>
-      scale.includes("Arpeggio")
-    )[0] as keyof Scales;
-    // if carousel is on Arpeggios, return arpeggio names
     return scaleNames.filter((scale) => scale.includes("Arpeggio"));
   }
 });
 
-watch(
-  () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],
-  () => {
-    if (props.workoutMode) {
-      scaleConfig.selectedNote = workoutConfig.startNote;
-      scaleConfig.selectedScale = workoutConfig.scales[0] as keyof Scales;
-      // store practice note order in session storage
-      sessionStorage.setItem(
-        "practiceNoteOrder",
-        JSON.stringify(scaleConfig.noteOrder)
-      );
-      scaleConfig.noteOrder = null;
-    } else {
-      scaleConfig.selectedNote = "C3";
-      scaleConfig.selectedScale = "Major (1-5)";
-      // get practice note order from session storage
-      scaleConfig.noteOrder = JSON.parse(
-        sessionStorage.getItem("practiceNoteOrder") || "null"
-      );
-    }
-  },
-  { deep: true, immediate: true }
-);
 
-const textCarouselComponent = ref({
-  itemsRef: ["Scales", "Arpeggios"],
+
+// watch(
+//   () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],
+//   () => {
+//     if (props.workoutMode) {
+//       scaleConfig.selectedNote = workoutConfig.startNote;
+//       scaleConfig.selectedScale = workoutConfig.scales[0] as keyof Scales;
+//       // store practice note order in session storage
+//       sessionStorage.setItem(
+//         "practiceNoteOrder",
+//         JSON.stringify(scaleConfig.noteOrder)
+//       );
+//       scaleConfig.noteOrder = null;
+//     } else {
+//       scaleConfig.selectedNote = "C3";
+//       scaleConfig.selectedScale = "Major (1-5)";
+//       // get practice note order from session storage
+//       scaleConfig.noteOrder = JSON.parse(
+//         sessionStorage.getItem("practiceNoteOrder") || "null"
+//       );
+//     }
+//   },
+//   { deep: true, immediate: true }
+// );
+
+onMounted(() => {
+  //set initial root note and scale based on settings
+  scaleConfig.selectedNote = settings.startingRootNote;
+
+  // if settings.startingScale is an arpeggio, change carousel to Arpeggios
+  if (settings.startingScale.includes("Arpeggio")) {
+    textCarouselComponent.value?.setActiveItem('Arpeggios');
+  }
+  scaleConfig.selectedScale = settings.startingScale;
 });
+
+const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(null);
 
 defineExpose({
   scaleToDisplay,
-  availableRootNotes
 });
 </script>

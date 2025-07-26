@@ -6,7 +6,6 @@ import ScaleConfig from "../components/ScaleConfig.vue";
 import TempoSelect from "../components/TempoSelect.vue";
 import WorkoutConfig from "../components/WorkoutConfig.vue";
 import Tabs from "../components/reuseable/Tabs.vue";
-import Menu from "../components/Menu.vue";
 
 import { ref, watch } from "vue";
 
