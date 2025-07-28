@@ -14,7 +14,7 @@
       </div>
       <button
         class="disabled:opacity-50 h-10 flex items-center shadow-sm dark:shadow-indigo-200 focus:outline-none"
-        :disabled="isLoadingAudio || isInvalidTempo"
+        :disabled="isInvalidTempo"
         :class="{ 'border-[#de9898]': audioIsPlaying }"
         @click="mode === 'practice' ? $emit('toggleAudio') : $emit('toggleWorkout')"
       >
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { faArrowsLeftRight, faPlay, faRepeat, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { isLoadingAudio, playBackOptions } from "../GlobalState";
+import { playBackOptions } from "../GlobalState";
 
 defineProps<{
   audioIsPlaying: boolean;

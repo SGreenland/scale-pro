@@ -7,6 +7,7 @@
       class="relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg text-center w-[90%] max-w-md"
     >
       <FontAwesomeIcon
+        v-if="hasCloseButton"
         role="button"
         @click="$emit('close')"
         :icon="faXmark"
@@ -25,8 +26,10 @@ import { defineEmits } from "vue";
 
 const props = withDefaults(defineProps<{
   mask?: boolean;
+  hasCloseButton?: boolean;
 }>(), {
   mask: true,
+  hasCloseButton: true,
 });
 
 defineEmits<{

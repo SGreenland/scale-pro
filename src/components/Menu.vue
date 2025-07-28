@@ -14,21 +14,28 @@
       class="relative card p-4 bg-indigo-100 dark:bg-indigo-800 text-indigo-900 dark:text-indigo-200 rounded-lg shadow-lg flex flex-col gap-2 items-center"
     >
       <ul class="list-none flex flex-col gap-2 items-center">
-        <li>Login/Signup</li>
-        <li>Workout Mode (Beta)</li>
-        <li>My Pitch Data</li>
-        <li>My Account</li>
-        <router-link @click="isOpen = false" to="/settings">Settings</router-link>
+        <router-link v-for="link in menuLinks" :key="link.name" :to=link.path @click="isOpen = false">{{ link.name }}</router-link>
       </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { RouterLink } from "vue-router";
+
+const isUserLoggedIn = ref(false); // This should be replaced with actual authentication logic
+
+const menuLinks = computed(() =>[
+  { name: "Home", path: "/" },
+  { name: isUserLoggedIn.value ? 'Logout' : 'Login' , path: isUserLoggedIn.value ? '/logout' : '/login' },
+  { name: "Signup", path: "/signup" },
+  // { name: "My Pitch Data", path: "/my-pitch-data" },
+  // { name: "My Account", path: "/my-account" },
+  { name: "Settings", path: "/settings" }
+]);
 
 const isOpen = ref(false);
 </script>
