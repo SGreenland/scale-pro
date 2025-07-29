@@ -14,4 +14,13 @@ export interface AuthResponse {
   };
 }
 
+export interface SignupErrors {
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
 
+export interface LoginErrors {
+  email?: string;
+  password?: string;
+}

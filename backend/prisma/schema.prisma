@@ -17,9 +17,10 @@ datasource db {
 model User {
   id          String   @id @default(uuid())
   email       String   @unique
+  userName    String
   password    String   // hashed
   createdAt   DateTime @default(now())
-  settings    Json
+  settings    Json?
   isAdmin     Boolean @default(false)
   pitchData   PitchData[]
   subscription Subscription?

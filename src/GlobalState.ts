@@ -2,8 +2,11 @@ import { computed, reactive, ref, watch} from "vue";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
 import { PlayBackOptions, ScaleConfig, Settings, WorkoutConfig } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
+import { useSessionStorage } from "./composables/useSessionStorage";
 
 const { getScale } = scaleManipulator();
+
+export const currentLoggedInUser = useSessionStorage<{ id: string; userName: string, email: string } | null>('user', null);
 
 export const presetNoteOrders = reactive({
   presets8: [
