@@ -1,6 +1,8 @@
-// src/types.ts
+// import settings from front end types
+import { Settings } from "../../src/types"
 
 export interface SignupRequestBody {
+  userName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -12,6 +14,14 @@ export interface AuthResponse {
     id: string;
     email: string;
   };
+}
+
+export interface SettingsRequestBody {
+  settings: Settings;
+}
+
+export interface SettingsResponse {
+  settings: Settings;
 }
 
 export interface SignupErrors {

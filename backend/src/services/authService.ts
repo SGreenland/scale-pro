@@ -1,8 +1,8 @@
 // src/services/authService.ts
-import { prisma } from "../prisma.ts";
+import { prisma } from "../prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { LoginErrors } from "../types.js";
+import { LoginErrors } from "../types";
 
 
 export async function registerUser(userName: string, email: string, password: string) {
@@ -29,8 +29,10 @@ export async function loginUser(email: string, password: string) {
     throw new Error(JSON.stringify(errors));
   }
   const isPasswordValid = await bcrypt.compare(password, user!.password);
-  if (!isPasswordValid) errors.password = "Invalid password";
-  if (Object.keys(errors).length > 0) throw new Error(JSON.stringify(errors));
+  if (!isPasswordValid) {
+    errors.password = "Invalid password";
+    throw new Error(JSON.stringify(errors));
+  }
 
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string, {
     expiresIn: "7d",

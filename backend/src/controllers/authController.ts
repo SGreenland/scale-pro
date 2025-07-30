@@ -1,12 +1,12 @@
 // src/controllers/authController.ts
 import { Request, Response } from "express";
-import { registerUser, loginUser } from "../services/authService.ts";
-import { AuthResponse, SignupRequestBody } from "../types.ts";
-import { validateSignupRequest } from "../validators/register.ts";
+import { registerUser, loginUser } from "../services/authService";
+import { AuthResponse, SignupRequestBody } from "../types";
+import { validateSignupRequest } from "../validators/register";
 
 export async function signup(
   req: Request<SignupRequestBody>,
-  res: Response<AuthResponse>
+  res: Response
 ) {
   const errors = validateSignupRequest(req.body);
 
@@ -14,7 +14,7 @@ export async function signup(
     return res.status(400).json({ errors: errors });
   }
 
-  const { userName, email, password } = req.body;
+  const { userName, email, password } = req.body as SignupRequestBody;
 
   try {
     const { user, token } = await registerUser(userName, email, password);
@@ -27,10 +27,10 @@ export async function signup(
 }
 
 export async function login(
-  req: Request<SignupRequestBody>,
+  req: Request,
   res: Response
 ) {
-  const { email, password } = req.body;
+  const { email, password } = req.body as { email: string; password: string };
 
   try {
     const { user, token } = await loginUser(email, password);

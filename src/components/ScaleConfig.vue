@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
 import {
   presetNoteOrders,
@@ -91,7 +91,7 @@ import {
   settings
 } from "../GlobalState";
 import { scales } from "../NotesAndScales";
-import { PresetNoteOrders } from "../types";
+import { PresetNoteOrders, Scales } from "../types";
 import QuickTranspose from "./QuickTranspose.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
@@ -160,15 +160,21 @@ const getScaleOptions = computed(() => {
 // );
 
 onMounted(() => {
-  //set initial root note and scale based on settings
-  scaleConfig.selectedNote = settings.startingRootNote;
-
   // if settings.startingScale is an arpeggio, change carousel to Arpeggios
   if (settings.startingScale.includes("Arpeggio")) {
     textCarouselComponent.value?.setActiveItem('Arpeggios');
   }
-  scaleConfig.selectedScale = settings.startingScale;
+
 });
+
+//watch for changes in settings and update scaleConfig accordingly
+watch(
+  [() => settings.startingScale, () => settings.startingRootNote],
+  ([newScale, newRootNote]: [keyof Scales, string]) => {
+    scaleConfig.selectedScale = newScale;
+    scaleConfig.selectedNote = newRootNote;
+  }
+);
 
 const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(null);
 

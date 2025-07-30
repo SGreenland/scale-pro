@@ -3,7 +3,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import authRoutes from "./routes/auth.ts";
+import authRoutes from "./routes/auth";
+import settingsRoutes from "./routes/settings";
 
 dotenv.config();
 
@@ -14,5 +15,7 @@ app.use(express.json());
 
 // Register routes here
 app.use("/api", authRoutes);
+
+app.use("/api", settingsRoutes)
 
 export default app;

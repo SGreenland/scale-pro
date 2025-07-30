@@ -155,6 +155,13 @@
         </div>
       </accordion-single>
     </div>
+    <submit-button
+      v-if="currentLoggedInUser"
+      class="mt-4"
+      @click="saveSettings"
+      :isSubmitting="isSaving"
+      :buttonText="getButtonText()"
+      ></submit-button>
   </div>
 </template>
 
@@ -169,12 +176,50 @@ import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
 import CustomRadioChips from "./reuseable/CustomRadioChips.vue";
 import { scales } from "../NotesAndScales";
 import RootNoteSelector from "./RootNoteSelector.vue";
+import { currentLoggedInUser } from "../GlobalState";
+import { ref } from "vue";
+import SubmitButton from "./reuseable/SubmitButton.vue";
+const isSaving = ref(false);
+const successfullySaved = ref(false);
 
 const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50`;
 const optionClasses: string = "grid gap-2 mx-2 mb-2";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
 function goBack() {
   window.history.back();
+}
+
+function getButtonText() {
+  return successfullySaved.value ? "Settings Saved!" : "Save Settings";
+}
+
+async function saveSettings() {
+  isSaving.value = true;
+  try {
+    const response = await fetch(`/api/settings/${currentLoggedInUser.value?.id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({settings: settings}),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to save settings');
+    }
+
+    const data = await response.json();
+
+    Object.assign(settings, data.settings);
+    isSaving.value = false;
+    successfullySaved.value = true;
+    setTimeout(() => {
+      successfullySaved.value = false;
+    }, 2000);
+  } catch (error) {
+    isSaving.value = false;
+    alert('Error saving settings: ' + error);
+  }
 }
 </script>
 

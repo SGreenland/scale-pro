@@ -40,6 +40,8 @@ const handleLogout = () => {
   currentLoggedInUser.value = null;
   // Clear the cookie
   document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  // Redirect to login page
+  window.location.href = '/login';
 }
 
 interface menuLink {

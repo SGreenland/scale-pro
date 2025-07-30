@@ -71,9 +71,22 @@ export const workoutNoteOrder = computed({
   },
 })
 
+//settings
+export const settings = reactive<Settings>({
+  startingRootNote: "C3",
+  startingScale: "Major",
+  theme: 'auto',
+  gridType: 'Piano roll',
+  loopGap: 'None',
+  loopGapCustom: 1,
+  autoShuffle: false,
+  minDetectionVolume: 'normal',
+  pitchToleranceLevel: 'standard',
+});
+
 export const scaleConfig = reactive<ScaleConfig>({
-  selectedScale: "Major (1-5)",
-  selectedNote: "C3",
+  selectedScale: settings.startingScale,
+  selectedNote: settings.startingRootNote,
   noteOrder: computedNoteOrder.value,
   currentGtrPositions: [],
 });
@@ -133,20 +146,6 @@ export const computedLoopGap = computed(() => {
   }
 });
 
-
-
-//settings
-export const settings = reactive<Settings>({
-  startingRootNote: "C3",
-  startingScale: "Major",
-  theme: 'auto',
-  gridType: 'Piano roll',
-  loopGap: 'None',
-  loopGapCustom: 1,
-  autoShuffle: false,
-  minDetectionVolume: 'normal',
-  pitchToleranceLevel: 'standard',
-});
 
 export const computedTheme = computed(() => {
   return settings.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : settings.theme;
