@@ -15,16 +15,19 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  userName    String
-  password    String   // hashed
-  createdAt   DateTime @default(now())
-  settings    Json?
-  isAdmin     Boolean @default(false)
-  pitchData   PitchData[]
-  subscription Subscription?
+  id              String   @id @default(uuid())
+  email           String   @unique
+  password        String
+  userName        String
+  stripeId        String?  // Nullable — only set after customer creation
+  trialExpiresAt  DateTime?
+  settings        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime? @updatedAt
+  subscription    Subscription?
+  pitchData       PitchData[]
 }
+
 
 model PitchData {
   id        String   @id @default(uuid())
@@ -40,9 +43,10 @@ model Subscription {
   id           String   @id @default(uuid())
   userId       String   @unique
   user         User     @relation(fields: [userId], references: [id])
-  stripeId     String   // Stripe customer ID
+  stripeSubId  String   // Stripe subscription ID
   active       Boolean  @default(false)
   startedAt    DateTime @default(now())
   expiresAt    DateTime?
 }
+
 

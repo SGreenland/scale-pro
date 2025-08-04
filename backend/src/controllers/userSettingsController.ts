@@ -1,13 +1,20 @@
 import { Request, Response } from "express";
-import { Settings } from "../../../src/types.js";
+import { Settings } from "../../../src/types";
 import {
     getUserSettings,
     updateUserSettings,
 } from "../services/userSettingsService";
-import { SettingsRequestBody } from "../types.js";
+import { SettingsRequestBody } from "../types";
+import { validateToken } from "../validators/helpers/auth";
 
 export async function get(req: Request, res: Response): Promise<Response> {
   const userId = req.params.id as string;
+
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token || !validateToken(token)) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   const userSettings = await getUserSettings(userId);
 

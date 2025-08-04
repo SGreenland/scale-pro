@@ -1,7 +1,7 @@
 <template>
   <div
     class="fixed inset-0 flex items-center justify-center"
-    :class="{'bg-black bg-opacity-50 z-[1000]': mask, 'z-2': !mask}"
+    :class="{'bg-black bg-opacity-70 z-[1000]': mask, 'z-2': !mask}"
   >
     <div
       class="relative bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg text-center w-[90%] max-w-md"

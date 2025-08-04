@@ -1,12 +1,18 @@
 <template>
   <div>
     <modal-wrapper :mask="false" :hasCloseButton="false">
-      <h1 class="text-2xl font-bold mb-4">Sign Up</h1>
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold mb-2">Create Your Free Account</h1>
+        <p class="text-gray-700 text-sm">
+          Sign up to unlock <strong>premium features free for 7 days</strong>.
+          <br />
+          <em>No credit card required.</em>
+        </p>
+      </div>
+
       <form class="text-left" @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="username" class="block text-sm font-medium text-gray-700"
-            >Username</label
-          >
+          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
           <input
             maxlength="20"
             v-model="formData.userName"
@@ -16,10 +22,9 @@
             required
           />
         </div>
+
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700"
-            >Email</label
-          >
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
           <input
             v-model="formData.email"
             type="email"
@@ -27,14 +32,11 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
           />
-          <span v-if="errors.email" class="text-red-500 text-sm">{{
-            errors.email
-          }}</span>
+          <span v-if="errors.email" class="text-red-500 text-sm">{{ errors.email }}</span>
         </div>
+
         <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700"
-            >Password</label
-          >
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
           <input
             v-model="formData.password"
             type="password"
@@ -42,16 +44,11 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
           />
-          <span v-if="errors.password" class="text-red-500 text-sm">{{
-            errors.password
-          }}</span>
+          <span v-if="errors.password" class="text-red-500 text-sm">{{ errors.password }}</span>
         </div>
+
         <div class="mb-4">
-          <label
-            for="confirm-password"
-            class="block text-sm font-medium text-gray-700"
-            >Confirm Password</label
-          >
+          <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
           <input
             v-model="formData.confirmPassword"
             type="password"
@@ -59,19 +56,22 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
           />
-          <span v-if="errors.password" class="text-red-500 text-sm">{{
-            errors.confirmPassword
-          }}</span>
+          <span v-if="errors.confirmPassword" class="text-red-500 text-sm">{{ errors.confirmPassword }}</span>
         </div>
+
         <submit-button
-          @click="handleSubmit"
           :isSubmitting="isSubmitting"
-          buttonText="Sign Up"
-        ></submit-button>
+          buttonText="Start Free Trial"
+        />
       </form>
+
+      <p class="text-center text-xs text-gray-500 mt-4">
+        Your free trial includes access to all features for 7 days.
+      </p>
     </modal-wrapper>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import axios from "axios";
@@ -79,6 +79,9 @@ import { reactive, ref } from "vue";
 import { currentLoggedInUser } from "../GlobalState";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const formData = reactive({
   userName: "",
@@ -102,13 +105,9 @@ const handleSubmit = () => {
       // Set read-only cookie with token
       document.cookie = `token=${response.data.token}; path=/; secure; samesite=strict`;
       // Set the current logged-in user
-      currentLoggedInUser.value = {
-        id: response.data.user.id,
-        userName: response.data.user.userName,
-        email: response.data.user.email,
-      };
+      currentLoggedInUser.value = response.data.user;
       //redirect to home
-      window.location.href = "/";
+      router.push("/");
     })
     .catch((error) => {
       if (error.response && error.response.data && error.response.data.errors) {
