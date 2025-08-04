@@ -11,7 +11,7 @@
       class="relative card p-4 bg-indigo-100 dark:bg-indigo-800 text-indigo-900 dark:text-indigo-200 rounded-lg shadow-lg flex flex-col gap-2 items-center"
     >
     <h3 v-if="isUserLoggedIn" class="p-2 border-b border-indigo-800 dark:border-white text-center" style="width: calc(100% + 4rem);">
-      {{ `Welcome, ${currentLoggedInUser?.userName}` }}
+      {{ `Hi, ${currentLoggedInUser?.userName}` }}
     </h3>
       <ul class="list-none flex flex-col gap-2 items-center">
         <div v-for="link in filteredMenuLinks" :key="link.name">

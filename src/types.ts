@@ -14,9 +14,9 @@ interface GuitarPosition {
 }
 
 interface Scales {
-  Major: number[];
+  "Major": number[];
   "Major (1-5)": number[];
-  Minor: number[];
+  "Natural Minor": number[];
   "Harmonic Minor": number[];
   "Minor Pentatonic": number[];
   "Major Arpeggio": number[];

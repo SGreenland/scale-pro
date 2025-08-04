@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import axios from "axios";
 import { reactive, ref } from "vue";
-import { currentLoggedInUser } from "../GlobalState";
+import { currentLoggedInUser, hasUserJustSignedUp } from "../GlobalState";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
 import { useRouter } from "vue-router";
@@ -106,6 +106,8 @@ const handleSubmit = () => {
       document.cookie = `token=${response.data.token}; path=/; secure; samesite=strict`;
       // Set the current logged-in user
       currentLoggedInUser.value = response.data.user;
+      // Set flag to indicate user just signed up
+      hasUserJustSignedUp.value = true;
       //redirect to home
       router.push("/");
     })

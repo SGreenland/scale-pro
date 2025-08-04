@@ -8,6 +8,8 @@ const { getScale } = scaleManipulator();
 
 export const currentLoggedInUser = useSessionStorage<{ id: string; userName: string, email: string } | null>('user', null);
 
+export const hasUserJustSignedUp = ref(false);
+
 export const presetNoteOrders = reactive({
   presets8: [
     [1, 3, 5, 7, 2, 4, 6, 8],

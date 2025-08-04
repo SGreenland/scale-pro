@@ -1,21 +1,31 @@
 <template>
   <div>
     <Menu />
+    <WelcomeModal v-if="shouldShowWelcomeModal" @close="handleWelcomeModalClose" />
     <router-view> </router-view>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from "vue";
 import Menu from "./components/Menu.vue";
-import { currentLoggedInUser, settings } from "./GlobalState";
+import WelcomeModal from "./components/WelcomeModal.vue";
+import { currentLoggedInUser, settings, hasUserJustSignedUp } from "./GlobalState";
 
-import { onMounted } from "vue";
 onMounted(() => {
   // Check if user is logged in
   if (currentLoggedInUser.value) {
     loadUserSettings();
   }
 });
+
+const shouldShowWelcomeModal = computed(() => {
+  return hasUserJustSignedUp.value && currentLoggedInUser.value !== null;
+});
+
+const handleWelcomeModalClose = () => {
+  hasUserJustSignedUp.value = false;
+};
 
 const loadUserSettings = async () => {
   try {
@@ -25,13 +35,14 @@ const loadUserSettings = async () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("token="))
-            ?.split("=")[1]}`,
+          Authorization: `Bearer ${
+            document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("token="))
+              ?.split("=")[1]
+          }`,
         },
       }
-
     );
     if (response.ok) {
       const data = await response.json();
