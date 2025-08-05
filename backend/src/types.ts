@@ -1,5 +1,6 @@
 // import settings from front end types
-import { Settings } from "../../src/types"
+import { Settings } from "@shared/types";
+import { Prisma } from "../generated/prisma";
 
 export interface SignupRequestBody {
   userName: string;
@@ -34,3 +35,10 @@ export interface LoginErrors {
   email?: string;
   password?: string;
 }
+
+export type UserWithSubscription = Prisma.UserGetPayload<{
+  include: {
+    subscription: true;
+  };
+}>;
+

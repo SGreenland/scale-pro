@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Settings } from "../../../src/types";
+import { Settings } from "@shared/types";
 import {
     getUserSettings,
     updateUserSettings,

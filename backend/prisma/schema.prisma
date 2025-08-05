@@ -14,6 +14,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SubscriptionStatus {
+  active
+  canceled
+  incomplete
+  past_due
+  unpaid
+}
+
+
 model User {
   id              String   @id @default(uuid())
   email           String   @unique
@@ -44,7 +53,7 @@ model Subscription {
   userId       String   @unique
   user         User     @relation(fields: [userId], references: [id])
   stripeSubId  String   // Stripe subscription ID
-  active       Boolean  @default(false)
+  status       SubscriptionStatus
   startedAt    DateTime @default(now())
   expiresAt    DateTime?
 }

@@ -1,3 +1,5 @@
+import { Scales } from "@shared/types";
+
 interface Note {
   name: string;
   interval: IntervalSymbol;
@@ -13,19 +15,19 @@ interface GuitarPosition {
   fret: number;
 }
 
-interface Scales {
-  "Major": number[];
-  "Major (1-5)": number[];
-  "Natural Minor": number[];
-  "Harmonic Minor": number[];
-  "Minor Pentatonic": number[];
-  "Major Arpeggio": number[];
-  "Minor Arpeggio": number[];
-  "Diminished Arpeggio": number[];
-  "Augmented Arpeggio": number[];
-}
+// interface Scales {
+//   "Major": number[];
+//   "Major (1-5)": number[];
+//   "Natural Minor": number[];
+//   "Harmonic Minor": number[];
+//   "Minor Pentatonic": number[];
+//   "Major Arpeggio": number[];
+//   "Minor Arpeggio": number[];
+//   "Diminished Arpeggio": number[];
+//   "Augmented Arpeggio": number[];
+// }
 
-type LoopGapOption = "None" | "Auto" | "Custom";
+// type LoopGapOption = "None" | "Auto" | "Custom";
 
 interface ScaleConfig {
   selectedScale: keyof Scales;
@@ -53,17 +55,17 @@ interface IntervalMap {
   [key: number]: IntervalSymbol;
 }
 
-interface Settings {
-  startingRootNote: string;
-  startingScale: keyof Scales;
-  theme: "auto" | "dark" | "light";
-  gridType: "Guitar tab" | "Piano roll";
-  loopGap: LoopGapOption;
-  loopGapCustom: number;
-  autoShuffle: boolean;
-  minDetectionVolume: "sensitive" | "normal";
-  pitchToleranceLevel: "loose" | "standard" | "precise";
-}
+// interface Settings {
+//   startingRootNote: string;
+//   startingScale: keyof Scales;
+//   theme: "auto" | "dark" | "light";
+//   gridType: "Guitar tab" | "Piano roll";
+//   loopGap: LoopGapOption;
+//   loopGapCustom: number;
+//   autoShuffle: boolean;
+//   minDetectionVolume: "sensitive" | "normal";
+//   pitchToleranceLevel: "loose" | "standard" | "precise";
+// }
 
 interface PresetNoteOrders {
   presets8: number[];
@@ -96,10 +98,8 @@ export type {
   PlayBackOptions,
   WorkoutConfig,
   ScaleConfig,
-  LoopGapOption,
   IntervalMap,
   IntervalSymbol,
   GuitarPosition,
   FretBoard,
-  Settings,
 };

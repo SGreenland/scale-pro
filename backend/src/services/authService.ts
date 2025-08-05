@@ -2,7 +2,7 @@
 import { prisma } from "../prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { LoginErrors } from "../types";
+import { LoginErrors, UserWithSubscription } from "../types";
 import { stripe } from "../app";
 
 export async function registerUser(
@@ -30,15 +30,12 @@ export async function registerUser(
         stripeId: stripeCustomer.id,
         trialExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
+      include: {
+        subscription: true,
+      },
     });
 
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET as string,
-      {
-        expiresIn: "7d",
-      }
-    );
+    const token = createUserToken(user)
 
     return { user, token };
   } catch (error) {
@@ -48,7 +45,11 @@ export async function registerUser(
 }
 
 export async function loginUser(email: string, password: string) {
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { email },
+    include: {
+      subscription: true,
+    },
+  });
   const errors: LoginErrors = {};
   if (!user) {
     errors.email = "Invalid email";
@@ -60,13 +61,27 @@ export async function loginUser(email: string, password: string) {
     throw new Error(JSON.stringify(errors));
   }
 
-  const token = jwt.sign(
-    { userId: user.id },
+  const token = createUserToken(user);
+
+  return { user, token };
+}
+
+
+function createUserToken(user: UserWithSubscription): string {
+  const isAdmin = process.env.ADMIN_EMAILS?.split(",").includes(user.email);
+  const isTrialActive =
+    user.trialExpiresAt && user.trialExpiresAt > new Date();
+  const hasActiveSubscription =
+    user.subscription?.status === "active";
+
+  return jwt.sign(
+    {
+      userId: user.id,
+      hasPremiumAccess: isTrialActive || hasActiveSubscription || isAdmin,
+    },
     process.env.JWT_SECRET as string,
     {
       expiresIn: "7d",
     }
   );
-
-  return { user, token };
 }

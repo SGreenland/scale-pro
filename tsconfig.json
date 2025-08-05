@@ -1,11 +1,14 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "strict": true,
+    "baseUrl": ".",                   // Needed for paths
+    "paths": {
+      "@shared/*": ["shared/*"]
     }
-  ],
+  },
+  "include": ["backend", "shared", "src"]
 }
+
+

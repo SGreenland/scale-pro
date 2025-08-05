@@ -1,6 +1,7 @@
 import { computed, reactive, ref, watch} from "vue";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
-import { PlayBackOptions, ScaleConfig, Settings, WorkoutConfig } from "./types";
+import { PlayBackOptions, ScaleConfig, WorkoutConfig } from "./types";
+import { Settings } from "@shared/types";
 import scaleManipulator from "./utils/scaleManipulator";
 import { useSessionStorage } from "./composables/useSessionStorage";
 
