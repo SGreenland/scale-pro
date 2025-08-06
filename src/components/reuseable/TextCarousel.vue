@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
@@ -35,6 +35,8 @@ const itemsRef = ref<string[]>(props.items)
 const emit = defineEmits<{
     (event: 'item-changed', item: string): void;
 }>();
+
+const activeItem = computed(() => itemsRef.value[0]);
 
 
 const setActiveItem = (item: string) => {
@@ -60,6 +62,6 @@ const shiftLeft = () => {
     emit('item-changed', itemsRef.value[0]);
 };
 
-defineExpose({ itemsRef, setActiveItem });
+defineExpose({ activeItem, setActiveItem });
 
 </script>

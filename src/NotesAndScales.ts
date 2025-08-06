@@ -46,10 +46,10 @@ for (const octave of octaves) {
 export const scales: Scales = {
     'Major': [0, 2, 4, 5, 7, 9, 11, 12],
     'Natural Minor': [0, 2, 3, 5, 7, 8, 10, 12],
+    'Major Arpeggio': [0, 4, 7, 12],
     'Major (1-5)': [0, 2, 4, 5, 7],
     'Harmonic Minor': [0, 2, 3, 5, 7, 8, 11, 12],
     'Minor Pentatonic': [0, 3, 5, 7, 10, 12],
-    'Major Arpeggio': [0, 4, 7, 12],
     'Minor Arpeggio': [0, 3, 7, 12],
     'Diminished Arpeggio': [0, 3, 6, 12],
     'Augmented Arpeggio': [0, 4, 8, 12],

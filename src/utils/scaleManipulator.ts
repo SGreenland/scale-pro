@@ -1,6 +1,6 @@
 
-import { notes, scales} from '../NotesAndScales.ts';
-import { Note, IntervalMap, IntervalSymbol } from '../types.ts';
+import { notes, scales} from '../NotesAndScales';
+import { Note, IntervalMap, IntervalSymbol } from '../types';
 
 
 export default function scaleManipulator() {

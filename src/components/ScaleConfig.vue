@@ -1,13 +1,19 @@
 <template>
-  <div class="grid-rows-2 w-full bg-gradient-to-br from-sky-300 to-indigo-400 dark:from-sky-600 dark:to-indigo-700 p-2 rounded-md border-2 border-indigo-900 shadow-lg max-sm:pt-4">
+  <div
+    class="grid-rows-2 w-full bg-gradient-to-br from-sky-300 to-indigo-400 dark:from-sky-600 dark:to-indigo-700 p-2 rounded-md border-2 border-indigo-900 shadow-lg max-sm:pt-4"
+  >
     <div class="flex max-sm:flex-wrap w-full gap-2 m-auto">
       <div class="flex items-center gap-2 lg:w-1/2 w-full">
         <div class="flex flex-col w-fit h-full justify-end items-start">
           <label for="note">Root Note</label>
           <quick-transpose
             v-show="!props.workoutMode"
-            :availableRootNotes="rootNoteSelector?.availableRootNotes">
-          <root-note-selector ref="rootNoteSelector" v-model="scaleConfig.selectedNote"></root-note-selector>
+            :availableRootNotes="rootNoteSelector?.availableRootNotes"
+          >
+            <root-note-selector
+              ref="rootNoteSelector"
+              v-model="scaleConfig.selectedNote"
+            ></root-note-selector>
           </quick-transpose>
         </div>
         <div class="flex flex-col w-full items-start">
@@ -40,17 +46,13 @@
         <div class="flex w-full justify-evenly items-center gap-2">
           <button
             :class="btnClass"
-            @click="
-              scaleConfig.noteOrder = reverse(scaleToDisplay);
-            "
+            @click="scaleConfig.noteOrder = reverse(scaleToDisplay)"
           >
             Reverse
           </button>
           <button
             :class="btnClass"
-            @click="
-              scaleConfig.noteOrder = shuffle(scaleToDisplay);
-            "
+            @click="scaleConfig.noteOrder = shuffle(scaleToDisplay)"
           >
             Shuffle
           </button>
@@ -88,7 +90,7 @@ import {
   presetNoteOrders,
   scaleConfig,
   scaleToDisplay,
-  settings
+  settings,
 } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
@@ -96,10 +98,13 @@ import QuickTranspose from "./QuickTranspose.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
+import { hasFullAccess } from "../utils/checkUserAccess";
 
 const { shuffle, reverse } = useReorderNotes();
 
-const rootNoteSelector = ref<InstanceType<typeof RootNoteSelector> | null>(null);
+const rootNoteSelector = ref<InstanceType<typeof RootNoteSelector> | null>(
+  null
+);
 
 
 const props = defineProps<{
@@ -107,16 +112,21 @@ const props = defineProps<{
 }>();
 
 const scaleNames = Object.keys(scales);
+const getAvailableScalesPerUser = (): (keyof Scales)[] => {
+  return hasFullAccess()
+    ? (scaleNames as (keyof Scales)[])
+    : (scaleNames.slice(0, 3) as (keyof Scales)[]);
+};
+
 const btnClass = "flex grow justify-center items-center";
 
 const handleScaleTypeChange = (item: string) => {
   if (item === "Scales") {
-    scaleConfig.selectedScale = "Major (1-5)";
+    scaleConfig.selectedScale = "Major";
   } else {
     scaleConfig.selectedScale = "Major Arpeggio";
   }
 };
-
 
 const presets = computed(() => {
   const presetsKey =
@@ -124,13 +134,26 @@ const presets = computed(() => {
   return presetNoteOrders[presetsKey];
 });
 
+const availableScales = getAvailableScalesPerUser();
+
 const getScaleOptions = computed(() => {
-  // if carousel is on Scales, return scale names
-  if (textCarouselComponent.value?.itemsRef[0] === "Scales") {
-    return scaleNames.filter((scaleName) => !scaleName.includes("Arpeggio"));
-  } else {
-    return scaleNames.filter((scale) => scale.includes("Arpeggio"));
+  let scalesList: (keyof Scales)[] = [];
+  switch (textCarouselComponent.value?.activeItem) {
+    case "Scales":
+      scalesList = availableScales.filter(
+        (scaleName) => !scaleName.includes("Arpeggio")
+      );
+      break;
+    case "Arpeggios":
+      scalesList = availableScales.filter((scale) =>
+        scale.includes("Arpeggio")
+      );
+      break;
+    default:
+      scalesList = availableScales;
+      break;
   }
+  return scalesList;
 });
 
 
@@ -162,9 +185,8 @@ const getScaleOptions = computed(() => {
 onMounted(() => {
   // if settings.startingScale is an arpeggio, change carousel to Arpeggios
   if (settings.startingScale.includes("Arpeggio")) {
-    textCarouselComponent.value?.setActiveItem('Arpeggios');
+    textCarouselComponent.value?.setActiveItem("Arpeggios");
   }
-
 });
 
 //watch for changes in settings and update scaleConfig accordingly
@@ -176,7 +198,9 @@ watch(
   }
 );
 
-const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(null);
+const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(
+  null
+);
 
 defineExpose({
   scaleToDisplay,
