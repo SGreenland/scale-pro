@@ -5,7 +5,7 @@
         🎤 Pitch Tracking Info
       </h2>
 
-      <div class="modal-body max-h-[80vh] overflow-y-auto">
+      <div class="modal-body max-h-[80vh] overflow-y-auto p-2">
         <p class="text-lg text-gray-800 dark:text-gray-200 mb-4">
           This feature tracks your pitch in real-time, providing feedback on your
           singing or playing accuracy.
