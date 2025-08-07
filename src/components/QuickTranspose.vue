@@ -3,7 +3,7 @@
     <!-- <div class="flex">
       <label>Quick Transpose</label>
     </div> -->
-    <div class="flex gap-2 items-center">
+    <div class="flex gap-1 items-center">
       <button
         class="inverted-btn w-10 input flex items-center justify-center"
         @click="(e) => handleClick('down', e)"
@@ -24,20 +24,6 @@
           size="2xl"
         />
       </button>
-      <!--info icon with tooltip-->
-      <div class="relative">
-        <FontAwesomeIcon
-          ref="transposeInfoIcon"
-          :icon="faInfoCircle"
-          class="text-indigo-950 ps-1 lg:text-xl text-lg dark:text-white"
-        />
-        <Tooltip :trigger="transposeInfoIcon">
-          <p class="text-sm">
-            Click the arrows to transpose the scale up or down by a semitone.
-            Shift-click to transpose by an octave. (Press and hold on mobile)
-          </p>
-        </Tooltip>
-      </div>
     </div>
   </div>
 </template>
@@ -45,21 +31,16 @@
 <script setup lang="ts">
 import {
   faCaretDown,
-  faCaretUp,
-  faInfoCircle,
+  faCaretUp
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { scaleConfig } from "../GlobalState";
 import { notes } from "../NotesAndScales";
 import { Note } from "../types";
-import Tooltip from "./reuseable/Tooltip.vue";
-import { ComponentPublicInstance, ref } from "vue";
 
 const props = defineProps<{
   availableRootNotes?: Note[] | undefined;
 }>();
-
-const transposeInfoIcon = ref<ComponentPublicInstance | null>(null);
 
 function transposeScale(
   direction: "up" | "down" | "octave-up" | "octave-down"

@@ -2,7 +2,7 @@
   <div class="fixed lg:right-2 right-0 md:top-2 top-0 z-[1000]" style="min-width: 180px;">
     <font-awesome-icon
       :icon="!isOpen ? faBars : faXmark"
-      class="text-2xl cursor-pointer fixed md:top-2 top-0 lg:right-2 right-0 p-2 text-indigo-900 dark:text-indigo-200 z-50 rounded-full bg-indigo-100 dark:bg-indigo-800"
+      class="text-2xl cursor-pointer fixed md:top-2 top-1 lg:right-2 right-1 p-2 text-indigo-900 dark:text-indigo-200 z-50 rounded-full bg-indigo-100 dark:bg-indigo-800"
       :class="{'shadow-lg': !isOpen}"
       @click="isOpen = !isOpen"
     />

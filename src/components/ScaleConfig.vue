@@ -5,12 +5,19 @@
     <div class="flex max-sm:flex-wrap w-full gap-2 m-auto">
       <div class="flex items-center gap-2 lg:w-1/2 w-full">
         <div class="flex flex-col w-fit h-full justify-end items-start">
-          <label for="note">Root Note</label>
+          <div class="flex gap-1">
+            <label for="note">Root Note</label><!--info icon with tooltip-->
+                <info-tooltip>
+                  Click the arrows to transpose the scale up or down by a semitone.
+                  Shift-click to transpose by an octave. (Press and hold on mobile)
+                </info-tooltip>
+          </div>
           <quick-transpose
             v-show="!props.workoutMode"
             :availableRootNotes="rootNoteSelector?.availableRootNotes"
           >
             <root-note-selector
+              class="w-[5.5rem]"
               ref="rootNoteSelector"
               v-model="scaleConfig.selectedNote"
             ></root-note-selector>
@@ -94,18 +101,18 @@ import {
 } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
+import { hasFullAccess } from "../utils/checkUserAccess";
 import QuickTranspose from "./QuickTranspose.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
-import { hasFullAccess } from "../utils/checkUserAccess";
+import InfoTooltip from "./reuseable/InfoTooltip.vue";
 
 const { shuffle, reverse } = useReorderNotes();
 
 const rootNoteSelector = ref<InstanceType<typeof RootNoteSelector> | null>(
   null
 );
-
 
 const props = defineProps<{
   workoutMode: boolean;

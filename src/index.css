@@ -105,6 +105,10 @@ button:focus-visible {
 
 select {
   padding: 0.6em 1.2em;
+  display: flex;
+  align-items: center;
+  max-height: 42px !important;
+  margin: 0 !important;
   border: 1px solid #6f6b6b;
   background-color: #fff;
     &, &::picker(select) {
