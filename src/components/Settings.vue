@@ -169,7 +169,7 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { settings } from "../GlobalState";
-import { LoopGapOption } from "../types";
+import { LoopGapOption } from "@shared/types";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import NumberInput from "./reuseable/NumberInput.vue";
 import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
@@ -215,7 +215,7 @@ async function saveSettings() {
     successfullySaved.value = true;
     setTimeout(() => {
       successfullySaved.value = false;
-    }, 2000);
+    }, 3000);
   } catch (error) {
     isSaving.value = false;
     alert('Error saving settings: ' + error);

@@ -3,22 +3,28 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import Stripe from "stripe";
-
 import authRoutes from "./routes/auth";
 import settingsRoutes from "./routes/settings";
+import stripeRoutes from "./routes/stripe";
 
 dotenv.config();
+
+var cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
 
 // Register routes here
 app.use("/api", authRoutes);
 
-app.use("/api", settingsRoutes)
+app.use("/api", settingsRoutes);
+
+app.use("/api", stripeRoutes);
 
 export default app;

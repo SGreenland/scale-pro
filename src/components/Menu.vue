@@ -63,13 +63,12 @@ const filteredMenuLinks = computed(() => {
 
 
 const menuLinks: menuLink[] = [
-  { name: "Home", path: "/" },
-  { name: 'Login' , path: '/login' },
-  {name: 'Logout', path: '/logout'},
-  { name: "Signup", path: "/signup" },
-  // { name: "My Pitch Data", path: "/my-pitch-data" },
-  // { name: "My Account", path: "/my-account" },
-  { name: "Settings", path: "/settings" }
+  { name: 'Home', path: '/' },
+  { name: 'Settings', path: '/settings' },
+  { name: 'Upgrade', path: '/upgrade' },
+  { name: 'Login', path: '/login' },
+  { name: 'Signup', path: '/signup' },
+  { name: 'Logout', path: '/logout' }
 ];
 
 const isOpen = ref(false);

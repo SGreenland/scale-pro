@@ -6,12 +6,14 @@ import Main from './pages/Main.vue'
 import Settings from './components/Settings.vue'
 import Login from './pages/Login.vue'
 import Signup from './pages/Signup.vue'
+import GetProLandingPage from './pages/GetProLandingPage.vue'
 
 const routes = [
     {path: '/', component: Main},
     {path: '/settings', component: Settings},
     {path: '/login', component: Login},
     {path: '/signup', component: Signup},
+    {path: '/upgrade', component: GetProLandingPage},
 ];
 
 Settings.displayName = 'Settings';
