@@ -121,6 +121,16 @@ select {
   }
 }
 
+/* style global scrollbars */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #6f6b6b;
+  border-radius: 8px;
+}
+
 
 input[type="text"],
 input[type="password"],
