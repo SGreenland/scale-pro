@@ -6,6 +6,7 @@ import Stripe from "stripe";
 import authRoutes from "./routes/auth";
 import settingsRoutes from "./routes/settings";
 import stripeRoutes from "./routes/stripe";
+import { stripeWebhook } from "./controllers/stripeController";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ var cookieParser = require('cookie-parser');
 const app = express();
 
 app.use(cors());
+app.post('/api/webhook',express.raw({ type: 'application/json' }), stripeWebhook);
 app.use(express.json());
 app.use(cookieParser());
 

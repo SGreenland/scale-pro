@@ -56,3 +56,50 @@ export async function createCheckoutSession(req: Request, res: Response) {
     res.status(500).json({ error: 'Failed to create checkout session' });
   }
 };
+
+
+//webhook to listen for subscription creation and update user subscription model
+export async function stripeWebhook(req: Request, res: Response) {
+  const sig = req.headers['stripe-signature'] as string;
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err);
+    return res.status(400).send(`Webhook Error: ${err || 'Invalid signature'}`);
+  }
+
+  switch (event.type) {
+    case 'customer.subscription.created':
+        const subscription = event.data.object;
+        const status = subscription.status;
+        console.log(`Subscription status is ${status}.`);
+
+      const subscriptionId = subscription.id;
+      const customerId = subscription.customer as string;
+
+      // Find the user by Stripe customer ID
+      const user = await prisma.user.findFirst({ where: { stripeId: customerId }, include: { subscription: true } });
+
+
+      if (user && !user.subscription) {
+        await prisma.subscription.create({
+          data: {
+            userId: user.id,
+            stripeSubId: subscriptionId,
+            status: 'active',
+            startedAt: new Date(subscription.start_date * 1000), // Convert to milliseconds
+            expiresAt: null
+          },
+        });
+      }
+      break;
+
+    default:
+      console.warn(`Unhandled event type ${event.type}`);
+  }
+
+  res.json({ received: true });
+}
