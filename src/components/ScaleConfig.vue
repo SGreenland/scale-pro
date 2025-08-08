@@ -128,9 +128,10 @@ const getAvailableScalesPerUser = (): (keyof Scales)[] => {
 const btnClass = "flex grow justify-center items-center";
 
 const handleScaleTypeChange = (item: string) => {
-  if (item === "Scales") {
+  //this is disgusting sorry about me
+  if (item === "Scales" && scaleConfig.selectedScale.includes("Arpeggio")) {
     scaleConfig.selectedScale = "Major";
-  } else {
+  } else if (item === "Arpeggios" && !scaleConfig.selectedScale.includes("Arpeggio")) {
     scaleConfig.selectedScale = "Major Arpeggio";
   }
 };
@@ -190,7 +191,6 @@ const getScaleOptions = computed(() => {
 // );
 
 onMounted(() => {
-  // if settings.startingScale is an arpeggio, change carousel to Arpeggios
   if (settings.startingScale.includes("Arpeggio") || scaleConfig.selectedScale.includes("Arpeggio")) {
     textCarouselComponent.value?.setActiveItem("Arpeggios");
   }
