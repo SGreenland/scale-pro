@@ -15,21 +15,23 @@
     </h3>
       <ul class="list-none flex flex-col gap-2 items-center">
         <div v-for="link in filteredMenuLinks" :key="link.name">
-          <router-link class="dark:text-indigo-200 dark:hover:text-indigo-300" v-if="link.name !== 'Logout'" :to=link.path @click="isOpen = false">{{ link.name }}</router-link>
-          <!--else logout button-->
-          <a role="button" class="router-link dark:text-indigo-200 dark:hover:text-indigo-300" v-else @click="handleLogout">{{ link.name }}</a>
+          <router-link class="dark:text-indigo-200 dark:hover:text-indigo-300" :to=link.path @click="isOpen = false">{{ link.name }}</router-link>
         </div>
+        <a v-if="currentLoggedInUser" role="button" class="router-link dark:text-indigo-200 dark:hover:text-indigo-300" @click="handleLogout">Logout</a>
       </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { RouterLink } from "vue-router";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { hasFullAccess } from "../utils/checkUserAccess";
+import { computed, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import { currentLoggedInUser } from "../GlobalState";
+
+const router = useRouter();
 
 const isUserLoggedIn = computed(() => {
   return currentLoggedInUser.value !== null;
@@ -44,10 +46,6 @@ const handleLogout = () => {
   window.location.href = '/login'; // Redirect to login page with full reload to reset state
 }
 
-interface menuLink {
-  name: string;
-  path: string;
-}
 
 const filteredMenuLinks = computed(() => {
   return menuLinks.filter(link => {
@@ -57,19 +55,15 @@ const filteredMenuLinks = computed(() => {
     if (link.name === 'Logout') {
       return isUserLoggedIn.value;
     }
+    if(link.name === 'Upgrade') {
+      return isUserLoggedIn.value && !hasFullAccess();
+    }
     return true;
   });
 });
 
 
-const menuLinks: menuLink[] = [
-  { name: 'Home', path: '/' },
-  { name: 'Settings', path: '/settings' },
-  { name: 'Upgrade', path: '/upgrade' },
-  { name: 'Login', path: '/login' },
-  { name: 'Signup', path: '/signup' },
-  { name: 'Logout', path: '/logout' }
-];
+const menuLinks = router.getRoutes();
 
 const isOpen = ref(false);
 </script>

@@ -9,11 +9,11 @@ import Signup from './pages/Signup.vue'
 import GetProLandingPage from './pages/GetProLandingPage.vue'
 
 const routes = [
-    {path: '/', component: Main},
-    {path: '/settings', component: Settings},
-    {path: '/login', component: Login},
-    {path: '/signup', component: Signup},
-    {path: '/upgrade', component: GetProLandingPage},
+    {path: '/', component: Main, name: 'Home'},
+    {path: '/settings', component: Settings, name: 'Settings'},
+    {path: '/login', component: Login, name: 'Login'},
+    {path: '/signup', component: Signup, name: 'Signup'},
+    {path: '/upgrade', component: GetProLandingPage, name: 'Upgrade'},
 ];
 
 Settings.displayName = 'Settings';
