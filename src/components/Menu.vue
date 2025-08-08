@@ -46,6 +46,8 @@ const handleLogout = () => {
   window.location.href = '/login'; // Redirect to login page with full reload to reset state
 }
 
+console.log("Current User:", currentLoggedInUser.value);
+
 
 const filteredMenuLinks = computed(() => {
   return menuLinks.filter(link => {
@@ -56,7 +58,7 @@ const filteredMenuLinks = computed(() => {
       return isUserLoggedIn.value;
     }
     if(link.name === 'Upgrade') {
-      return isUserLoggedIn.value && !hasFullAccess();
+      return isUserLoggedIn.value && (currentLoggedInUser.value?.trialExpiresAt || !hasFullAccess());
     }
     return true;
   });

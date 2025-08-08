@@ -7,7 +7,7 @@ import { useSessionStorage } from "./composables/useSessionStorage";
 
 const { getScale } = scaleManipulator();
 
-export const currentLoggedInUser = useSessionStorage<{ id: string; userName: string, email: string } | null>('user', null);
+export const currentLoggedInUser = useSessionStorage<{ id: string; userName: string, email: string, trialExpiresAt: Date } | null>('user', null);
 
 export const hasUserJustSignedUp = ref(false);
 

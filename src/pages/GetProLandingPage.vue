@@ -17,6 +17,7 @@
       class="mt-3 w-3/4 mx-auto"
       @click="startCheckout"
       :is-submitting="loading"
+      :disabled="loading"
       :button-text="loading ? 'Redirecting...' : 'Get Pro Now!'"
     >
     </submit-button>
@@ -29,7 +30,7 @@
         You can manage your subscription from
         <a href="/my-account">your account</a>.
       </p>
-      <button class="mt-4 w-3/4"><a class="w-full" href="/">Start Practicing!</a></button>
+      <button class="mt-4 w-3/4 mx-auto"><a class="w-full" href="/">Start Practicing!</a></button>
     </div>
   </modal-wrapper>
 </template>

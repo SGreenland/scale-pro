@@ -18,10 +18,12 @@ enum SubscriptionStatus {
   active
   canceled
   incomplete
+  incomplete_expired
+  paused
+  trialing
   past_due
   unpaid
 }
-
 
 model User {
   id              String   @id @default(uuid())

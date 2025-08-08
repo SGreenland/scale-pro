@@ -191,7 +191,7 @@ const getScaleOptions = computed(() => {
 
 onMounted(() => {
   // if settings.startingScale is an arpeggio, change carousel to Arpeggios
-  if (settings.startingScale.includes("Arpeggio")) {
+  if (settings.startingScale.includes("Arpeggio") || scaleConfig.selectedScale.includes("Arpeggio")) {
     textCarouselComponent.value?.setActiveItem("Arpeggios");
   }
 });

@@ -49,7 +49,8 @@ const handleSubmit = async () => {
             currentLoggedInUser.value = {
                 id: response.data.user.id,
                 userName: response.data.user.userName,
-                email: response.data.user.email
+                email: response.data.user.email,
+                trialExpiresAt: response.data.user.trialExpiresAt
             };
             // Redirect to home
             window.location.href = '/';
