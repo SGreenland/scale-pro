@@ -8,7 +8,7 @@
     />
     <div
       v-if="showTooltip"
-      class="absolute top-8 w-48 bg-white border dark:bg-gray-700 dark:text-white text-sm p-2 rounded shadow-lg z-[100]"
+      class="absolute top-6 w-48 bg-white border border-black dark:bg-gray-700 dark:text-white text-sm p-2 rounded shadow-lg z-[100]"
     >
       <p class="text-sm">
         <slot></slot>

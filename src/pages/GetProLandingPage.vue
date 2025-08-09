@@ -1,11 +1,11 @@
 <template>
   <modal-wrapper :mask="false" :has-close-button="false">
     <div v-if="!success">
-      <h2 class="text-xl">Upgrade to Scale Maestro Pro!</h2>
+      <h2 class="text-2xl">Upgrade to Scale Maestro Pro!</h2>
       <div class="my-2">£3.99 /month or £39.99 /year</div>
       <div class="flex items-center w-fit m-auto gap-2">Monthly<toggle-switch :show-on-off-text="false" v-model="isYearly" class="mt-2" />Yearly</div>
       <hr class="my-4" />
-      <b class="py-2">What's included:</b>
+      <p class="my-2"><b>What's included:</b></p>
       <ul class="feature-list pl-5 flex flex-col gap-2">
         <li>Over 20 premium scales and arpeggios</li>
         <li>Save your settings and pitch data</li>

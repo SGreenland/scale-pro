@@ -121,6 +121,8 @@ select {
   }
 }
 
+/* to-do: select option dark mode? */
+
 /* style global scrollbars */
 ::-webkit-scrollbar {
   width: 12px;
@@ -195,7 +197,7 @@ label {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #f6faff;
   }
   a:hover {
     color: #747bff;

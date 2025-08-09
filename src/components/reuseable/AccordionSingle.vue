@@ -1,7 +1,7 @@
 <template>
   <details>
     <summary
-      class="flex justify-between items-center w-full p-2 border cursor-pointer"
+      class="flex justify-between items-center w-full p-2 shadow cursor-pointer"
       :class="extraSummaryClasses"
     >
       <h3>{{ title }}</h3>

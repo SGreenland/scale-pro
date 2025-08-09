@@ -1,9 +1,9 @@
 <template>
   <div
-    class="flex-col h-fit p-4 lg:w-1/2 w-full mt-4 m-auto rounded border shadow"
+    class="flex-col h-fit p-5 lg:w-1/2 w-full mt-4 m-auto rounded-lg shadow-md dark:shadow-gray-500 bg-white dark:bg-gray-800/50"
   >
     <div class="w-full text-start">
-      <div class="flex relative items-center py-4 border-b">
+      <div class="flex relative items-center pb-5">
         <font-awesome-icon
           role="button"
           @click="goBack"
@@ -182,7 +182,7 @@ import SubmitButton from "./reuseable/SubmitButton.vue";
 const isSaving = ref(false);
 const successfullySaved = ref(false);
 
-const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50`;
+const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50 shadow-indigo-400 rounded mb-1`;
 const optionClasses: string = "grid gap-2 mx-2 mb-2";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
 function goBack() {
@@ -230,6 +230,10 @@ label {
 
 input {
   height: 1.5rem;
+}
+
+hr {
+  margin-block: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
