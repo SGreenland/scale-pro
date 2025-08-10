@@ -151,12 +151,20 @@ export const computedLoopGap = computed(() => {
   }
 });
 
-
-export const computedTheme = computed(() => {
-  return settings.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : settings.theme;
+export const currentSettings = computed(() => {
+  //if userSettings is empty object, return default settings
+  if (Object.keys(userSettings).length === 0) {
+    return settings;
+  }
+  return userSettings as Settings;
 });
 
-watch(() => settings.theme, () => {
+
+export const computedTheme = computed(() => {
+  return currentSettings.value.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : currentSettings.value.theme;
+});
+
+watch(() => currentSettings, () => {
   const html = document.documentElement;
 
   if (computedTheme.value === 'dark') {
@@ -164,7 +172,7 @@ watch(() => settings.theme, () => {
   } else {
     html.classList.remove('dark');
   }
-}, { immediate: true });
+}, { immediate: true, deep: true });
 
 
 

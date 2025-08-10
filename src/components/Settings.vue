@@ -155,9 +155,9 @@
 </template>
 
 <script setup lang="ts">
-import { LoopGapOption, Settings } from "@shared/types";
+import { LoopGapOption } from "@shared/types";
 import { ref, computed } from "vue";
-import { currentLoggedInUser, settings, userSettings } from "../GlobalState";
+import { currentLoggedInUser, settings, currentSettings } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";
@@ -177,14 +177,6 @@ function getButtonText() {
   return successfullySaved.value ? "Settings Saved!" : "Save Settings";
 }
 
-const currentSettings = computed(() => {
-  //if userSettings is empty object, return default settings
-  if (Object.keys(userSettings).length === 0) {
-    return settings;
-  }
-  return userSettings as Settings;
-});
-
 async function saveSettings() {
   isSaving.value = true;
   try {
@@ -194,7 +186,7 @@ async function saveSettings() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${document.cookie.split('token=')[1]?.split(';')[0] || ''}`
       },
-      body: JSON.stringify({settings: settings}),
+      body: JSON.stringify({settings: currentSettings.value}),
     });
 
     if (!response.ok) {
