@@ -34,7 +34,7 @@ watch(() => tabsComponent.value.currentTab, () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 w-full max-sm:text-[0.9rem]">
+  <div class="xl:w-2/3 lg:w-5/6 m-auto flex flex-col gap-3 w-full max-sm:text-[0.9rem]">
     <tabs
       v-show="false"
       ref="tabsComponent"
@@ -47,7 +47,7 @@ watch(() => tabsComponent.value.currentTab, () => {
       </template>
     </tabs>
     <scale-config
-      class="lg:w-2/3 m-auto"
+      class="m-auto"
       v-show="tabsComponent.currentTab === 'practice'"
       :workoutMode="tabsComponent.currentTab === 'workout'"
       ref="scaleConfigComponent"

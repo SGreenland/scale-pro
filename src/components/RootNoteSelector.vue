@@ -1,5 +1,5 @@
 <template>
-  <select style="max-height: 200px;" id="note" v-model="modelValue">
+  <select style="max-height: 200px;" id="note-selector" v-model="modelValue">
     <option v-for="(note, index) in availableRootNotes" :key="index">
       {{ note.name }}
     </option>

@@ -12,7 +12,9 @@
 
       <form class="text-left" @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+          <label for="username" class="block text-sm font-medium text-gray-700"
+            >Username</label
+          >
           <input
             maxlength="20"
             v-model="formData.userName"
@@ -24,7 +26,9 @@
         </div>
 
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Email</label
+          >
           <input
             v-model="formData.email"
             type="email"
@@ -32,11 +36,15 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
           />
-          <span v-if="errors.email" class="text-red-500 text-sm">{{ errors.email }}</span>
+          <span v-if="errors.email" class="text-red-500 text-sm">{{
+            errors.email
+          }}</span>
         </div>
 
         <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-700"
+            >Password</label
+          >
           <input
             v-model="formData.password"
             type="password"
@@ -44,11 +52,17 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
           />
-          <span v-if="errors.password" class="text-red-500 text-sm">{{ errors.password }}</span>
+          <span v-if="errors.password" class="text-red-500 text-sm">{{
+            errors.password
+          }}</span>
         </div>
 
         <div class="mb-4">
-          <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <label
+            for="confirm-password"
+            class="block text-sm font-medium text-gray-700"
+            >Confirm Password</label
+          >
           <input
             v-model="formData.confirmPassword"
             type="password"
@@ -56,13 +70,14 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
           />
-          <span v-if="errors.confirmPassword" class="text-red-500 text-sm">{{ errors.confirmPassword }}</span>
+          <span v-if="errors.confirmPassword" class="text-red-500 text-sm">{{
+            errors.confirmPassword
+          }}</span>
         </div>
 
-        <submit-button
-          :isSubmitting="isSubmitting"
-          buttonText="Start Free Trial"
-        />
+        <submit-button :isSubmitting="isSubmitting">
+          Start Free Trial
+        </submit-button>
       </form>
 
       <p class="text-center text-xs text-gray-500 mt-4">
@@ -71,7 +86,6 @@
     </modal-wrapper>
   </div>
 </template>
-
 
 <script setup lang="ts">
 import axios from "axios";

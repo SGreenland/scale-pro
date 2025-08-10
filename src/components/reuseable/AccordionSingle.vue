@@ -4,7 +4,7 @@
       class="flex justify-between items-center w-full p-2 shadow cursor-pointer"
       :class="extraSummaryClasses"
     >
-      <h3>{{ title }}</h3>
+      <h3 :class="centerTitle && 'mx-auto'">{{ title }}</h3>
       <font-awesome-icon :icon="faChevronDown"></font-awesome-icon>
     </summary>
     <slot></slot>
@@ -18,6 +18,7 @@ import { defineProps } from "vue";
 defineProps<{
   title: string;
   extraSummaryClasses?: string;
+  centerTitle?: boolean;
 }>();
 </script>
 

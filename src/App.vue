@@ -10,14 +10,7 @@
 import { computed, onMounted } from "vue";
 import Menu from "./components/Menu.vue";
 import WelcomeModal from "./components/WelcomeModal.vue";
-import { currentLoggedInUser, settings, hasUserJustSignedUp } from "./GlobalState";
-
-onMounted(() => {
-  // Check if user is logged in
-  if (currentLoggedInUser.value) {
-    loadUserSettings();
-  }
-});
+import { currentLoggedInUser, hasUserJustSignedUp, userSettings } from "./GlobalState";
 
 const shouldShowWelcomeModal = computed(() => {
   return hasUserJustSignedUp.value && currentLoggedInUser.value !== null;
@@ -27,34 +20,30 @@ const handleWelcomeModalClose = () => {
   hasUserJustSignedUp.value = false;
 };
 
-const loadUserSettings = async () => {
-  try {
-    const response = await fetch(
-      `/api/settings/${currentLoggedInUser.value?.id}`,
-      {
+onMounted(() => {
+  const loadUserSettings = async () => {
+    try {
+      const response = await fetch(`/api/settings`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${
-            document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("token="))
-              ?.split("=")[1]
-          }`,
         },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // Update global settings state
+        Object.assign(userSettings, data.settings);
+      } else {
+        console.error("Failed to load user settings");
       }
-    );
-    if (response.ok) {
-      const data = await response.json();
-      // Update global settings state
-      Object.assign(settings, data.settings);
-    } else {
-      console.error("Failed to load user settings");
+    } catch (error) {
+      console.error("Error loading user settings:", error);
     }
-  } catch (error) {
-    console.error("Error loading user settings:", error);
+  };
+  if (currentLoggedInUser.value) {
+    loadUserSettings();
   }
-};
+});
 </script>
 
 <style scoped></style>

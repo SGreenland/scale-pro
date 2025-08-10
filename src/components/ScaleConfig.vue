@@ -2,15 +2,16 @@
   <div
     class="grid-rows-2 w-full bg-gradient-to-br from-sky-300 to-indigo-400 dark:from-sky-600 dark:to-indigo-700 p-2 rounded-md border-2 border-indigo-900 shadow-lg max-sm:pt-4"
   >
-    <div class="flex max-sm:flex-wrap w-full gap-2 m-auto">
+    <div class="flex max-md:flex-wrap w-full gap-2 m-auto">
       <div class="flex items-center gap-2 lg:w-1/2 w-full">
         <div class="flex flex-col w-fit h-full justify-end items-start">
           <div class="flex gap-1">
-            <label for="note">Root Note</label><!--info icon with tooltip-->
-                <info-tooltip>
-                  Click the arrows to transpose the scale up or down by a semitone.
-                  Shift-click to transpose by an octave. (Press and hold on mobile)
-                </info-tooltip>
+            <label for="note">Root Note</label
+            ><!--info icon with tooltip-->
+            <info-tooltip>
+              Click the arrows to transpose the scale up or down by a semitone.
+              Shift-click to transpose by an octave. (Press and hold on mobile)
+            </info-tooltip>
           </div>
           <quick-transpose
             v-show="!props.workoutMode"
@@ -23,7 +24,7 @@
             ></root-note-selector>
           </quick-transpose>
         </div>
-        <div class="flex flex-col w-full items-start">
+        <div class="flex flex-col w-full items-start md:min-w-[175px] min-w-none">
           <text-carousel
             ref="textCarouselComponent"
             :items="['Scales', 'Arpeggios']"
@@ -44,7 +45,7 @@
       <div class="flex flex-col justify-end lg:w-1/2 w-full">
         <div class="font-medium flex justify-between items-end pb-2">
           Note Order<button
-            class="rounded-full h-6 flex items-center inverted-btn text-sm"
+            class="rounded-full h-6 flex items-center inverted-btn text-[0.8rem] px-2"
             @click="scaleConfig.noteOrder = null"
           >
             Reset Order
@@ -91,22 +92,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
 import {
   presetNoteOrders,
   scaleConfig,
   scaleToDisplay,
-  settings,
+  userSettings,
 } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
 import { hasFullAccess } from "../utils/checkUserAccess";
 import QuickTranspose from "./QuickTranspose.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
+import InfoTooltip from "./reuseable/InfoTooltip.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
-import InfoTooltip from "./reuseable/InfoTooltip.vue";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 const { shuffle, reverse } = useReorderNotes();
 
@@ -131,7 +133,10 @@ const handleScaleTypeChange = (item: string) => {
   //this is disgusting sorry about me
   if (item === "Scales" && scaleConfig.selectedScale.includes("Arpeggio")) {
     scaleConfig.selectedScale = "Major";
-  } else if (item === "Arpeggios" && !scaleConfig.selectedScale.includes("Arpeggio")) {
+  } else if (
+    item === "Arpeggios" &&
+    !scaleConfig.selectedScale.includes("Arpeggio")
+  ) {
     scaleConfig.selectedScale = "Major Arpeggio";
   }
 };
@@ -164,8 +169,6 @@ const getScaleOptions = computed(() => {
   return scalesList;
 });
 
-
-
 // watch(
 //   () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],
 //   () => {
@@ -190,19 +193,28 @@ const getScaleOptions = computed(() => {
 //   { deep: true, immediate: true }
 // );
 
-onMounted(() => {
-  if (settings.startingScale.includes("Arpeggio") || scaleConfig.selectedScale.includes("Arpeggio")) {
-    textCarouselComponent.value?.setActiveItem("Arpeggios");
-  }
-});
-
-//watch for changes in settings and update scaleConfig accordingly
+//watch for initial user settings load to set scaleConfig
 watch(
-  [() => settings.startingScale, () => settings.startingRootNote],
-  ([newScale, newRootNote]: [keyof Scales, string]) => {
-    scaleConfig.selectedScale = newScale;
-    scaleConfig.selectedNote = newRootNote;
-  }
+  () => userSettings,
+  () => {
+    if ("startingScale" in userSettings && "startingRootNote" in userSettings) {
+      scaleConfig.selectedScale = userSettings.startingScale as keyof Scales;
+      scaleConfig.selectedNote = userSettings.startingRootNote as string;
+    }
+  },
+  { deep: true, once: true }
+);
+
+watch(
+  () => scaleConfig.selectedScale,
+  (newScale) => {
+    nextTick(() => {
+      if (newScale.includes("Arpeggio")) {
+        textCarouselComponent.value?.setActiveItem("Arpeggios");
+      }
+    });
+  },
+  { immediate: true }
 );
 
 const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(

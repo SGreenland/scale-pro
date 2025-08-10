@@ -91,6 +91,13 @@ interface FretBoard {
   [stringNum: number]: string[];
 }
 
+interface UserSessionObject {
+  id: string;
+  userName: string;
+  email: string;
+  trialExpiresAt?: Date | null; // Optional, only if user has no subscription
+}
+
 export type {
   Note,
   Scales,
@@ -102,4 +109,5 @@ export type {
   IntervalSymbol,
   GuitarPosition,
   FretBoard,
+  UserSessionObject,
 };

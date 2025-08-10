@@ -1,13 +1,13 @@
 import { computed, reactive, ref, watch} from "vue";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
-import { PlayBackOptions, ScaleConfig, WorkoutConfig } from "./types";
+import { PlayBackOptions, ScaleConfig, UserSessionObject, WorkoutConfig } from "./types";
 import { Settings } from "@shared/types";
 import scaleManipulator from "./utils/scaleManipulator";
 import { useSessionStorage } from "./composables/useSessionStorage";
 
 const { getScale } = scaleManipulator();
 
-export const currentLoggedInUser = useSessionStorage<{ id: string; userName: string, email: string, trialExpiresAt: Date } | null>('user', null);
+export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>('user', null);
 
 export const hasUserJustSignedUp = ref(false);
 
@@ -86,6 +86,8 @@ export const settings = reactive<Settings>({
   minDetectionVolume: 'normal',
   pitchToleranceLevel: 'standard',
 });
+
+export const userSettings = reactive<Settings|{}>({});
 
 export const scaleConfig = reactive<ScaleConfig>({
   selectedScale: settings.startingScale,

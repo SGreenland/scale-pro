@@ -1,11 +1,8 @@
 <template>
   <div class="flex flex-col">
-    <!-- <div class="flex">
-      <label>Quick Transpose</label>
-    </div> -->
     <div class="flex gap-1 items-center">
       <button
-        class="inverted-btn w-10 input flex items-center justify-center"
+        class="qt-btn inverted-btn w-10 input flex items-center justify-center"
         @click="(e) => handleClick('down', e)"
         @touchstart="() => handleLongPressStart('down')"
         @touchend="cancelHold"
@@ -14,7 +11,7 @@
       </button>
       <slot></slot>
       <button
-        class="inverted-btn w-10 input flex items-center justify-center"
+        class="qt-btn inverted-btn w-10 input flex items-center justify-center"
         @click="(e) => handleClick('up', e)"
         @touchstart="() => handleLongPressStart('up')"
         @touchend="cancelHold"
@@ -101,4 +98,8 @@ function cancelHold() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .qt-btn {
+    border: none !important;
+  }
+</style>

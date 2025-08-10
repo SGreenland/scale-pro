@@ -13,7 +13,7 @@
                     <input v-model="formData.password" type="password" id="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
                     <span v-if="errors.password" class="text-red-500 text-sm">{{ errors.password }}</span>
                 </div>
-                <submit-button :disabled="isSubmitting" @click="handleSubmit" :isSubmitting="isSubmitting" buttonText="Login"></submit-button>
+                <submit-button @click="handleSubmit" :isSubmitting="isSubmitting">Login</submit-button>
             </form>
         </modal-wrapper>
     </div>

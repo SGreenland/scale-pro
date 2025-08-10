@@ -60,12 +60,17 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #082f49;
   cursor: pointer;
   transition: all 0.25s;
 }
-button:hover {
-  outline-color: #0369a1;
+
+.dark button {
+  background-color: #082f49;
+  color: whitesmoke
+}
+
+.dark button:hover {
+  outline-color: whitesmoke;
 }
 
 .inverted-btn {
@@ -119,6 +124,14 @@ select {
     max-height: 300px;
     scrollbar-color: #6f6b6b transparent;
   }
+}
+
+#note-selector {
+  &::picker-icon {
+    margin-left: 0.2rem;
+  }
+  width: fit-content
+
 }
 
 /* to-do: select option dark mode? */

@@ -1,20 +1,13 @@
-import { Request, Response } from "express";
 import { Settings } from "@shared/types";
+import { Request, Response } from "express";
 import {
-    getUserSettings,
-    updateUserSettings,
+  getUserSettings,
+  updateUserSettings,
 } from "../services/userSettingsService";
 import { SettingsRequestBody } from "../types";
-import { validateToken } from "../validators/helpers/auth";
 
 export async function get(req: Request, res: Response): Promise<Response> {
-  const userId = req.params.id as string;
-
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token || !validateToken(token)) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+  const userId = req.user!.id;
 
   const userSettings = await getUserSettings(userId);
 
@@ -28,9 +21,10 @@ export async function get(req: Request, res: Response): Promise<Response> {
 }
 
 export async function post(req: Request, res: Response): Promise<Response> {
-  const userId = req.params.id as string;
+  const userId = req.user!.id;
 
   if (!userId) {
+    console.error("User ID is missing in the request");
     return res.status(400).json({ error: "User ID is required" });
   }
 

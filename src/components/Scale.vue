@@ -21,7 +21,7 @@
     />
     <!-- for each grid cell create a border top if guitar mode-->
     <div
-      class="lg:w-2/3 w-full absolute left-0 right-0 m-auto z-10"
+      class="w-full absolute left-0 right-0 m-auto z-10"
       v-if="settings.gridType === 'Guitar tab'"
     >
       <div
@@ -32,7 +32,7 @@
       ></div>
     </div>
     <div
-      class="relative grid max-sm:text-xs lg:w-2/3 w-full m-auto"
+      class="relative grid max-sm:text-xs w-full m-auto"
       :class="settings.gridType === 'Guitar tab' ? 'fretboard' : 'piano-roll'"
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,

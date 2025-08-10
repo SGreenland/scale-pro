@@ -6,6 +6,7 @@ import Stripe from "stripe";
 import authRoutes from "./routes/auth";
 import settingsRoutes from "./routes/settings";
 import stripeRoutes from "./routes/stripe";
+import userRoutes from "./routes/user";
 import { stripeWebhook } from "./controllers/stripeController";
 
 dotenv.config();
@@ -28,5 +29,7 @@ app.use("/api", authRoutes);
 app.use("/api", settingsRoutes);
 
 app.use("/api", stripeRoutes);
+
+app.use("/api", userRoutes);
 
 export default app;

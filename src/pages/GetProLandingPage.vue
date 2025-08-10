@@ -3,7 +3,13 @@
     <div v-if="!success">
       <h2 class="text-2xl">Upgrade to Scale Maestro Pro!</h2>
       <div class="my-2">£3.99 /month or £39.99 /year</div>
-      <div class="flex items-center w-fit m-auto gap-2">Monthly<toggle-switch :show-on-off-text="false" v-model="isYearly" class="mt-2" />Yearly</div>
+      <div class="flex items-center w-fit m-auto gap-2">
+        Monthly<toggle-switch
+          :show-on-off-text="false"
+          v-model="isYearly"
+          class="mt-2"
+        />Yearly
+      </div>
       <hr class="my-4" />
       <p class="my-2"><b>What's included:</b></p>
       <ul class="feature-list pl-5 flex flex-col gap-2">
@@ -14,13 +20,12 @@
         <li class="more">And much more!</li>
       </ul>
       <submit-button
-      class="mt-3 w-3/4 mx-auto"
-      @click="startCheckout"
-      :is-submitting="loading"
-      :disabled="loading"
-      :button-text="loading ? 'Redirecting...' : 'Get Pro Now!'"
-    >
-    </submit-button>
+        class="mt-3 w-3/4 mx-auto"
+        @click="startCheckout"
+        :is-submitting="loading"
+      >
+        {{ loading ? "Redirecting..." : "Get Pro Now!" }}
+      </submit-button>
     </div>
     <!--success content-->
     <div class="grid gap-2" v-else>
@@ -30,7 +35,9 @@
         You can manage your subscription from
         <a href="/my-account">your account</a>.
       </p>
-      <button class="mt-4 w-3/4 mx-auto"><a class="w-full" href="/">Start Practicing!</a></button>
+      <button class="mt-4 w-3/4 mx-auto">
+        <a class="w-full" href="/">Start Practicing!</a>
+      </button>
     </div>
   </modal-wrapper>
 </template>
@@ -77,7 +84,8 @@ const startCheckout = async () => {
   font-weight: bold;
 }
 
-button a, button a:hover {
+button a,
+button a:hover {
   all: unset;
 }
 </style>

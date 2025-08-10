@@ -1,26 +1,15 @@
 <template>
-  <div
-    class="flex-col h-fit p-5 lg:w-1/2 w-full mt-4 m-auto rounded-lg shadow-md dark:shadow-gray-500 bg-white dark:bg-gray-800/50"
-  >
+  <card-wrapper title="Settings" :withBackArrow="true">
     <div class="w-full text-start">
-      <div class="flex relative items-center pb-5">
-        <font-awesome-icon
-          role="button"
-          @click="goBack"
-          class="cursor-pointer ps-1"
-          :icon="faArrowLeft"
-        ></font-awesome-icon>
-        <h2 class="text-2xl absolute w-fit left-0 right-0 m-auto">Settings</h2>
-      </div>
       <accordion-single title="General" :extra-summary-classes="sectionHeaderClasses">
         <div :class="optionClasses">
           <label for="startingNote">Starting Note</label>
-          <root-note-selector v-model="settings.startingRootNote"></root-note-selector>
+          <root-note-selector v-model="currentSettings.startingRootNote"></root-note-selector>
         </div>
         <hr />
         <div :class="optionClasses">
           <label for="startingScale">Starting Scale</label>
-          <select v-model="settings.startingScale" name="startingScale" id="startingScale">
+          <select v-model="currentSettings.startingScale" name="startingScale" id="startingScale">
             <option v-for="scale in Object.keys(scales)" :value="scale">
               {{ scale }}
             </option>
@@ -35,7 +24,7 @@
           <div class="flex justify-between items-center mt-2">
             <label for="theme">Theme</label>
             <select
-              v-model="settings.theme"
+              v-model="currentSettings.theme"
               name="theme"
               id="theme"
               class="w-fit px-1 h-[42px]"
@@ -52,7 +41,7 @@
           <custom-radio-chips
             id="grid-type"
             :options="['Guitar tab', 'Piano roll']"
-            v-model="settings.gridType"
+            v-model="currentSettings.gridType"
           ></custom-radio-chips>
         </div>
       </accordion-single>
@@ -65,7 +54,7 @@
           <label class="me-1" for="loop-gap">Loop Gap </label>
           <div class="flex items-center gap-2">
             <select
-              v-model="settings.loopGap"
+              v-model="currentSettings.loopGap"
               name="loop-gap"
               id="loop-gap"
               class="w-fit px-1 h-[42px]"
@@ -79,8 +68,8 @@
               </option>
             </select>
             <NumberInput
-              v-if="settings.loopGap === 'Custom'"
-              v-model="settings.loopGapCustom"
+              v-if="currentSettings.loopGap === 'Custom'"
+              v-model="currentSettings.loopGapCustom"
               :min="1"
               :max="8"
             />
@@ -91,7 +80,7 @@
           <label for="auto-shuffle">Auto Shuffle </label>
           <toggle-switch
             id="auto-shuffle"
-            v-model="settings.autoShuffle"
+            v-model="currentSettings.autoShuffle"
           ></toggle-switch>
         </div>
       </accordion-single>
@@ -107,7 +96,7 @@
               <div class="flex w-1/3 items-center gap-2">
                 <input
                   type="radio"
-                  v-model="settings.minDetectionVolume"
+                  v-model="currentSettings.minDetectionVolume"
                   value="sensitive"
                 />
                 Sensitive
@@ -115,7 +104,7 @@
               <div class="flex w-1/3 items-center gap-2">
                 <input
                   type="radio"
-                  v-model="settings.minDetectionVolume"
+                  v-model="currentSettings.minDetectionVolume"
                   value="normal"
                 />
                 Normal
@@ -129,7 +118,7 @@
               <div class="flex items-center gap-2">
                 <input
                   type="radio"
-                  v-model="settings.pitchToleranceLevel"
+                  v-model="currentSettings.pitchToleranceLevel"
                   value="loose"
                 />
                 🎵 Loose
@@ -137,7 +126,7 @@
               <div class="flex items-center gap-2">
                 <input
                   type="radio"
-                  v-model="settings.pitchToleranceLevel"
+                  v-model="currentSettings.pitchToleranceLevel"
                   value="standard"
                 />
                 🎶 Standard
@@ -145,7 +134,7 @@
               <div class="flex items-center gap-2">
                 <input
                   type="radio"
-                  v-model="settings.pitchToleranceLevel"
+                  v-model="currentSettings.pitchToleranceLevel"
                   value="precise"
                 />
                 🎼 Precise
@@ -160,46 +149,50 @@
       class="mt-4"
       @click="saveSettings"
       :isSubmitting="isSaving"
-      :buttonText="getButtonText()"
-      ></submit-button>
-  </div>
+      >{{ getButtonText() }}
+    </submit-button>
+  </card-wrapper>
 </template>
 
 <script setup lang="ts">
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { settings } from "../GlobalState";
-import { LoopGapOption } from "@shared/types";
-import AccordionSingle from "./reuseable/AccordionSingle.vue";
-import NumberInput from "./reuseable/NumberInput.vue";
-import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
-import CustomRadioChips from "./reuseable/CustomRadioChips.vue";
+import { LoopGapOption, Settings } from "@shared/types";
+import { ref, computed } from "vue";
+import { currentLoggedInUser, settings, userSettings } from "../GlobalState";
 import { scales } from "../NotesAndScales";
-import RootNoteSelector from "./RootNoteSelector.vue";
-import { currentLoggedInUser } from "../GlobalState";
-import { ref } from "vue";
+import AccordionSingle from "./reuseable/AccordionSingle.vue";
+import CardWrapper from "./reuseable/CardWrapper.vue";
+import CustomRadioChips from "./reuseable/CustomRadioChips.vue";
+import NumberInput from "./reuseable/NumberInput.vue";
 import SubmitButton from "./reuseable/SubmitButton.vue";
+import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
+import RootNoteSelector from "./RootNoteSelector.vue";
 const isSaving = ref(false);
 const successfullySaved = ref(false);
 
 const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50 shadow-indigo-400 rounded mb-1`;
 const optionClasses: string = "grid gap-2 mx-2 mb-2";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
-function goBack() {
-  window.history.back();
-}
 
 function getButtonText() {
   return successfullySaved.value ? "Settings Saved!" : "Save Settings";
 }
 
+const currentSettings = computed(() => {
+  //if userSettings is empty object, return default settings
+  if (Object.keys(userSettings).length === 0) {
+    return settings;
+  }
+  return userSettings as Settings;
+});
+
 async function saveSettings() {
   isSaving.value = true;
   try {
-    const response = await fetch(`/api/settings/${currentLoggedInUser.value?.id}`, {
+    const response = await fetch('/api/settings', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${document.cookie.split('token=')[1]?.split(';')[0] || ''}`
       },
       body: JSON.stringify({settings: settings}),
     });
