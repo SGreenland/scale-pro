@@ -47,7 +47,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
-import { currentLoggedInUser } from "../GlobalState";
+import { currentLoggedInUser, scaleConfig } from "../GlobalState";
 
 const router = useRouter();
 
@@ -78,6 +78,11 @@ const handleSubmit = async () => {
         trialExpiresAt: response.data.user.trialExpiresAt,
         userSettings: response.data.user.userSettings,
       };
+      // set scaleconfig defaults
+      if (currentLoggedInUser.value.userSettings) {
+        scaleConfig.selectedNote = currentLoggedInUser.value.userSettings.startingRootNote;
+        scaleConfig.selectedScale = currentLoggedInUser.value.userSettings.startingScale;
+      }
       // Redirect to home
       router.push("/");
     } else {
