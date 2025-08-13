@@ -17,6 +17,19 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fade-in {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* index.css */
 html.dark body {
   background-color: #111;
@@ -132,6 +145,13 @@ select {
   }
   width: fit-content
 
+}
+
+li.plus-tick::after {
+  content: "✓";
+  color: green;
+  margin-inline: 5px;
+  font-weight: bold;
 }
 
 /* to-do: select option dark mode? */

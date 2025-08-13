@@ -45,10 +45,9 @@
           <label for="password" class="block text-sm font-medium text-gray-700"
             >Password</label
           >
-          <input
+          <PasswordInput
             v-model="formData.password"
             type="password"
-            id="password"
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
             required
           />
@@ -63,7 +62,8 @@
             class="block text-sm font-medium text-gray-700"
             >Confirm Password</label
           >
-          <input
+          <ConfirmPasswordInput
+            :password-to-match="formData.password"
             v-model="formData.confirmPassword"
             type="password"
             id="confirm-password"
@@ -90,10 +90,12 @@
 <script setup lang="ts">
 import axios from "axios";
 import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 import { currentLoggedInUser, hasUserJustSignedUp } from "../GlobalState";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
+import PasswordInput from "../components/reuseable/PasswordInput.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
-import { useRouter } from "vue-router";
+import ConfirmPasswordInput from "../components/reuseable/ConfirmPasswordInput.vue";
 
 const router = useRouter();
 

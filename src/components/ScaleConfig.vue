@@ -97,8 +97,7 @@ import useReorderNotes from "../composables/useReorderNotes";
 import {
   presetNoteOrders,
   scaleConfig,
-  scaleToDisplay,
-  userSettings,
+  scaleToDisplay
 } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
@@ -108,7 +107,6 @@ import DropdownButton from "./reuseable/DropdownButton.vue";
 import InfoTooltip from "./reuseable/InfoTooltip.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
-import { text } from "@fortawesome/fontawesome-svg-core";
 
 const { shuffle, reverse } = useReorderNotes();
 
@@ -193,18 +191,6 @@ const getScaleOptions = computed(() => {
 //   { deep: true, immediate: true }
 // );
 
-//watch for initial user settings load to set scaleConfig
-watch(
-  () => userSettings,
-  () => {
-    if ("startingScale" in userSettings && "startingRootNote" in userSettings) {
-      scaleConfig.selectedScale = userSettings.startingScale as keyof Scales;
-      scaleConfig.selectedNote = userSettings.startingRootNote as string;
-    }
-  },
-  { deep: true, once: true }
-);
-
 watch(
   () => scaleConfig.selectedScale,
   (newScale) => {
@@ -216,6 +202,7 @@ watch(
   },
   { immediate: true }
 );
+
 
 const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(
   null

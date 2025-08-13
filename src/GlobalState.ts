@@ -1,9 +1,9 @@
-import { computed, reactive, ref, watch} from "vue";
+import { Settings } from "@shared/types";
+import { computed, reactive, ref, watch } from "vue";
+import { useSessionStorage } from "./composables/useSessionStorage";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
 import { PlayBackOptions, ScaleConfig, UserSessionObject, WorkoutConfig } from "./types";
-import { Settings } from "@shared/types";
 import scaleManipulator from "./utils/scaleManipulator";
-import { useSessionStorage } from "./composables/useSessionStorage";
 
 const { getScale } = scaleManipulator();
 
@@ -87,8 +87,6 @@ export const settings = reactive<Settings>({
   pitchToleranceLevel: 'standard',
 });
 
-export const userSettings = reactive<Settings|{}>({});
-
 export const scaleConfig = reactive<ScaleConfig>({
   selectedScale: settings.startingScale,
   selectedNote: settings.startingRootNote,
@@ -153,10 +151,10 @@ export const computedLoopGap = computed(() => {
 
 export const currentSettings = computed(() => {
   //if userSettings is empty object, return default settings
-  if (Object.keys(userSettings).length === 0) {
-    return settings;
-  }
-  return userSettings as Settings;
+  // if (Object.keys(userSettings).length === 0) {
+  //   return settings;
+  // }
+  return currentLoggedInUser.value?.userSettings || settings;
 });
 
 

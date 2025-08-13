@@ -3,7 +3,7 @@ import {
     updateUserPassword,
     updateUserProfile,
 } from "../services/updateUserService";
-import { validateEmail } from "../validators/helpers/auth";
+import { validateEmail, validatePassword } from "../validators/helpers/auth";
 
 export async function updateProfile(
   req: Request,
@@ -39,18 +39,27 @@ export async function updatePassword(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const userId = req.params.id as string;
+  const userId = req.user!.id;
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });
   }
 
-  const { currentPassword, newPassword } = req.body;
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
 
-  if (!currentPassword || !newPassword) {
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
     return res
       .status(400)
-      .json({ error: "Current and new passwords are required" });
+      .json({ error: "All fields are required" });
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    return res.status(400).json({ error: "Passwords do not match" });
+  }
+
+  //validate new password strength
+  if( !validatePassword(newPassword)) {
+    return res.status(400).json({ error: "Password must be at least 8 characters long and contain a number" });
   }
 
   try {
@@ -65,6 +74,6 @@ export async function updatePassword(
       .json({ message: "Password updated successfully", result });
   } catch (error) {
     console.error("Error updating user password:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: error instanceof Error ? error.message : "Internal server error" });
   }
 }

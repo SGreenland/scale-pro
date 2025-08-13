@@ -145,7 +145,7 @@
       </accordion-single>
     </div>
     <submit-button
-      v-if="currentLoggedInUser"
+      v-if="currentLoggedInUser && hasFullAccess()"
       class="mt-4"
       @click="saveSettings"
       :isSubmitting="isSaving"
@@ -156,8 +156,9 @@
 
 <script setup lang="ts">
 import { LoopGapOption } from "@shared/types";
-import { ref, computed } from "vue";
-import { currentLoggedInUser, settings, currentSettings } from "../GlobalState";
+import { hasFullAccess } from "../utils/checkUserAccess";
+import { ref } from "vue";
+import { currentLoggedInUser, currentSettings, settings } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";
@@ -195,7 +196,9 @@ async function saveSettings() {
 
     const data = await response.json();
 
-    Object.assign(settings, data.settings);
+    if(data.settings) {
+      currentLoggedInUser.value!.userSettings = data.settings;
+    }
     isSaving.value = false;
     successfullySaved.value = true;
     setTimeout(() => {

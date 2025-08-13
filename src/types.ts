@@ -1,4 +1,4 @@
-import { Scales } from "@shared/types";
+import { Scales, Settings } from "@shared/types";
 
 interface Note {
   name: string;
@@ -55,18 +55,6 @@ interface IntervalMap {
   [key: number]: IntervalSymbol;
 }
 
-// interface Settings {
-//   startingRootNote: string;
-//   startingScale: keyof Scales;
-//   theme: "auto" | "dark" | "light";
-//   gridType: "Guitar tab" | "Piano roll";
-//   loopGap: LoopGapOption;
-//   loopGapCustom: number;
-//   autoShuffle: boolean;
-//   minDetectionVolume: "sensitive" | "normal";
-//   pitchToleranceLevel: "loose" | "standard" | "precise";
-// }
-
 interface PresetNoteOrders {
   presets8: number[];
   presets6: number[];
@@ -96,6 +84,7 @@ interface UserSessionObject {
   userName: string;
   email: string;
   trialExpiresAt?: Date | null; // Optional, only if user has no subscription
+  userSettings?: Settings | null; // Optional, only if user has settings
 }
 
 export type {
