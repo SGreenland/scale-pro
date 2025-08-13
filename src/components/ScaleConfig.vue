@@ -18,7 +18,7 @@
             :availableRootNotes="rootNoteSelector?.availableRootNotes"
           >
             <root-note-selector
-              class="w-[5.5rem]"
+              class="w-20 pe-0"
               ref="rootNoteSelector"
               v-model="scaleConfig.selectedNote"
             ></root-note-selector>

@@ -143,8 +143,6 @@ select {
   &::picker-icon {
     margin-left: 0.2rem;
   }
-  width: fit-content
-
 }
 
 li.plus-tick::after {
