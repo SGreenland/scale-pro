@@ -9,7 +9,6 @@ export function hasFullAccess(): boolean {
   try {
     parsedToken = JSON.parse(atob(token.split(".")[1]));
   } catch (error) {
-    console.error("Error parsing token:", error);
     // If parsing fails, assume no premium access
     parsedToken.hasPremiumAccess = false;
   }

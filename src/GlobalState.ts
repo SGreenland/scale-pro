@@ -87,9 +87,13 @@ export const settings = reactive<Settings>({
   pitchToleranceLevel: 'standard',
 });
 
+export const currentSettings = computed(() => {
+  return currentLoggedInUser.value?.userSettings || settings;
+});
+
 export const scaleConfig = reactive<ScaleConfig>({
-  selectedScale: settings.startingScale,
-  selectedNote: settings.startingRootNote,
+  selectedScale: currentSettings.value.startingScale,
+  selectedNote: currentSettings.value.startingRootNote,
   noteOrder: computedNoteOrder.value,
   currentGtrPositions: [],
 });
@@ -137,25 +141,19 @@ export const workoutConfig = reactive<WorkoutConfig>({
 
 export const computedLoopGap = computed(() => {
   // refactor to switch statement
-  switch (settings.loopGap) {
+  switch (currentSettings.value.loopGap) {
     case 'None':
       return 0;
     case 'Auto':
       return scaleToDisplay.value.length === 4 ? 2 : 3;
     case 'Custom':
-      return settings.loopGapCustom * 2 + 1;
+      return currentSettings.value.loopGapCustom * 2 + 1;
     default:
       return 1;
   }
 });
 
-export const currentSettings = computed(() => {
-  //if userSettings is empty object, return default settings
-  // if (Object.keys(userSettings).length === 0) {
-  //   return settings;
-  // }
-  return currentLoggedInUser.value?.userSettings || settings;
-});
+
 
 
 export const computedTheme = computed(() => {
@@ -186,10 +184,10 @@ const maxCentsMap = {
 };
 
 export const computedMinDetectionVolume = computed(() => {
-  return minDetectionVolumeMap[settings.minDetectionVolume];
+  return minDetectionVolumeMap[currentSettings.value.minDetectionVolume];
 });
 
 export const computedMaxCents = computed(() => {
-  return maxCentsMap[settings.pitchToleranceLevel];
+  return maxCentsMap[currentSettings.value.pitchToleranceLevel];
 });
 
