@@ -59,7 +59,7 @@ const startCheckout = async () => {
   loading.value = true;
 
   try {
-    const { data } = await axios.post("/api/create-checkout-session", {
+    const { data } = await axios.post("/api/stripe/create-checkout-session", {
       isYearly: isYearly.value,
     });
 

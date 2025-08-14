@@ -40,6 +40,7 @@ export async function login(req: Request, res: Response) {
           userName: user.userName,
           email: user.email,
           trialExpiresAt: !user.subscription && user.trialExpiresAt,
+          subscriptionId: user.subscription ? user.subscription.id : null,
           userSettings: user.settings || null,
         },
       });

@@ -5,6 +5,9 @@
        {{ countdownTimerMHS ? `Trial ends in: ${countdownTimerMHS}` : "Your trial has expired..." }}
         <router-link to="/upgrade">Upgrade Now!</router-link>
       </p>
+      <p v-if="currentLoggedInUser?.subscriptionId && hasFullAccess()">
+        Thanks for upgrading to Pro! <a @click.prevent="goToCustomerPortal" href="#">Manage your Subscription</a>
+      </p>
       <div class="grid gap-2 mb-4">
         <div :class="formFieldClasses">
           <label for="username">Username</label>
@@ -81,6 +84,7 @@ import CardWrapper from "../components/reuseable/CardWrapper.vue";
 import ConfirmPasswordInput from "../components/reuseable/ConfirmPasswordInput.vue";
 import PasswordInput from "../components/reuseable/PasswordInput.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
+import { hasFullAccess } from "../utils/checkUserAccess";
 
 const username = ref<string>(currentLoggedInUser.value?.userName || "");
 const email = ref<string>(currentLoggedInUser.value?.email || "");
@@ -95,6 +99,22 @@ const formFieldClasses = "grid gap-2 text-start mb-2";
 const profileUpdateBtnText = ref<string>("Update");
 const countdownTimerMHS = ref<string>(getTimer());
 
+const goToCustomerPortal = () => {
+  if (currentLoggedInUser.value?.subscriptionId) {
+    axios.post("/api/stripe/customer-portal").then((response) => {
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        alert("No customer portal URL returned.");
+      }
+    }).catch((error) => {
+      console.error("Error redirecting to customer portal:", error);
+      alert("Something went wrong redirecting to the customer portal.");
+    });
+  } else {
+    alert("No subscription found.");
+  }
+};
 
 
 function getTimer() {

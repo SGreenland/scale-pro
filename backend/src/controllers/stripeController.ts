@@ -1,18 +1,12 @@
 import { Request, Response } from "express";
-import { prisma } from "../prisma"; // Adjust the import based on your project structure
 import { stripe } from "../app"; // Assuming you have initialized Stripe in app.ts
-import jwt from "jsonwebtoken";
+import { prisma } from "../prisma"; // Adjust the import based on your project structure
 import { createStripeCustomer } from "../services/stripeService";
 
 export async function createCheckoutSession(req: Request, res: Response) {
   try {
-    const token = req.cookies.token;
-
+    const userId = req.user?.id;
     const isYearly = req.body.isYearly || false; // Default to false if not provided
-
-    const userId = (
-      jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string }
-    ).userId;
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -55,6 +49,35 @@ export async function createCheckoutSession(req: Request, res: Response) {
   } catch (err) {
     console.error("Checkout session error:", err);
     res.status(500).json({ error: "Failed to create checkout session" });
+  }
+}
+
+//customer portal to manage subscriptions
+export async function customerPortal(req: Request, res: Response) {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !user.stripeId) {
+      return res
+        .status(400)
+        .json({ error: "User or Stripe customer not found" });
+    }
+
+    const session = await stripe.billingPortal.sessions.create({
+
+      customer: user.stripeId,
+      return_url: `${process.env.FRONT_END_URL}/my-account`,
+    });
+
+    res.status(200).json({ url: session.url });
+  } catch (err) {
+    console.error("Customer portal error:", err);
+    res.status(500).json({ error: "Failed to create customer portal session" });
   }
 }
 

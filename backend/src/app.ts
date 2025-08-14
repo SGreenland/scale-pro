@@ -28,7 +28,7 @@ app.use("/api", authRoutes);
 
 app.use("/api", settingsRoutes);
 
-app.use("/api", stripeRoutes);
+app.use("/api/stripe", stripeRoutes);
 
 app.use("/api", userRoutes);
 

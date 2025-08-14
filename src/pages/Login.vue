@@ -76,6 +76,7 @@ const handleSubmit = async () => {
         userName: response.data.user.userName,
         email: response.data.user.email,
         trialExpiresAt: response.data.user.trialExpiresAt,
+        subscriptionId: response.data.user.subscriptionId,
         userSettings: response.data.user.userSettings,
       };
       // set scaleconfig defaults

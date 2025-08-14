@@ -83,7 +83,8 @@ interface UserSessionObject {
   id: string;
   userName: string;
   email: string;
-  trialExpiresAt?: Date | null; // Optional, only if user has no subscription
+  trialExpiresAt?: Date | null;
+  subscriptionId?: string | null; // Optional, only if user has a subscription
   userSettings?: Settings | null; // Optional, only if user has settings
 }
 
