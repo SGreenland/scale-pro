@@ -123,6 +123,30 @@ export async function stripeWebhook(req: Request, res: Response) {
         });
       }
       break;
+    case "customer.subscription.updated":
+      const updatedSubscription = event.data.object;
+      const updatedStatus = updatedSubscription.status;
+      const updatedSubscriptionId = updatedSubscription.id;
+      try {
+        const subscription = await prisma.subscription.findFirst({
+          where: { stripeSubId: updatedSubscriptionId },
+        })
+        if (subscription) {
+          const expiresAt = updatedSubscription.cancel_at;
+          await prisma.subscription.update({
+            where: { id: subscription.id },
+            data: {
+              status: updatedStatus,
+              expiresAt: expiresAt ? new Date(expiresAt * 1000) : null,
+            },
+          });
+        } else {
+          console.warn(`No subscription found for ID ${updatedSubscriptionId}`);
+      }
+      } catch (error) {
+        console.error("Error updating subscription:", error);
+      }
+      break;
 
     default:
       console.warn(`Unhandled event type ${event.type}`);

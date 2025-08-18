@@ -8,6 +8,9 @@
       <p v-if="currentLoggedInUser?.subscriptionId && hasFullAccess()">
         Thanks for upgrading to Pro! <a @click.prevent="goToCustomerPortal" href="#">Manage your Subscription</a>
       </p>
+      <p v-if="subCancelsAt">
+        Your subscription has been cancelled and will expire on {{ subCancelsAt }}
+      </p>
       <div class="grid gap-2 mb-4">
         <div :class="formFieldClasses">
           <label for="username">Username</label>
@@ -78,7 +81,7 @@
 
 <script setup lang="ts">
 import axios, { isAxiosError } from "axios";
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { currentLoggedInUser } from "../GlobalState";
 import CardWrapper from "../components/reuseable/CardWrapper.vue";
 import ConfirmPasswordInput from "../components/reuseable/ConfirmPasswordInput.vue";
@@ -93,6 +96,7 @@ const newPassword = ref<string>("");
 const confirmNewPassword = ref<string>("");
 const passwordError = ref<string>("");
 const currentPasswordError = ref<string>("");
+const subCancelsAt = ref<string | null>(null);
 
 const formFieldClasses = "grid gap-2 text-start mb-2";
 
@@ -115,6 +119,22 @@ const goToCustomerPortal = () => {
     alert("No subscription found.");
   }
 };
+
+onBeforeMount(() => {
+  // get fresh user data on mount
+  axios.get("/api/user/profile").then((response) => {
+    if (response.data.user) {
+      currentLoggedInUser.value!.userName = response.data.user.userName,
+      currentLoggedInUser.value!.email = response.data.user.email;
+      currentLoggedInUser.value!.trialExpiresAt = response.data.user.trialExpiresAt;
+      const expiresAt = response.data.user.subscription?.expiresAt;
+      if(expiresAt) subCancelsAt.value = new Date(expiresAt).toDateString() || null;
+      countdownTimerMHS.value = getTimer();
+    }
+  }).catch((error) => {
+    console.error("Error fetching user profile:", error);
+  });
+});
 
 
 function getTimer() {

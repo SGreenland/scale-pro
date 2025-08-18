@@ -1,9 +1,36 @@
 import { Request, Response } from "express";
+import { prisma } from "../prisma"; // Adjust the import based on your project structure
 import {
     updateUserPassword,
     updateUserProfile,
 } from "../services/updateUserService";
 import { validateEmail, validatePassword } from "../validators/helpers/auth";
+
+
+export async function getProfile(req: Request, res: Response): Promise<Response> {
+  const userId = req.user!.id;
+
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  try {
+    // Assuming getUserProfile is a function that retrieves the user's profile
+    const userWithSubscription = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { subscription: true }, // Include user settings if needed
+    });
+
+    if (!userWithSubscription) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({ user: userWithSubscription });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
 
 export async function updateProfile(
   req: Request,
