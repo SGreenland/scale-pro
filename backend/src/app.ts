@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth";
 import settingsRoutes from "./routes/settings";
 import stripeRoutes from "./routes/stripe";
 import userRoutes from "./routes/user";
+import pitchDataRoutes from "./routes/pitchData";
 import { stripeWebhook } from "./controllers/stripeController";
 
 dotenv.config();
@@ -25,11 +26,11 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // Register routes here
 app.use("/api", authRoutes);
-
 app.use("/api", settingsRoutes);
-
+app.use("/api", userRoutes);
+app.use("/api", pitchDataRoutes);
 app.use("/api/stripe", stripeRoutes);
 
-app.use("/api", userRoutes);
+
 
 export default app;

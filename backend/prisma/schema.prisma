@@ -46,8 +46,9 @@ model PitchData {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   scale     String
-  accuracy  Float
-  notes     Json
+  percentageInTune  Float
+  averageDeviation  Float
+  toleranceLevel       String
 }
 
 model Subscription {

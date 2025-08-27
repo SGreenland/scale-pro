@@ -19,7 +19,9 @@
         No Data Available
       </h2>
       <div class="text-lg text-gray-800 dark:text-gray-200">
-        <p class="mb-4">It seems there is no pitch data to display at the moment.</p>
+        <p class="mb-4">
+          It seems there is no pitch data to display at the moment.
+        </p>
         <hr />
         <p class="my-4">
           <b>Tip:</b>
@@ -37,12 +39,19 @@
       >
         Close
       </button> -->
+    <div v-if="hasFullAccess()" class="flex gap-2 justify-end border-t pt-4 mt-4">
+      <button class="inverted-btn">Screenshot</button>
+      <button @click="handleSave">Save</button>
+    </div>
   </modal-wrapper>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import ModalWrapper from "./reuseable/ModalWrapper.vue";
+import { hasFullAccess } from "../utils/checkUserAccess";
+import axios from "axios";
+import { currentSettings, scaleConfig } from "../GlobalState";
 const props = defineProps<{
   averageDeviation: number;
   inTunePercentage: number;
@@ -57,4 +66,21 @@ const feedbackMessage = computed(() => {
   if (percent >= 25) return "💪 Decent effort! Practice will help.";
   return "🎯 Keep practicing — you're on the right track!";
 });
+const handleSave = () => {
+  axios.post("/api/pitch-data", {
+    scale: scaleConfig.selectedNote + scaleConfig.selectedScale,
+    averageDeviation: props.averageDeviation,
+    percentageInTune: props.inTunePercentage,
+    toleranceLevel: currentSettings.value.pitchToleranceLevel,
+  })
+    .then(() => {
+      alert("Pitch data saved successfully!");
+      // Optionally, emit an event to notify parent component
+      // emit('saved');
+    })
+    .catch((error) => {
+      console.error("Error saving pitch data:", error);
+      alert("Failed to save pitch data. Please try again.");
+    });
+};
 </script>
