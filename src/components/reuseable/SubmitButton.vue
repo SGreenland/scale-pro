@@ -1,5 +1,5 @@
 <template>
-  <button :disabled="isSubmitting" type="submit" class="w-full flex items-center justify-center h-12">
+  <button :disabled="isSubmitting" type="submit" class="flex items-center justify-center h-12" :class="widthClass">
     <font-awesome-icon
       class="animate-spin"
       v-if="isSubmitting"
@@ -13,9 +13,13 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-defineProps<{
+withDefaults(defineProps<{
   isSubmitting: boolean;
-}>();
+  widthClass?: string;
+}>(), {
+  isSubmitting: false,
+  widthClass: "w-full"
+});
 </script>
 
 <style scoped></style>

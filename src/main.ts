@@ -8,17 +8,28 @@ import Login from './pages/Login.vue'
 import Signup from './pages/Signup.vue'
 import GetProLandingPage from './pages/GetProLandingPage.vue'
 import UserAccountPage from './pages/UserAccountPage.vue'
+import UserPitchData from './pages/UserPitchData.vue'
+// Import ModuleRegistry and the required module
+import {
+    ModuleRegistry,
+    AllCommunityModule, // or AllEnterpriseModule
+} from 'ag-grid-community';
+
+// Register the module
+ModuleRegistry.registerModules([
+    AllCommunityModule, // or AllEnterpriseModule
+]);
 
 const routes = [
     {path: '/', component: Main, name: 'Home'},
-    {path: '/settings', component: Settings, name: 'Settings'},
     {path: '/login', component: Login, name: 'Login'},
     {path: '/signup', component: Signup, name: 'Signup'},
+    {path: '/settings', component: Settings, name: 'Settings'},
+    {path: '/my-pitch-data', component: UserPitchData, name: 'My Pitch Data'},
     {path: '/upgrade', component: GetProLandingPage, name: 'Upgrade'},
     {path: '/my-account', component: UserAccountPage, name: 'My Account'},
 ];
 
-Settings.displayName = 'Settings';
 
 
 const router = createRouter({
