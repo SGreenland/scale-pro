@@ -1,8 +1,15 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 lg:w-2/3 mx-auto">
     <h2 class="text-xl mb-4">My Pitch Data</h2>
+    <div>
+      <Checkbox
+        v-model="allColumnsVisible"
+        label="Show All Columns"
+        class="mt-4"
+      />
+    </div>
     <ag-grid-vue
-      class="h-96 lg:w-2/3 w-full mx-auto text-left"
+      class="h-96 w-full mx-auto text-left"
       :rowData="rowData"
       :columnDefs="colDefs"
       :columnTypes="columnTypes"
@@ -15,7 +22,29 @@
 <script setup lang="ts">
 import { AgGridVue } from "ag-grid-vue3";
 import axios from "axios";
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
+import Checkbox from "../components/reuseable/Checkbox.vue";
+
+const shouldHideColumn = ref(false); // Set to true to hide certain columns
+const allColumnsVisible = computed({
+  get: () => !shouldHideColumn.value,
+  set: (value) => {
+    shouldHideColumn.value = !value;
+  },
+});
+const updateColumnVisibility = () => {
+    shouldHideColumn.value = window.innerWidth < 640;
+  };
+
+onMounted(() => {
+  // hide certain columns on small screens
+  window.addEventListener("resize", updateColumnVisibility);
+});
+
+// remove event listener on unmount
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateColumnVisibility);
+});
 
 const rowData = ref([]);
 const columnTypes = ref({
@@ -41,17 +70,19 @@ const colDefs = ref([
     filter: true,
     flex: 1,
   },
-//   {
-//     headerName: "Average Deviation",
-//     field: "averageDeviation",
-//     sortable: true,
-//     filter: true,
-//     flex: 1,
-//   },
+  {
+    headerName: "Average Deviation",
+    field: "averageDeviation",
+    sortable: true,
+    hide: shouldHideColumn,
+    filter: true,
+    flex: 1,
+  },
   {
     headerName: "Tolerance",
     field: "toleranceLevel",
     sortable: true,
+    hide: shouldHideColumn,
     filter: true,
     flex: 1,
   },

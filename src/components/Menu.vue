@@ -51,7 +51,7 @@ const filteredMenuLinks = computed(() => {
     if (link.name === 'Login' || link.name === 'Signup') {
       return !isUserLoggedIn.value;
     }
-    if (link.name === 'Logout' || link.name === 'My Account') {
+    if (link.name === 'Logout' || link.name === 'My Account' || link.name === 'My Pitch Data') {
       return isUserLoggedIn.value;
     }
     if(link.name === 'Upgrade') {
