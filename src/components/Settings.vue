@@ -2,12 +2,11 @@
   <card-wrapper title="Settings" :withBackArrow="true">
     <div class="w-full text-start">
       <accordion-single title="General" :extra-summary-classes="sectionHeaderClasses">
-        <div :class="optionClasses">
+        <div :class="optionInlineClasses">
           <label for="startingNote">Starting Note</label>
           <root-note-selector v-model="currentSettings.startingRootNote"></root-note-selector>
         </div>
-        <hr />
-        <div :class="optionClasses">
+        <div :class="optionInlineClasses" class="border-b-0">
           <label for="startingScale">Starting Scale</label>
           <select v-model="currentSettings.startingScale" name="startingScale" id="startingScale">
             <option v-for="scale in Object.keys(scales)" :value="scale">
@@ -20,8 +19,7 @@
         title="Display"
         :extra-summary-classes="sectionHeaderClasses"
       >
-        <div :class="optionClasses">
-          <div class="flex justify-between items-center mt-2">
+        <div :class="optionInlineClasses">
             <label for="theme">Theme</label>
             <select
               v-model="currentSettings.theme"
@@ -33,10 +31,8 @@
               <option value="dark">Dark</option>
               <option value="light">Light</option>
             </select>
-          </div>
         </div>
-        <hr>
-        <div :class="optionClasses">
+        <div :class="optionInlineClasses" class="border-b-0">
           <label for="grid-type">Grid Type</label>
           <custom-radio-chips
             id="grid-type"
@@ -50,7 +46,7 @@
         title="Looping"
         :extra-summary-classes="sectionHeaderClasses"
       >
-        <div class="flex justify-between items-center p-2">
+        <div :class=optionInlineClasses>
           <label class="me-1" for="loop-gap">Loop Gap </label>
           <div class="flex items-center gap-2">
             <select
@@ -75,8 +71,7 @@
             />
           </div>
         </div>
-        <hr />
-        <div class="flex w-full justify-between items-center p-2">
+        <div :class="optionInlineClasses" class="border-b-0">
           <label for="auto-shuffle">Auto Shuffle </label>
           <toggle-switch
             id="auto-shuffle"
@@ -111,8 +106,7 @@
               </div>
             </div>
           </div>
-          <hr />
-          <div :class="optionClasses">
+          <div :class="optionClasses" class="border-b-0">
             <label>Pitch Tolerance</label>
             <div class="flex justify-between items-center mx-2">
               <div class="flex items-center gap-2">
@@ -171,7 +165,8 @@ const isSaving = ref(false);
 const successfullySaved = ref(false);
 
 const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50 shadow-indigo-400 rounded mb-1`;
-const optionClasses: string = "grid gap-2 mx-2 mb-2";
+const optionInlineClasses: string = "flex flex-wrap items-center justify-between py-3 px-2 border-b";
+const optionClasses: string = "grid gap-2 p-3 border-b";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
 
 function getButtonText() {
