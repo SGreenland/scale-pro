@@ -5,7 +5,7 @@
       <Checkbox
         v-model="allColumnsVisible"
         label="Show All Columns"
-        class="mt-4"
+        class="mb-2"
       />
     </div>
     <ag-grid-vue
