@@ -150,10 +150,10 @@
 
 <script setup lang="ts">
 import { LoopGapOption } from "@shared/types";
-import { hasFullAccess } from "../utils/checkUserAccess";
 import { ref } from "vue";
-import { currentLoggedInUser, currentSettings, settings } from "../GlobalState";
+import { currentLoggedInUser, currentSettings } from "../GlobalState";
 import { scales } from "../NotesAndScales";
+import { hasFullAccess } from "../utils/checkUserAccess";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";
 import CustomRadioChips from "./reuseable/CustomRadioChips.vue";
