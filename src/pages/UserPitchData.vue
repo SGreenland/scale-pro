@@ -16,13 +16,18 @@
       :pagination="true"
       :paginationPageSize="20"
     ></ag-grid-vue>
+    <div class="chart-wrapper mt-8">
+      <ag-charts :options="options" class="h-96 w-full"></ag-charts>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { AgGridVue } from "ag-grid-vue3";
+import { AgCharts } from 'ag-charts-vue3';
+import type { AgChartOptions } from "ag-charts-community";
 import axios from "axios";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import Checkbox from "../components/reuseable/Checkbox.vue";
 
 const shouldHideColumn = ref(false); // Set to true to hide certain columns
@@ -52,6 +57,8 @@ const columnTypes = ref({
     valueFormatter: (params: any) =>
       new Date(params.value).toLocaleDateString(),
   },
+  percentage: { valueFormatter: (params: any) => `${params.value}%` },
+  cents: { valueFormatter: (params: any) => `${params.value} cents` },
 });
 const colDefs = ref([
   {
@@ -64,15 +71,17 @@ const colDefs = ref([
   },
   { headerName: "Scale", field: "scale", sortable: true, filter: true, flex: 1 },
   {
-    headerName: "Percentage In Tune",
+    headerName: "In Tune",
     field: "percentageInTune",
+    type: "percentage",
     sortable: true,
     filter: true,
     flex: 1,
   },
   {
-    headerName: "Average Deviation",
+    headerName: "Avg. Deviation",
     field: "averageDeviation",
+    type: "cents",
     sortable: true,
     hide: shouldHideColumn,
     filter: true,
@@ -87,6 +96,59 @@ const colDefs = ref([
     flex: 1,
   },
 ]);
+
+const averageScorePerScale = computed(() => {
+    const scaleMap: Record<string, { total: number; count: number }> = {};
+    rowData.value.forEach((entry: any) => {
+        if (!scaleMap[entry.scale]) {
+            scaleMap[entry.scale] = { total: 0, count: 0 };
+        }
+        scaleMap[entry.scale].total += entry.percentageInTune;
+        scaleMap[entry.scale].count += 1;
+    });
+    return Object.entries(scaleMap).map(([scale, data]) => ({
+        Scale: scale,
+        'In tune %': data.total / data.count,
+    }))
+  });
+
+
+ const options = computed<AgChartOptions>(() => ({
+            // Data: Data to be displayed in the chart
+            data: averageScorePerScale.value,
+            title: {
+                text: 'Average In Tune Percentage by Scale',
+                fontSize: 18,
+                fontFamily: 'Arial, sans-serif',
+            },
+            // Series: Defines which chart type and data to use
+            series: [{ type: 'bar', direction: 'horizontal', xKey: 'Scale', yKey: 'In tune %', fill: '#4F46E5', cornerRadius: 10 }],
+            axes: [
+                {
+                    type: 'category',
+                    position: 'left',
+                    paddingOuter: 0.7,
+                    label: {
+                        rotation: 0,
+                        fontSize: 14,
+                        fontFamily: 'Arial, sans-serif',
+                    },
+                },
+                {
+                    type: 'number',
+                    position: 'bottom',
+                    label: {
+                        fontSize: 14,
+                        fontFamily: 'Arial, sans-serif',
+                        formatter: (params) => `${Math.round(params.value)}%`,
+                    },
+                    min: 0,
+                    max: 100,
+                    tickInterval: 10,
+                },
+            ],
+
+ }));
 
 
 
@@ -106,5 +168,9 @@ onBeforeMount(() => {
 <style>
 span.ag-paging-page-size {
     display: none !important;
+}
+.chart-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
 }
 </style>
