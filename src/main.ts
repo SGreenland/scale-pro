@@ -9,11 +9,18 @@ import Signup from './pages/Signup.vue'
 import GetProLandingPage from './pages/GetProLandingPage.vue'
 import UserAccountPage from './pages/UserAccountPage.vue'
 import UserPitchData from './pages/UserPitchData.vue'
-// Import ModuleRegistry and the required module
 import {
     ModuleRegistry,
-    AllCommunityModule, // or AllEnterpriseModule
+    AllCommunityModule,
 } from 'ag-grid-community';
+
+import axios from "axios";
+
+import.meta.env.PROD && (axios.defaults.baseURL = import.meta.env.VITE_API_URL || "http://localhost:4000");
+
+axios.defaults.withCredentials = true;
+
+
 
 // Register the module
 ModuleRegistry.registerModules([

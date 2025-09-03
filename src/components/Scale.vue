@@ -762,97 +762,98 @@ const scaleDuration = computed(
 let interval: number = 0;
 
 function toggleWorkout() {
-  let direction = 1;
+  return;
+  // let direction = 1;
 
-  if (interval) {
-    clearInterval(interval);
-  }
-  workoutInProgress.value = !workoutInProgress.value;
+  // if (interval) {
+  //   clearInterval(interval);
+  // }
+  // workoutInProgress.value = !workoutInProgress.value;
 
-  if (workoutInProgress.value) {
-    setTimeout(() => {
-      toggleAudio();
-    }, 100);
+  // if (workoutInProgress.value) {
+  //   setTimeout(() => {
+  //     toggleAudio();
+  //   }, 100);
 
-    // while selected note is not end note, change note after each scale repitition
-    interval = setInterval(() => {
-      // selectedNote index
-      const selectedNoteIndex = notes.findIndex(
-        (note) => note.name === scaleConfig.selectedNote
-      );
-      // if selectedNote is not endNote, increment selectedNote
-      if (
-        scaleConfig.selectedNote !== workoutConfig.endNote &&
-        direction === 1
-      ) {
-        // change note to current selected note index + 1
-        scaleConfig.selectedNote = notes[selectedNoteIndex + direction].name;
-        // change direction if end note reached
-        if (scaleConfig.selectedNote === workoutConfig.endNote) {
-          direction = -1;
-        }
-        //toggle audio
-        setTimeout(() => {
-          toggleAudio();
-        }, 100);
-      } else if (
-        scaleConfig.selectedNote !== workoutConfig.startNote &&
-        workoutConfig.roundTrip
-      ) {
-        // if selectedNote is not startNote, decrement selectedNote
-        scaleConfig.selectedNote = notes[selectedNoteIndex + direction].name;
-        //toggle audio
-        setTimeout(() => {
-          toggleAudio();
-        }, 100);
-      } else {
-        // if selectedNote is endNote and no multiple scales, workout is complete
-        if (workoutConfig.scales.length === 1 && interval) {
-          clearInterval(interval);
-          workoutInProgress.value = false;
-          // reset to start note after workout is complete
-          setTimeout(() => {
-            scaleConfig.selectedNote = workoutConfig.startNote;
-          }, scaleDuration.value);
-          return;
-        }
-        if (workoutConfig.scales.length > 1) {
-          const currentScaleIndex = workoutConfig.scales.indexOf(
-            scaleConfig.selectedScale
-          );
-          if (currentScaleIndex + 1 < workoutConfig.scales.length) {
-            //@ts-ignore
-            scaleConfig.selectedScale =
-              workoutConfig.scales[currentScaleIndex + 1];
+  //   // while selected note is not end note, change note after each scale repitition
+  //   interval = setInterval(() => {
+  //     // selectedNote index
+  //     const selectedNoteIndex = notes.findIndex(
+  //       (note) => note.name === scaleConfig.selectedNote
+  //     );
+  //     // if selectedNote is not endNote, increment selectedNote
+  //     if (
+  //       scaleConfig.selectedNote !== workoutConfig.endNote &&
+  //       direction === 1
+  //     ) {
+  //       // change note to current selected note index + 1
+  //       scaleConfig.selectedNote = notes[selectedNoteIndex + direction].name;
+  //       // change direction if end note reached
+  //       if (scaleConfig.selectedNote === workoutConfig.endNote) {
+  //         direction = -1;
+  //       }
+  //       //toggle audio
+  //       setTimeout(() => {
+  //         toggleAudio();
+  //       }, 100);
+  //     } else if (
+  //       scaleConfig.selectedNote !== workoutConfig.startNote &&
+  //       workoutConfig.roundTrip
+  //     ) {
+  //       // if selectedNote is not startNote, decrement selectedNote
+  //       scaleConfig.selectedNote = notes[selectedNoteIndex + direction].name;
+  //       //toggle audio
+  //       setTimeout(() => {
+  //         toggleAudio();
+  //       }, 100);
+  //     } else {
+  //       // if selectedNote is endNote and no multiple scales, workout is complete
+  //       if (workoutConfig.scales.length === 1 && interval) {
+  //         clearInterval(interval);
+  //         workoutInProgress.value = false;
+  //         // reset to start note after workout is complete
+  //         setTimeout(() => {
+  //           scaleConfig.selectedNote = workoutConfig.startNote;
+  //         }, scaleDuration.value);
+  //         return;
+  //       }
+  //       if (workoutConfig.scales.length > 1) {
+  //         const currentScaleIndex = workoutConfig.scales.indexOf(
+  //           scaleConfig.selectedScale
+  //         );
+  //         if (currentScaleIndex + 1 < workoutConfig.scales.length) {
+  //           //@ts-ignore
+  //           scaleConfig.selectedScale =
+  //             workoutConfig.scales[currentScaleIndex + 1];
 
-            workoutInProgress.value = false;
-            toggleWorkout();
-          } else {
-            workoutInProgress.value = false;
-            clearInterval(interval);
-            //@ts-ignore
-            scaleConfig.selectedScale = workoutConfig.scales[0];
-          }
-        } else {
-          clearInterval(interval);
-          workoutInProgress.value = false;
-          // reset to start note after workout is complete
-          setTimeout(() => {
-            scaleConfig.selectedNote = workoutConfig.startNote;
-          }, scaleDuration.value);
-        }
-      }
-    }, scaleDuration.value);
-  } else {
-    clearInterval(interval);
-    //disable button to give time for timeouts to clear
-    isLoadingAudio.value = true;
-    setTimeout(() => {
-      isLoadingAudio.value = false;
-    }, 500);
-    //toggle audio
-    toggleAudio();
-  }
+  //           workoutInProgress.value = false;
+  //           toggleWorkout();
+  //         } else {
+  //           workoutInProgress.value = false;
+  //           clearInterval(interval);
+  //           //@ts-ignore
+  //           scaleConfig.selectedScale = workoutConfig.scales[0];
+  //         }
+  //       } else {
+  //         clearInterval(interval);
+  //         workoutInProgress.value = false;
+  //         // reset to start note after workout is complete
+  //         setTimeout(() => {
+  //           scaleConfig.selectedNote = workoutConfig.startNote;
+  //         }, scaleDuration.value);
+  //       }
+  //     }
+  //   }, scaleDuration.value);
+  // } else {
+  //   clearInterval(interval);
+  //   //disable button to give time for timeouts to clear
+  //   isLoadingAudio.value = true;
+  //   setTimeout(() => {
+  //     isLoadingAudio.value = false;
+  //   }, 500);
+  //   //toggle audio
+  //   toggleAudio();
+  // }
 }
 
 onBeforeUnmount(() => {

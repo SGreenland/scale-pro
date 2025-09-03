@@ -1,10 +1,18 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": "src",
     "outDir": "dist",
-    "rootDir": "../",
     "esModuleInterop": true,
-    "types": ["node"]
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "baseUrl": ".",                      // for paths
+    "paths": {
+      "@shared/*": ["../shared/*"]       // map @shared for backend
+    }
   },
-  "include": ["src"]
+  "include": ["src", "../shared/**/*.ts"]
 }
