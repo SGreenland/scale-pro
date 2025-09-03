@@ -149,7 +149,7 @@
 </template>
 
 <script setup lang="ts">
-import { LoopGapOption } from "@shared/types";
+import { LoopGapOption } from "../../shared/types";
 import { ref } from "vue";
 import { currentLoggedInUser, currentSettings } from "../GlobalState";
 import { scales } from "../NotesAndScales";
