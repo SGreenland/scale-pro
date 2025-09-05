@@ -1,4 +1,4 @@
-import { Settings } from "@shared/types";
+import type { Settings } from "../../../shared/types";
 import { JsonValue } from "../../generated/prisma/runtime/library.js";
 import { prisma } from "../prisma";
 

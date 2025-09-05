@@ -1,4 +1,4 @@
-import { Settings } from "@shared/types";
+import type { Settings } from "../../../shared/types";
 import { Request, Response } from "express";
 import {
   getUserSettings,
