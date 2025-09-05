@@ -1,4 +1,4 @@
-import type { Settings } from "../../../shared/types";
+import { Settings } from "@scalemaestro/shared-types";
 import { Request, Response } from "express";
 import {
   getUserSettings,

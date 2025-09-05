@@ -12,7 +12,7 @@ export interface Scales {
 
 export type LoopGapOption = "None" | "Auto" | "Custom";
 
-export type Settings = {
+export interface Settings {
   startingRootNote: string;
   startingScale: keyof Scales;
   theme: "auto" | "dark" | "light";

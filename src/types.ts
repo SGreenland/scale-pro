@@ -1,4 +1,4 @@
-import { Scales, Settings } from "@shared/types";
+import { Scales, Settings } from "@scalemaestro/shared-types";
 
 interface Note {
   name: string;

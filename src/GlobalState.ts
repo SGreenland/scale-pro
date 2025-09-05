@@ -1,4 +1,4 @@
-import { Settings } from "@shared/types";
+import { Settings } from "@scalemaestro/shared-types";
 import { computed, reactive, ref, watch } from "vue";
 import { useSessionStorage } from "./composables/useSessionStorage";
 import { guitarScaleStringPatterns } from "./NotesAndScales";
