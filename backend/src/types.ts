@@ -1,5 +1,5 @@
 // import settings from front end types
-import { Settings } from "@shared/types";
+import type { Settings } from "../../shared/types";
 import { Prisma } from "../generated/prisma";
 
 export interface SignupRequestBody {
