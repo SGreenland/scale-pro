@@ -3,8 +3,8 @@
     "target": "ES2021",
     "module": "commonjs",
     "moduleResolution": "node",
-    "rootDirs": ["src", "../shared"], // include shared directory
-    "outDir": "dist",
+    "rootDir": "../", // include shared directory
+    "outDir": "backend/dist",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
