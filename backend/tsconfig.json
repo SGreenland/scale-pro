@@ -4,7 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "../", // include shared directory
-    "outDir": "backend/dist",
+    "outDir": "src/dist",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
@@ -14,5 +14,6 @@
       "@shared/*": ["../shared/*"]       // map @shared for backend
     }
   },
-  "include": ["src", "../shared/**/*.ts"]
+  "include": ["src", "../shared/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
