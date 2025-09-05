@@ -22,7 +22,7 @@ axios.defaults.withCredentials = true;
 
 
 
-// Register the module
+// Register the module...
 ModuleRegistry.registerModules([
     AllCommunityModule, // or AllEnterpriseModule
 ]);
