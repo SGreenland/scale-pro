@@ -4,7 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "../", // include shared directory
-    "outDir": "src/dist",
+    "outDir": "dist",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
