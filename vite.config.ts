@@ -10,9 +10,12 @@ export default defineConfig({
     outDir: "dist",
     assetsDir: "assets",
   },
-  resolve: {
+    resolve: {
     alias: {
-      "@shared": path.resolve(__dirname, "shared"),
+      "@scalemaestro/shared-types": path.resolve(
+        __dirname,
+        "packages/shared-types"
+      ),
     },
   },
   server: {
