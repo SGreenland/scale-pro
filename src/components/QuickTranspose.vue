@@ -7,7 +7,7 @@
         @touchstart="() => handleLongPressStart('down')"
         @touchend="cancelHold"
       >
-        <FontAwesomeIcon :icon="faCaretDown" size="2xl" />
+        <FontAwesomeIcon :icon="faArrowDown" size="xl" />
       </button>
       <slot></slot>
       <button
@@ -17,8 +17,8 @@
         @touchend="cancelHold"
       >
         <FontAwesomeIcon
-          :icon="faCaretUp"
-          size="2xl"
+          :icon="faArrowUp"
+          size="xl"
         />
       </button>
     </div>
@@ -27,8 +27,8 @@
 
 <script setup lang="ts">
 import {
-  faCaretDown,
-  faCaretUp
+  faArrowUp,
+  faArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { scaleConfig } from "../GlobalState";

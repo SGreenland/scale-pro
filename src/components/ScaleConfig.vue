@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid-rows-2 w-full bg-gradient-to-br from-sky-300 to-indigo-400 dark:from-sky-600 dark:to-indigo-700 p-2 rounded-md border-2 border-indigo-900 shadow-lg max-sm:pt-4"
+    class="grid-rows-2 w-full bg-gradient-to-br from-sky-300 to-indigo-400 dark:from-sky-600 dark:to-indigo-700 p-2 rounded-md border-2 border-indigo-900 shadow-lg"
   >
     <div class="flex max-md:flex-wrap w-full gap-2 m-auto">
       <div class="flex items-center gap-2 lg:w-1/2 w-full">
