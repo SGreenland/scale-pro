@@ -1,8 +1,9 @@
 <template>
-  <ModalWrapper @close="$emit('close')">
+  <ModalWrapper class="px-2" @close="$emit('close')">
     <div class="text-center">
-      <h2 class="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
-        🎤 Pitch Tracking Info
+      <h2 class="relative w-fit mx-auto text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+        <span class="h2 absolute ms-[-35px]">🎤</span>
+         Pitch Tracking Info
       </h2>
 
       <div class="modal-body max-h-[80vh] overflow-y-auto p-2">

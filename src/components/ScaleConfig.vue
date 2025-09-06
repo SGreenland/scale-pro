@@ -44,12 +44,7 @@
       <!--note order-->
       <div class="flex flex-col justify-end lg:w-1/2 w-full">
         <div class="font-medium flex justify-between items-end pb-2">
-          Note Order<button
-            class="rounded-full h-6 flex items-center inverted-btn text-[0.8rem] px-2"
-            @click="scaleConfig.noteOrder = null"
-          >
-            Reset Order
-          </button>
+          Note Order
         </div>
         <div class="flex w-full justify-evenly items-center gap-2">
           <button
@@ -85,6 +80,12 @@
               </button>
             </div>
           </dropdown-button>
+           <button
+            class="flex size-10 center-xy inverted-btn text-[0.8rem] px-2"
+            @click="scaleConfig.noteOrder = null"
+          >
+            <font-awesome-icon size="xl" :icon="faRefresh"></font-awesome-icon>
+          </button>
         </div>
       </div>
     </div>
@@ -107,6 +108,8 @@ import DropdownButton from "./reuseable/DropdownButton.vue";
 import InfoTooltip from "./reuseable/InfoTooltip.vue";
 import TextCarousel from "./reuseable/TextCarousel.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 const { shuffle, reverse } = useReorderNotes();
 
