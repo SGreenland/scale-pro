@@ -24,7 +24,9 @@
             ></root-note-selector>
           </quick-transpose>
         </div>
-        <div class="flex flex-col size-full items-start md:min-w-[175px] min-w-none">
+        <div
+          class="flex flex-col size-full items-start md:min-w-[175px] min-w-none"
+        >
           <text-carousel
             ref="textCarouselComponent"
             :items="['Scales', 'Arpeggios']"
@@ -46,7 +48,15 @@
         <!-- <div class="font-medium flex justify-between items-end pb-2">
           Note Order
         </div> -->
-        <tabs ref="tabs" active-color="indigo" :tabs="['note-order', 'pitch-tracking']">
+        <tabs
+          ref="tabs"
+          active-color="indigo"
+          :tabs="['pitch-tracking', 'note-order']"
+        >
+          <div
+            :class="{ hidden: tabs?.currentTab !== 'pitch-tracking' }"
+            id="pitch-tracking-template"
+          ></div>
           <template #note-order>
             <div class="flex w-full justify-evenly items-center gap-2">
               <button
@@ -79,15 +89,15 @@
                 class="flex size-10 center-xy inverted-btn text-[0.8rem] px-2"
                 @click="scaleConfig.noteOrder = null"
               >
-                <font-awesome-icon size="xl" :icon="faRefresh"></font-awesome-icon>
+                <font-awesome-icon
+                  size="xl"
+                  :icon="faRefresh"
+                ></font-awesome-icon>
               </button>
             </div>
           </template>
-          <template #pitch-tracking>
-          </template>
-      </tabs>
-      <div :class="{'hidden' : tabs?.currentTab !== 'pitch-tracking'} " id="pitch-tracking-template"></div>
-    </div>
+        </tabs>
+      </div>
     </div>
   </div>
 </template>
@@ -95,11 +105,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
-import {
-  presetNoteOrders,
-  scaleConfig,
-  scaleToDisplay
-} from "../GlobalState";
+import { presetNoteOrders, scaleConfig, scaleToDisplay } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
 import { hasFullAccess } from "../utils/checkUserAccess";
@@ -208,7 +214,6 @@ watch(
   },
   { immediate: true }
 );
-
 
 const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(
   null

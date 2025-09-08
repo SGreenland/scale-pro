@@ -81,6 +81,7 @@
       </accordion-single>
       <!--pitch settings-->
       <accordion-single
+        ref="pitchTrackingAccordion"
         title="Pitch Tracking"
         :extra-summary-classes="sectionHeaderClasses"
       >
@@ -150,7 +151,7 @@
 
 <script setup lang="ts">
 import { LoopGapOption } from "@scalemaestro/shared-types";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { currentLoggedInUser, currentSettings } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { hasFullAccess } from "../utils/checkUserAccess";
@@ -168,6 +169,19 @@ const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-30
 const optionInlineClasses: string = "flex flex-wrap items-center justify-between py-3 px-2 border-b";
 const optionClasses: string = "grid gap-2 p-3 border-b";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
+const pitchTrackingAccordion = ref<InstanceType<typeof AccordionSingle> | null>(null);
+
+onMounted(() => {
+  const queryParams = new URLSearchParams(window.location.search);
+
+  if (queryParams.get("section") === "pitch-tracking" && pitchTrackingAccordion.value) {
+      const accordionElement = pitchTrackingAccordion.value?.$el as HTMLElement;
+      if (accordionElement) {
+        accordionElement.setAttribute("open", 'true');
+        accordionElement.scrollIntoView({ behavior: "smooth" });
+      }
+  }
+});
 
 function getButtonText() {
   return successfullySaved.value ? "Settings Saved!" : "Save Settings";

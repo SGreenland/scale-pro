@@ -17,6 +17,8 @@
         {{ tab.replaceAll('-', ' ') }}
       </span>
     </div>
+    <!--default slot-->
+    <slot></slot>
     <slot :name="currentTab"></slot>
   </div>
 </template>

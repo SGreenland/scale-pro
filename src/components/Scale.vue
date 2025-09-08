@@ -109,37 +109,44 @@
         Find Alt. Frets
       </button>
     <Teleport defer to="#pitch-tracking-template">
-      <div class="w-full ml-auto flex justify-end">
+      <div class="w-full flex">
 
-        <div class="flex items-center gap-2 max-sm:mx-auto">
-          <button
-            :disabled="!isPitchTracking && pitchData.length > 0"
-            class="flex items-center gap-2 dark:shadow-sm dark:shadow-indigo-200"
-            @click="togglePitchTracking"
-          >
-            <div
-              class="bg-red-500 size-4 rounded-full"
-              :class="{
-                'animate-[radar_1s_ease-in-out_infinite]': isPitchTracking,
-              }"
-            ></div>
-            {{ (isPitchTracking ? "Stop " : "Start ") + "Pitch Tracking" }}
-          </button>
-          <button @click="showInfoModal = true" class="inverted-btn">
-            Help
-            <FontAwesomeIcon
-              :icon="faInfoCircle"
-              class="ps-1 text-white"
-              size="lg"
-            />
-          </button>
-          <button
-            class="inverted-btn"
-            :disabled="!isPitchTracking && pitchData.length === 0"
-            @click="clearPitchData"
-          >
-            <FontAwesomeIcon :icon="faRefresh" size="lg" />
-          </button>
+        <div class="flex w-full items-center justify-between">
+          <div class="flex gap-2">
+            <button
+              :disabled="!isPitchTracking && pitchData.length > 0"
+              class="flex items-center gap-2 dark:shadow-sm dark:shadow-indigo-200"
+              @click="togglePitchTracking"
+            >
+              <div
+                class="bg-red-500 size-4 rounded-full"
+                :class="{
+                  'animate-[radar_1s_ease-in-out_infinite]': isPitchTracking,
+                }"
+              ></div>
+              {{ (isPitchTracking ? "Stop " : "Start ") + " Tracking" }}
+            </button>
+            <button
+              class="inverted-btn"
+              :disabled="!isPitchTracking && pitchData.length === 0"
+              @click="clearPitchData"
+            >
+              <FontAwesomeIcon :icon="faRefresh" size="lg" />
+            </button>
+            <button @click="showInfoModal = true" class="inverted-btn">
+              Help
+              <FontAwesomeIcon
+                :icon="faQuestionCircle"
+                class="ps-1 text-white"
+                size="lg"
+              />
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+              <a class="btn" href="/settings?section=pitch-tracking">
+                <FontAwesomeIcon :icon=faCog size="lg" class="text-black dark:text-white" />
+              </a>
+          </div>
         </div>
       </div>
     </Teleport>
@@ -147,7 +154,7 @@
 </template>
 
 <script setup lang="ts">
-import { faInfoCircle, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import { faQuestionCircle, faRefresh, faCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import DragSelect, { DSInputElement } from "dragselect";
 import {
