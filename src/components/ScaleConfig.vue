@@ -24,7 +24,7 @@
             ></root-note-selector>
           </quick-transpose>
         </div>
-        <div class="flex flex-col w-full items-start md:min-w-[175px] min-w-none">
+        <div class="flex flex-col size-full items-start md:min-w-[175px] min-w-none">
           <text-carousel
             ref="textCarouselComponent"
             :items="['Scales', 'Arpeggios']"
@@ -43,51 +43,51 @@
       </div>
       <!--note order-->
       <div class="flex flex-col justify-end lg:w-1/2 w-full">
-        <div class="font-medium flex justify-between items-end pb-2">
+        <!-- <div class="font-medium flex justify-between items-end pb-2">
           Note Order
-        </div>
-        <div class="flex w-full justify-evenly items-center gap-2">
-          <button
-            :class="btnClass"
-            @click="scaleConfig.noteOrder = reverse(scaleToDisplay)"
-          >
-            Reverse
-          </button>
-          <button
-            :class="btnClass"
-            @click="scaleConfig.noteOrder = shuffle(scaleToDisplay)"
-          >
-            Shuffle
-          </button>
-          <!-- <button class="flex">
-          <font-awesome-icon
-            class="size-6"
-            :icon="faRefresh"
-            @click="scaleConfig.noteOrder = null"
-          />
-        </button> -->
-          <dropdown-button :class="btnClass" button-text="Presets">
-            <div class="grid space-y-2 p-2 mt-2 max-h-40 overflow-auto">
+        </div> -->
+        <tabs ref="tabs" active-color="indigo" :tabs="['note-order', 'pitch-tracking']">
+          <template #note-order>
+            <div class="flex w-full justify-evenly items-center gap-2">
               <button
-                v-for="(preset, index) in presets"
-                :key="index"
-                class="text-nowrap"
-                @click="
-                  scaleConfig.noteOrder = preset.map((value) => value - 1)
-                "
+                :class="btnClass"
+                @click="scaleConfig.noteOrder = reverse(scaleToDisplay)"
               >
-                {{ preset.toString().replaceAll(",", " ").trim() }}
+                Reverse
+              </button>
+              <button
+                :class="btnClass"
+                @click="scaleConfig.noteOrder = shuffle(scaleToDisplay)"
+              >
+                Shuffle
+              </button>
+              <dropdown-button :class="btnClass" button-text="Presets">
+                <div class="grid space-y-2 p-2 mt-2 max-h-40 overflow-auto">
+                  <button
+                    v-for="(preset, index) in presets"
+                    :key="index"
+                    class="text-nowrap"
+                    @click="
+                      scaleConfig.noteOrder = preset.map((value) => value - 1)
+                    "
+                  >
+                    {{ preset.toString().replaceAll(",", " ").trim() }}
+                  </button>
+                </div>
+              </dropdown-button>
+              <button
+                class="flex size-10 center-xy inverted-btn text-[0.8rem] px-2"
+                @click="scaleConfig.noteOrder = null"
+              >
+                <font-awesome-icon size="xl" :icon="faRefresh"></font-awesome-icon>
               </button>
             </div>
-          </dropdown-button>
-           <button
-            class="flex size-10 center-xy inverted-btn text-[0.8rem] px-2"
-            @click="scaleConfig.noteOrder = null"
-          >
-            <font-awesome-icon size="xl" :icon="faRefresh"></font-awesome-icon>
-          </button>
-        </div>
-      </div>
+          </template>
+          <template #pitch-tracking>
+          </template>
+      </tabs>
+      <div :class="{'hidden' : tabs?.currentTab !== 'pitch-tracking'} " id="pitch-tracking-template"></div>
+    </div>
     </div>
   </div>
 </template>
@@ -110,6 +110,9 @@ import TextCarousel from "./reuseable/TextCarousel.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import Tabs from "./reuseable/Tabs.vue";
+
+const tabs = ref<InstanceType<typeof Tabs> | null>(null);
 
 const { shuffle, reverse } = useReorderNotes();
 

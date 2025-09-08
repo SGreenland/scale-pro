@@ -10,12 +10,12 @@
     "start": "concurrently \"npm run dev\" \"npm run dev --prefix backend\""
   },
   "dependencies": {
-    "@scalemaestro/shared-types": "file:./packages/shared-types",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@scalemaestro/shared-types": "file:./packages/shared-types",
     "ag-charts-vue3": "^12.1.2",
     "ag-grid-vue3": "^34.1.2",
     "axios": "^1.11.0",
