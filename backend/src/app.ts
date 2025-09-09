@@ -16,7 +16,24 @@ var cookieParser = require('cookie-parser');
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.post('/api/webhook',express.raw({ type: 'application/json' }), stripeWebhook);
 app.use(express.json());
 app.use(cookieParser());
@@ -24,7 +41,6 @@ app.use(cookieParser());
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 
-// Register routes here
 app.use("/api", authRoutes);
 app.use("/api", settingsRoutes);
 app.use("/api", userRoutes);
