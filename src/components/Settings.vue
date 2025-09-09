@@ -1,14 +1,23 @@
 <template>
   <card-wrapper title="Settings" :withBackArrow="true">
     <div class="w-full text-start">
-      <accordion-single title="General" :extra-summary-classes="sectionHeaderClasses">
+      <accordion-single
+        title="General"
+        :extra-summary-classes="sectionHeaderClasses"
+      >
         <div :class="optionInlineClasses">
           <label for="startingNote">Starting Note</label>
-          <root-note-selector v-model="currentSettings.startingRootNote"></root-note-selector>
+          <root-note-selector
+            v-model="currentSettings.startingRootNote"
+          ></root-note-selector>
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="startingScale">Starting Scale</label>
-          <select v-model="currentSettings.startingScale" name="startingScale" id="startingScale">
+          <select
+            v-model="currentSettings.startingScale"
+            name="startingScale"
+            id="startingScale"
+          >
             <option v-for="scale in Object.keys(scales)" :value="scale">
               {{ scale }}
             </option>
@@ -20,17 +29,17 @@
         :extra-summary-classes="sectionHeaderClasses"
       >
         <div :class="optionInlineClasses">
-            <label for="theme">Theme</label>
-            <select
-              v-model="currentSettings.theme"
-              name="theme"
-              id="theme"
-              class="w-fit px-1 h-[42px]"
-            >
-              <option value="auto">Auto</option>
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
+          <label for="theme">Theme</label>
+          <select
+            v-model="currentSettings.theme"
+            name="theme"
+            id="theme"
+            class="w-fit px-1 h-[42px]"
+          >
+            <option value="auto">Auto</option>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="grid-type">Grid Type</label>
@@ -46,7 +55,7 @@
         title="Looping"
         :extra-summary-classes="sectionHeaderClasses"
       >
-        <div :class=optionInlineClasses>
+        <div :class="optionInlineClasses">
           <label class="me-1" for="loop-gap">Loop Gap </label>
           <div class="flex items-center gap-2">
             <select
@@ -162,24 +171,31 @@ import NumberInput from "./reuseable/NumberInput.vue";
 import SubmitButton from "./reuseable/SubmitButton.vue";
 import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
+import axios from "axios";
+
 const isSaving = ref(false);
 const successfullySaved = ref(false);
-
 const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50 shadow-indigo-400 rounded mb-1`;
-const optionInlineClasses: string = "flex flex-wrap items-center justify-between py-3 px-2 border-b";
+const optionInlineClasses: string =
+  "flex flex-wrap items-center justify-between py-3 px-2 border-b";
 const optionClasses: string = "grid gap-2 p-3 border-b";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
-const pitchTrackingAccordion = ref<InstanceType<typeof AccordionSingle> | null>(null);
+const pitchTrackingAccordion = ref<InstanceType<typeof AccordionSingle> | null>(
+  null
+);
 
 onMounted(() => {
   const queryParams = new URLSearchParams(window.location.search);
 
-  if (queryParams.get("section") === "pitch-tracking" && pitchTrackingAccordion.value) {
-      const accordionElement = pitchTrackingAccordion.value?.$el as HTMLElement;
-      if (accordionElement) {
-        accordionElement.setAttribute("open", 'true');
-        accordionElement.scrollIntoView({ behavior: "smooth" });
-      }
+  if (
+    queryParams.get("section") === "pitch-tracking" &&
+    pitchTrackingAccordion.value
+  ) {
+    const accordionElement = pitchTrackingAccordion.value?.$el as HTMLElement;
+    if (accordionElement) {
+      accordionElement.setAttribute("open", "true");
+      accordionElement.scrollIntoView({ behavior: "smooth" });
+    }
   }
 });
 
@@ -190,32 +206,32 @@ function getButtonText() {
 async function saveSettings() {
   isSaving.value = true;
   try {
-    const response = await fetch('/api/settings', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${document.cookie.split('token=')[1]?.split(';')[0] || ''}`
-      },
-      body: JSON.stringify({settings: currentSettings.value}),
-    });
+    const token = document.cookie.split("token=")[1]?.split(";")[0] || "";
+    const response = await axios.post(
+      "/api/settings",
+      { settings: currentSettings.value },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    if (!response.ok) {
-      throw new Error('Failed to save settings');
-    }
-
-    const data = await response.json();
-
-    if(data.settings) {
-      currentLoggedInUser.value!.userSettings = data.settings;
+    if (response.data.settings) {
+      currentLoggedInUser.value!.userSettings = response.data.settings;
     }
     isSaving.value = false;
     successfullySaved.value = true;
     setTimeout(() => {
       successfullySaved.value = false;
     }, 3000);
-  } catch (error) {
+  } catch (error: any) {
     isSaving.value = false;
-    alert('Error saving settings: ' + error);
+    alert(
+      "Error saving settings: " +
+        (error.response?.data?.message || error.message || error)
+    );
   }
 }
 </script>
