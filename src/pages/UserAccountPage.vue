@@ -127,8 +127,8 @@ onBeforeMount(() => {
       currentLoggedInUser.value!.userName = response.data.user.userName,
       currentLoggedInUser.value!.email = response.data.user.email;
       currentLoggedInUser.value!.trialExpiresAt = response.data.user.trialExpiresAt;
-      const subCancelsAt = response.data.user.subscription?.expiresAt;
-      if(subCancelsAt) subCancelsAt.value = new Date(subCancelsAt).toDateString() || null;
+      const subCancelsAtField = response.data.user.subscription?.expiresAt;
+      if(subCancelsAtField) subCancelsAt.value = new Date(subCancelsAtField).toDateString() || null;
       countdownTimerMHS.value = getTimer();
     }
   }).catch((error) => {
