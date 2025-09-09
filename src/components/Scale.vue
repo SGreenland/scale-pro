@@ -143,9 +143,9 @@
             </button>
           </div>
           <div class="flex items-center gap-2">
-              <a class="btn" href="/settings?section=pitch-tracking">
+              <router-link :to="{ name: 'Settings', query: { section: 'pitch-tracking' } }">
                 <FontAwesomeIcon :icon=faCog size="lg" class="text-black dark:text-white" />
-              </a>
+              </router-link>
           </div>
         </div>
       </div>
