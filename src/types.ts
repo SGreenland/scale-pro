@@ -86,6 +86,7 @@ interface UserSessionObject {
   trialExpiresAt?: Date | null;
   subscriptionId?: string | null; // Optional, only if user has a subscription
   userSettings?: Settings | null; // Optional, only if user has settings
+  hasPremiumAccess: boolean;
 }
 
 export type {

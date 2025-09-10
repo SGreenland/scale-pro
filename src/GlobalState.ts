@@ -11,8 +11,6 @@ export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>('
 
 export const hasUserJustSignedUp = ref(false);
 
-export const hasFullAccess = ref(false);
-
 export const presetNoteOrders = reactive({
   presets8: [
     [1, 3, 5, 7, 2, 4, 6, 8],

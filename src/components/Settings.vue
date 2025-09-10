@@ -149,7 +149,7 @@
       </accordion-single>
     </div>
     <submit-button
-      v-if="currentLoggedInUser && hasFullAccess"
+      v-if="currentLoggedInUser?.hasPremiumAccess"
       class="mt-4"
       @click="saveSettings"
       :isSubmitting="isSaving"
@@ -161,7 +161,7 @@
 <script setup lang="ts">
 import { LoopGapOption } from "@scalemaestro/shared-types";
 import { ref, onMounted } from "vue";
-import { currentLoggedInUser, currentSettings, hasFullAccess } from "../GlobalState";
+import { currentLoggedInUser, currentSettings } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";

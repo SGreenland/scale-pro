@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { hasFullAccess } from "../GlobalState";
+
 import { computed, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { currentLoggedInUser } from "../GlobalState";
@@ -55,7 +55,7 @@ const filteredMenuLinks = computed(() => {
       return isUserLoggedIn.value;
     }
     if(link.name === 'Upgrade') {
-      return isUserLoggedIn.value && (currentLoggedInUser.value?.trialExpiresAt || !hasFullAccess.value);
+      return isUserLoggedIn.value && (currentLoggedInUser.value?.trialExpiresAt || !currentLoggedInUser.value?.hasPremiumAccess);
     }
     return true;
   });

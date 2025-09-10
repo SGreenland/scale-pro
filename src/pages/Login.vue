@@ -48,7 +48,7 @@ import { useRouter } from "vue-router";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
 import { currentLoggedInUser, scaleConfig } from "../GlobalState";
-import { hasFullAccess } from "../GlobalState";
+
 
 const router = useRouter();
 
@@ -77,8 +77,8 @@ const handleSubmit = async () => {
         trialExpiresAt: response.data.user.trialExpiresAt,
         subscriptionId: response.data.user.subscriptionId,
         userSettings: response.data.user.userSettings,
+        hasPremiumAccess: response.data.user.hasPremiumAccess,
       };
-      hasFullAccess.value = response.data.hasPremiumAccess;
       // set scaleconfig defaults
       if (currentLoggedInUser.value.userSettings) {
         scaleConfig.selectedNote = currentLoggedInUser.value.userSettings.startingRootNote;

@@ -5,7 +5,7 @@
        {{ countdownTimerMHS ? `Trial ends in: ${countdownTimerMHS}` : "Your trial has expired..." }}
         <router-link to="/upgrade">Upgrade Now!</router-link>
       </p>
-      <p v-if="currentLoggedInUser?.subscriptionId && hasFullAccess">
+      <p v-if="currentLoggedInUser?.subscriptionId && currentLoggedInUser?.hasPremiumAccess">
         Thanks for upgrading to Pro! <a @click.prevent="goToCustomerPortal" href="#">Manage your Subscription</a>
       </p>
       <p v-if="subCancelsAt">
@@ -82,7 +82,7 @@
 <script setup lang="ts">
 import axios, { isAxiosError } from "axios";
 import { ref, onBeforeMount } from "vue";
-import { currentLoggedInUser, hasFullAccess  } from "../GlobalState";
+import { currentLoggedInUser } from "../GlobalState";
 import CardWrapper from "../components/reuseable/CardWrapper.vue";
 import ConfirmPasswordInput from "../components/reuseable/ConfirmPasswordInput.vue";
 import PasswordInput from "../components/reuseable/PasswordInput.vue";
