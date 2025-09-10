@@ -149,7 +149,7 @@
       </accordion-single>
     </div>
     <submit-button
-      v-if="currentLoggedInUser && hasFullAccess()"
+      v-if="currentLoggedInUser && hasFullAccess"
       class="mt-4"
       @click="saveSettings"
       :isSubmitting="isSaving"
@@ -161,9 +161,8 @@
 <script setup lang="ts">
 import { LoopGapOption } from "@scalemaestro/shared-types";
 import { ref, onMounted } from "vue";
-import { currentLoggedInUser, currentSettings } from "../GlobalState";
+import { currentLoggedInUser, currentSettings, hasFullAccess } from "../GlobalState";
 import { scales } from "../NotesAndScales";
-import { hasFullAccess } from "../utils/checkUserAccess";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";
 import CustomRadioChips from "./reuseable/CustomRadioChips.vue";
@@ -206,16 +205,9 @@ function getButtonText() {
 async function saveSettings() {
   isSaving.value = true;
   try {
-    const token = document.cookie.split("token=")[1]?.split(";")[0] || "";
     const response = await axios.post(
       "/api/settings",
-      { settings: currentSettings.value },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      { settings: currentSettings.value }
     );
 
     if (response.data.settings) {

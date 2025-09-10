@@ -60,24 +60,26 @@ export async function loginUser(email: string, password: string) {
     errors.password = "Invalid password";
     throw new Error(JSON.stringify(errors));
   }
-
-  const token = createUserToken(user);
-
-  return { user, token };
-}
-
-
-function createUserToken(user: UserWithSubscription): string {
   const isAdmin = process.env.ADMIN_EMAILS?.split(",").includes(user.email);
   const isTrialActive =
     user.trialExpiresAt && user.trialExpiresAt > new Date();
   const hasActiveSubscription =
     user.subscription?.status === "active";
 
+  const hasPremiumAccess = isAdmin || isTrialActive || hasActiveSubscription;
+
+  const token = createUserToken(user);
+
+  return { user, token, hasPremiumAccess };
+}
+
+
+function createUserToken(user: UserWithSubscription): string {
+
   return jwt.sign(
     {
       userId: user.id,
-      hasPremiumAccess: isTrialActive || hasActiveSubscription || isAdmin,
+      userName: user.userName,
     },
     process.env.JWT_SECRET as string,
     {

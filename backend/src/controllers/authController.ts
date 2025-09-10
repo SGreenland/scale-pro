@@ -15,12 +15,10 @@ export async function signup(req: Request<SignupRequestBody>, res: Response) {
 
   try {
     const { user, token } = await registerUser(userName, email, password);
-    return res
-      .status(201)
-      .json({
-        token,
-        user: { id: user.id, userName: user.userName, email: user.email },
-      });
+    return res.status(201).json({
+      token,
+      user: { id: user.id, userName: user.userName, email: user.email },
+    });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }
@@ -30,20 +28,24 @@ export async function login(req: Request, res: Response) {
   const { email, password } = req.body as { email: string; password: string };
 
   try {
-    const { user, token } = await loginUser(email, password);
-    return res
-      .status(200)
-      .json({
-        token,
-        user: {
-          id: user.id,
-          userName: user.userName,
-          email: user.email,
-          trialExpiresAt: !user.subscription && user.trialExpiresAt,
-          subscriptionId: user.subscription ? user.subscription.id : null,
-          userSettings: user.settings || null,
-        },
-      });
+    const { user, token, hasPremiumAccess } = await loginUser(email, password);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({
+      user: {
+        id: user.id,
+        userName: user.userName,
+        email: user.email,
+        trialExpiresAt: !user.subscription && user.trialExpiresAt,
+        subscriptionId: user.subscription ? user.subscription.id : null,
+        userSettings: user.settings || null,
+      },
+      hasPremiumAccess: hasPremiumAccess,
+    });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }

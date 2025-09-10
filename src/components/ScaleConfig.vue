@@ -105,10 +105,9 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
-import { presetNoteOrders, scaleConfig, scaleToDisplay } from "../GlobalState";
+import { presetNoteOrders, scaleConfig, scaleToDisplay, hasFullAccess } from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
-import { hasFullAccess } from "../utils/checkUserAccess";
 import QuickTranspose from "./QuickTranspose.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import InfoTooltip from "./reuseable/InfoTooltip.vue";
@@ -132,7 +131,7 @@ const props = defineProps<{
 
 const scaleNames = Object.keys(scales);
 const getAvailableScalesPerUser = (): (keyof Scales)[] => {
-  return hasFullAccess()
+  return hasFullAccess.value
     ? (scaleNames as (keyof Scales)[])
     : (scaleNames.slice(0, 3) as (keyof Scales)[]);
 };

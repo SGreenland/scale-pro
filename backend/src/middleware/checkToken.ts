@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 
 declare module "express-serve-static-core" {
   interface Request {
-    user?: { id: string; hasPremiumAccess?: boolean; };
+    user?: { id: string; userName: string; };
   }
 }
 
@@ -22,11 +22,11 @@ export function checkToken(required = true) {
       const decoded = jwt.verify(
         token,
         process.env.JWT_SECRET as string
-      ) as { userId: string; hasPremiumAccess?: boolean; };
+      ) as { userId: string; userName: string; };
 
       req.user = {
         id: decoded.userId,
-        hasPremiumAccess: !!decoded.hasPremiumAccess,
+        userName: decoded.userName,
       };
 
       next();

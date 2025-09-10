@@ -14,7 +14,7 @@
         <p class="text-base italic text-gray-600 dark:text-gray-300 mb-6">
           {{ feedbackMessage }}
         </p>
-        <div v-if="hasFullAccess()" class="flex gap-2 justify-end border-t pt-4">
+        <div v-if="hasFullAccess" class="flex gap-2 justify-end border-t pt-4">
         <button class="inverted-btn">Screenshot</button>
         <submit-button width-class="w-20":is-submitting="isSaving" @click="handleSave">Save</submit-button>
       </div>
@@ -61,9 +61,8 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import ModalWrapper from "./reuseable/ModalWrapper.vue";
-import { hasFullAccess } from "../utils/checkUserAccess";
 import axios from "axios";
-import { currentSettings, scaleConfig } from "../GlobalState";
+import { currentSettings, scaleConfig, hasFullAccess } from "../GlobalState";
 import SubmitButton from "./reuseable/SubmitButton.vue";
 const props = defineProps<{
   averageDeviation: number;

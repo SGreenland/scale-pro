@@ -48,6 +48,7 @@ import { useRouter } from "vue-router";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
 import { currentLoggedInUser, scaleConfig } from "../GlobalState";
+import { hasFullAccess } from "../GlobalState";
 
 const router = useRouter();
 
@@ -67,9 +68,7 @@ const handleSubmit = async () => {
   try {
     isSubmitting.value = true;
     const response = await axios.post("/api/login", formData);
-    if (response.data.token && response.data.user) {
-      //set read-only cookie with token
-      document.cookie = `token=${response.data.token}; path=/; secure; HttpOnly samesite=strict`;
+    if (response.data.user) {
       // Set the current logged-in user
       currentLoggedInUser.value = {
         id: response.data.user.id,
@@ -79,6 +78,7 @@ const handleSubmit = async () => {
         subscriptionId: response.data.user.subscriptionId,
         userSettings: response.data.user.userSettings,
       };
+      hasFullAccess.value = response.data.hasPremiumAccess;
       // set scaleconfig defaults
       if (currentLoggedInUser.value.userSettings) {
         scaleConfig.selectedNote = currentLoggedInUser.value.userSettings.startingRootNote;
