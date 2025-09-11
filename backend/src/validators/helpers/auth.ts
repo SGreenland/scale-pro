@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { UserWithSubscription } from "src/types";
 
 export function validateEmail(email: string): boolean {
   const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -19,4 +20,13 @@ export function validateToken(token: string): boolean {
   } catch (error) {
     return false;
   }
+}
+
+export function checkPremiumAccess(user: UserWithSubscription): boolean {
+  const isAdmin = process.env.ADMIN_EMAILS?.split(",").includes(user.email);
+  const isTrialActive =
+    user.trialExpiresAt && user.trialExpiresAt > new Date();
+  const hasActiveSubscription =
+    user.subscription?.status === "active";
+  return Boolean(isAdmin || isTrialActive || hasActiveSubscription);
 }

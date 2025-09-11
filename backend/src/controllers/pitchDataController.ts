@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
+import { checkPremiumAccess } from "src/validators/helpers/auth";
 
 export async function getPitchData(req: Request, res: Response) {
   const userId = req.user!.id;
@@ -23,6 +24,16 @@ export async function addPitchData(req: Request, res: Response) {
 
   if (!scale || percentageInTune === undefined || averageDeviation === undefined || !toleranceLevel) {
     return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: userId },
+    include: { subscription: true },
+  });
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  if(!checkPremiumAccess(user)) {
+    return res.status(403).json({ error: "User does not have premium access" });
   }
 
   try {

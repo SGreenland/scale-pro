@@ -1,6 +1,7 @@
 import { Settings } from "@scalemaestro/shared-types";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { prisma } from "../prisma";
+import { checkPremiumAccess } from "src/validators/helpers/auth";
 
 export async function getUserSettings(userId: string): Promise<JsonValue | null> {
   const userSettings = await prisma.user.findUnique({
@@ -30,6 +31,13 @@ export async function updateUserSettings(
   if (settingsJson === null) {
     throw new Error("Settings cannot be null");
   }
+  const user = await prisma.user.findUnique({ where: { id: userId },
+    include: { subscription: true },
+  });
+  if (!user) {
+    throw new Error("User not found");
+  }
+  if(!checkPremiumAccess(user)) throw new Error("User does not have premium access");
   const updatedSettings = await prisma.user.update({
     where: { id: userId },
     data: { settings: settingsJson as any },

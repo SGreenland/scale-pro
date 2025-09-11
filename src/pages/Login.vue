@@ -77,7 +77,7 @@ const handleSubmit = async () => {
         trialExpiresAt: response.data.user.trialExpiresAt,
         subscriptionId: response.data.user.subscriptionId,
         userSettings: response.data.user.userSettings,
-        hasPremiumAccess: response.data.user.hasPremiumAccess,
+        hasPremiumAccess: response.data.hasPremiumAccess,
       };
       // set scaleconfig defaults
       if (currentLoggedInUser.value.userSettings) {
