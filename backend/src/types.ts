@@ -1,6 +1,6 @@
 // import settings from front end types
 import { Settings } from "@scalemaestro/shared-types";
-import { Prisma } from "../generated/prisma";
+import { Prisma } from "@prisma/client";
 
 export interface SignupRequestBody {
   userName: string;

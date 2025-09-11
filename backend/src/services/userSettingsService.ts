@@ -1,5 +1,5 @@
 import { Settings } from "@scalemaestro/shared-types";
-import { JsonValue } from "../../generated/prisma/runtime/library.js";
+import { JsonValue } from "@prisma/client/runtime/library";
 import { prisma } from "../prisma";
 
 export async function getUserSettings(userId: string): Promise<JsonValue | null> {
