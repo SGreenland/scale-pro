@@ -1,7 +1,7 @@
 import { Settings } from "@scalemaestro/shared-types";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { prisma } from "../prisma";
-import { checkPremiumAccess } from "src/validators/helpers/auth";
+import { checkPremiumAccess } from "../validators/helpers/auth";
 
 export async function getUserSettings(userId: string): Promise<JsonValue | null> {
   const userSettings = await prisma.user.findUnique({

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
-import { checkPremiumAccess } from "src/validators/helpers/auth";
+import { checkPremiumAccess } from "../validators/helpers/auth";
 
 export async function getPitchData(req: Request, res: Response) {
   const userId = req.user!.id;
