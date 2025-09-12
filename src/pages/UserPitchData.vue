@@ -43,6 +43,7 @@ const updateColumnVisibility = () => {
 
 onMounted(() => {
   // hide certain columns on small screens
+  updateColumnVisibility();
   window.addEventListener("resize", updateColumnVisibility);
 });
 
