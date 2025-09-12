@@ -80,7 +80,7 @@ const handleSubmit = async () => {
         hasPremiumAccess: response.data.hasPremiumAccess,
       };
       // set scaleconfig defaults
-      if (currentLoggedInUser.value.userSettings) {
+      if (currentLoggedInUser.value.userSettings && response.data.hasPremiumAccess) {
         scaleConfig.selectedNote = currentLoggedInUser.value.userSettings.startingRootNote;
         scaleConfig.selectedScale = currentLoggedInUser.value.userSettings.startingScale;
       }
