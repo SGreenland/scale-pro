@@ -2,8 +2,8 @@
   <div v-click-away:[isOpen] class="fixed lg:right-2 right-0 md:top-2 top-0 z-[1000]" style="min-width: 180px;">
     <font-awesome-icon
       :icon="!isOpen ? faBars : faXmark"
-      class="text-2xl cursor-pointer fixed md:top-2 top-1 lg:right-2 right-1 p-2 text-indigo-900 dark:text-indigo-200 z-50 rounded-full bg-indigo-100 dark:bg-indigo-800"
-      :class="{'shadow-lg': !isOpen}"
+      class="text-2xl cursor-pointer fixed md:top-2 top-2 right-2 max-sm:p-1 p-2 text-indigo-900 dark:text-indigo-200 z-50 rounded-full bg-indigo-100 dark:bg-indigo-800"
+      :class="{'shadow-lg max-sm:opacity-80': !isOpen}"
       @click="isOpen = !isOpen"
     />
     <div

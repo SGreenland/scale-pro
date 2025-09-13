@@ -14,6 +14,7 @@
             </info-tooltip>
           </div>
           <quick-transpose
+            class="max-sm:w-[160px]"
             v-show="!props.workoutMode"
             :availableRootNotes="rootNoteSelector?.availableRootNotes"
           >
@@ -105,7 +106,12 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
-import { presetNoteOrders, scaleConfig, scaleToDisplay, currentLoggedInUser } from "../GlobalState";
+import {
+  presetNoteOrders,
+  scaleConfig,
+  scaleToDisplay,
+  currentLoggedInUser,
+} from "../GlobalState";
 import { scales } from "../NotesAndScales";
 import { PresetNoteOrders, Scales } from "../types";
 import QuickTranspose from "./QuickTranspose.vue";
