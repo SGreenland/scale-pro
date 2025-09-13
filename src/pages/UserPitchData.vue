@@ -15,6 +15,7 @@
       :columnTypes="columnTypes"
       :pagination="true"
       :paginationPageSize="20"
+      :theme="isDarkMode ? darkTheme : undefined"
     ></ag-grid-vue>
     <div class="chart-wrapper mt-8">
       <ag-charts :options="options" class="h-96 w-full"></ag-charts>
@@ -25,6 +26,7 @@
 <script setup lang="ts">
 import type { AgChartOptions } from "ag-charts-community";
 import { AgCharts } from "ag-charts-vue3";
+import { colorSchemeDarkBlue, themeQuartz } from 'ag-grid-community';
 import { AgGridVue } from "ag-grid-vue3";
 import axios from "axios";
 import {
@@ -46,6 +48,19 @@ const allColumnsVisible = computed({
 const updateColumnVisibility = () => {
   shouldHideColumn.value = window.innerWidth < 640;
 };
+
+const darkTheme = themeQuartz.withPart(colorSchemeDarkBlue);
+
+const isDarkMode = computed(() =>
+  document.documentElement.classList.contains("dark") || window.matchMedia("(prefers-color-scheme: dark)").matches
+);
+
+const backgroundColor = computed(() =>
+  document.documentElement.classList.contains("dark") ? "#1F2937" : "#FFFFFF"
+);
+const foregroundColor = computed(() =>
+  document.documentElement.classList.contains("dark") ? "#F3F4F6" : "#111827"
+);
 
 onMounted(() => {
   // hide certain columns on small screens
@@ -128,6 +143,12 @@ const averageScorePerScale = computed(() => {
 const options = computed<AgChartOptions>(() => ({
   // Data: Data to be displayed in the chart
   data: averageScorePerScale.value,
+  theme: {
+    params: {
+      foregroundColor: foregroundColor.value,
+      backgroundColor: backgroundColor.value,
+    },
+  },
   title: {
     text: "Average In Tune Percentage by Scale",
     fontSize: 18,
@@ -169,7 +190,6 @@ const options = computed<AgChartOptions>(() => ({
       },
       min: 0,
       max: 100,
-      tickInterval: 10,
     },
   ],
 }));
@@ -179,7 +199,6 @@ onBeforeMount(() => {
     .get("/api/pitch-data")
     .then((response) => {
       rowData.value = response.data.pitchData;
-      console.log("Fetched user pitch data:", rowData.value);
     })
     .catch((error) => {
       console.error("Error fetching user pitch data:", error);
