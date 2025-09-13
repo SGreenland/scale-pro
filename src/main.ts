@@ -13,6 +13,7 @@ import {
     ModuleRegistry,
     AllCommunityModule,
 } from 'ag-grid-community';
+import vClickAway from './directives/vClickAway';
 
 import axios from "axios";
 
@@ -44,4 +45,8 @@ const router = createRouter({
     routes,
 });
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App).use(router);
+
+app.directive('click-away', vClickAway);
+
+app.mount('#app');

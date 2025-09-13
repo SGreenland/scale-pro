@@ -27,6 +27,7 @@ import { defineEmits } from "vue";
 const props = withDefaults(defineProps<{
   mask?: boolean;
   hasCloseButton?: boolean;
+  closeOnClickOutside?: boolean;
 }>(), {
   mask: true,
   hasCloseButton: true,
