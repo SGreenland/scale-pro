@@ -1,41 +1,42 @@
 <template>
-  <div class="p-4 lg:w-2/3 mx-auto">
-    <h2 class="text-xl mb-4">My Pitch Data</h2>
-    <div>
-      <Checkbox
-        v-model="allColumnsVisible"
-        label="Show All Columns"
-        class="mb-2"
-      />
+  <card-wrapper
+    title="My Pitch Data"
+    maxWidth="1200px"
+    width="2/3"
+    with-back-arrow
+  >
+    <div class="p-4 w-full mx-auto">
+      <div>
+        <Checkbox
+          v-model="allColumnsVisible"
+          label="Show All Columns"
+          class="mb-2"
+        />
+      </div>
+      <ag-grid-vue
+        class="h-96 w-full mx-auto text-left"
+        :rowData="rowData"
+        :columnDefs="colDefs"
+        :columnTypes="columnTypes"
+        :pagination="true"
+        :paginationPageSize="20"
+        :theme="isDarkMode ? darkTheme : undefined"
+      ></ag-grid-vue>
+      <div class="chart-wrapper mt-8">
+        <ag-charts :options="options" class="h-96 w-full"></ag-charts>
+      </div>
     </div>
-    <ag-grid-vue
-      class="h-96 w-full mx-auto text-left"
-      :rowData="rowData"
-      :columnDefs="colDefs"
-      :columnTypes="columnTypes"
-      :pagination="true"
-      :paginationPageSize="20"
-      :theme="isDarkMode ? darkTheme : undefined"
-    ></ag-grid-vue>
-    <div class="chart-wrapper mt-8">
-      <ag-charts :options="options" class="h-96 w-full"></ag-charts>
-    </div>
-  </div>
+  </card-wrapper>
 </template>
 
 <script setup lang="ts">
+import CardWrapper from "../components/reuseable/CardWrapper.vue";
 import type { AgChartOptions } from "ag-charts-community";
 import { AgCharts } from "ag-charts-vue3";
-import { colorSchemeDarkBlue, themeQuartz } from 'ag-grid-community';
+import { colorSchemeDarkBlue, themeQuartz } from "ag-grid-community";
 import { AgGridVue } from "ag-grid-vue3";
 import axios from "axios";
-import {
-  computed,
-  onBeforeMount,
-  onBeforeUnmount,
-  onMounted,
-  ref
-} from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
 import Checkbox from "../components/reuseable/Checkbox.vue";
 
 const shouldHideColumn = ref(false); // Set to true to hide certain columns
@@ -51,8 +52,10 @@ const updateColumnVisibility = () => {
 
 const darkTheme = themeQuartz.withPart(colorSchemeDarkBlue);
 
-const isDarkMode = computed(() =>
-  document.documentElement.classList.contains("dark") || window.matchMedia("(prefers-color-scheme: dark)").matches
+const isDarkMode = computed(
+  () =>
+    document.documentElement.classList.contains("dark") ||
+    window.matchMedia("(prefers-color-scheme: dark)").matches
 );
 
 const backgroundColor = computed(() =>

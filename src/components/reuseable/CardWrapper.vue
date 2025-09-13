@@ -1,6 +1,7 @@
 <template>
   <div
-    class="flex-col h-fit p-5 lg:w-1/2 md:w-2/3 w-full mt-4 m-auto rounded-lg shadow-md dark:shadow-gray-500 bg-white dark:bg-gray-800/50"
+    class="flex-col h-fit p-5 md:w-2/3 w-full mt-4 m-auto rounded-lg shadow-md dark:shadow-gray-500 bg-white dark:bg-gray-800/50"
+    :class="`lg:w-${width} max-w-[${maxWidth}]`"
   >
   <div class="flex relative items-center pb-3">
         <font-awesome-icon
@@ -30,10 +31,14 @@ withDefaults(
   defineProps<{
     title?: string;
     withBackArrow?: boolean;
+    width?: '1/2' | '2/3' | '3/4' | 'full';
+    maxWidth?: string;
   }>(),
   {
     title: '',
     withBackArrow: false,
+    width: '1/2',
+    maxWidth: '900px',
   }
 );
 </script>
