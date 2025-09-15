@@ -5,7 +5,7 @@
     width="2/3"
     with-back-arrow
   >
-    <div class="p-4 w-full mx-auto">
+    <div class="lg:p-4 p-0 w-full mx-auto">
       <div>
         <Checkbox
           v-model="allColumnsVisible"
