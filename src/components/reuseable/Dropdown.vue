@@ -62,7 +62,7 @@ defineExpose({ open });
         >
             <div
                 v-show="open"
-                class="absolute z-50 rounded-md shadow-lg"
+                class="absolute z-50 rounded-md shadow-lg border"
                 :class="[widthClass, alignmentClasses, marginClass, positionClass]"
                 style="display: none"
                 @click="closeContentOnClick && (open = false)"

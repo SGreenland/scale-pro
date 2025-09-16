@@ -26,22 +26,55 @@
           </quick-transpose>
         </div>
         <div
-          class="flex flex-col size-full items-start md:min-w-[175px] min-w-none"
+          class="flex flex-col size-full items-start justify-end md:min-w-[175px] min-w-none"
         >
-          <text-carousel
-            ref="textCarouselComponent"
-            :items="['Scales', 'Arpeggios']"
-            @item-changed="handleScaleTypeChange"
-          ></text-carousel>
-          <select
-            class="flex w-full"
-            id="scale"
-            v-model="scaleConfig.selectedScale"
-          >
-            <option v-for="(name, index) in getScaleOptions" :key="index">
-              {{ name }}
-            </option>
-          </select>
+          <label for="note-pattern">{{
+            selectedPatternCategory.slice(0, -1)
+          }}</label>
+          <div class="flex w-full gap-2">
+            <select
+              class="grow"
+              id="note-pattern"
+              v-model="scaleConfig.selectedPattern"
+            >
+              <option
+                :value="pattern"
+                v-for="(pattern, index) in getPatternOptions"
+                :key="index"
+              >
+                {{ pattern.name }}
+              </option>
+            </select>
+            <dropdown class="self-center" :closeContentOnClick="true">
+              <template #trigger>
+                <font-awesome-icon
+                  role="button"
+                  :icon="faEllipsisV"
+                  size="xl"
+                />
+              </template>
+              <template #content>
+              <div class="grid gap-2 p-2">
+                <b class="border-b">Choose Category: </b>
+                <button
+                  v-for="category in ['Scales', 'Arpeggios', 'Intervals']"
+                  :key="category"
+                  @click="selectedPatternCategory = category"
+                  :class="
+                    {
+                      'bg-indigo-500 text-white':
+                        selectedPatternCategory === category,
+                      'hover:bg-indigo-200 dark:hover:bg-indigo-600':
+                        selectedPatternCategory !== category,
+                    } + ' rounded-md px-2 py-1 text-left'
+                  "
+                >
+                  {{ category }}
+                </button>
+              </div>
+              </template>
+            </dropdown>
+          </div>
         </div>
       </div>
       <!--note order-->
@@ -104,24 +137,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue";
+import { faEllipsisV, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { NotePattern } from "packages/shared-types/dist";
+import { computed, ref, watch } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
 import {
+  currentLoggedInUser,
   presetNoteOrders,
   scaleConfig,
   scaleToDisplay,
-  currentLoggedInUser,
 } from "../GlobalState";
-import { scales } from "../NotesAndScales";
-import { PresetNoteOrders, Scales } from "../types";
+import { notePatterns } from "../NotesAndScales";
+import { PresetNoteOrders } from "../types";
 import QuickTranspose from "./QuickTranspose.vue";
+import Dropdown from "./reuseable/Dropdown.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import InfoTooltip from "./reuseable/InfoTooltip.vue";
-import TextCarousel from "./reuseable/TextCarousel.vue";
-import RootNoteSelector from "./RootNoteSelector.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import Tabs from "./reuseable/Tabs.vue";
+import RootNoteSelector from "./RootNoteSelector.vue";
 
 const tabs = ref<InstanceType<typeof Tabs> | null>(null);
 
@@ -135,26 +169,15 @@ const props = defineProps<{
   workoutMode: boolean;
 }>();
 
-const scaleNames = Object.keys(scales);
-const getAvailableScalesPerUser = (): (keyof Scales)[] => {
+// const scaleNames = notePatterns.map((pattern) => pattern.name);
+
+const getAvailablePatternsPerUser = (): NotePattern[] => {
   return currentLoggedInUser.value?.hasPremiumAccess
-    ? (scaleNames as (keyof Scales)[])
-    : (scaleNames.slice(0, 3) as (keyof Scales)[]);
+    ? notePatterns
+    : notePatterns.filter((pattern) => !pattern.isPremium);
 };
 
 const btnClass = "flex grow justify-center items-center";
-
-const handleScaleTypeChange = (item: string) => {
-  //this is disgusting sorry about me
-  if (item === "Scales" && scaleConfig.selectedScale.includes("Arpeggio")) {
-    scaleConfig.selectedScale = "Major";
-  } else if (
-    item === "Arpeggios" &&
-    !scaleConfig.selectedScale.includes("Arpeggio")
-  ) {
-    scaleConfig.selectedScale = "Major Arpeggio";
-  }
-};
 
 const presets = computed(() => {
   const presetsKey =
@@ -162,26 +185,19 @@ const presets = computed(() => {
   return presetNoteOrders[presetsKey];
 });
 
-const availableScales = getAvailableScalesPerUser();
+const availablePatterns = getAvailablePatternsPerUser();
+const selectedPatternCategory = ref("Scales");
 
-const getScaleOptions = computed(() => {
-  let scalesList: (keyof Scales)[] = [];
-  switch (textCarouselComponent.value?.activeItem) {
-    case "Scales":
-      scalesList = availableScales.filter(
-        (scaleName) => !scaleName.includes("Arpeggio")
-      );
-      break;
-    case "Arpeggios":
-      scalesList = availableScales.filter((scale) =>
-        scale.includes("Arpeggio")
-      );
-      break;
-    default:
-      scalesList = availableScales;
-      break;
+const getPatternOptions = computed(() => {
+  return availablePatterns.filter(
+    (pattern) => pattern.type === selectedPatternCategory.value.slice(0, -1).toLowerCase()
+  );
+});
+
+watch(() => getPatternOptions.value, (newPatterns) => {
+  if (!newPatterns.includes(scaleConfig.selectedPattern)) {
+    scaleConfig.selectedPattern = newPatterns[0];
   }
-  return scalesList;
 });
 
 // watch(
@@ -208,21 +224,21 @@ const getScaleOptions = computed(() => {
 //   { deep: true, immediate: true }
 // );
 
-watch(
-  () => scaleConfig.selectedScale,
-  (newScale) => {
-    nextTick(() => {
-      if (newScale.includes("Arpeggio")) {
-        textCarouselComponent.value?.setActiveItem("Arpeggios");
-      }
-    });
-  },
-  { immediate: true }
-);
+// watch(
+//   () => scaleConfig.selectedScale,
+//   (newScale) => {
+//     nextTick(() => {
+//       if (newScale.includes("Arpeggio")) {
+//         textCarouselComponent.value?.setActiveItem("Arpeggios");
+//       }
+//     });
+//   },
+//   { immediate: true }
+// );
 
-const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(
-  null
-);
+// const textCarouselComponent = ref<InstanceType<typeof TextCarousel> | null>(
+//   null
+// );
 
 defineExpose({
   scaleToDisplay,

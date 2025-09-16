@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { workoutConfig } from "../GlobalState";
-import { notes, scales } from "../NotesAndScales";
+import { notes } from "../NotesAndScales";
 import { computed, watch } from "vue";
 import MultiSelectInput from "./reuseable/MultiSelectInput.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";

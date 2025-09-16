@@ -1,15 +1,16 @@
 
-import { notes, scales} from '../NotesAndScales';
+import { NotePattern } from '@scalemaestro/shared-types';
+import { notes, notePatterns} from '../NotesAndScales';
 import { Note, IntervalMap, IntervalSymbol } from '../types';
 
 
 export default function scaleManipulator() {
 
-    function getScale(root: string, scaleType: keyof typeof scales, order?: number[]|null, currentGtrPositions?: number[]): Note[] {
+    function getPattern(root: string, pattern: NotePattern, order?: number[]|null, currentGtrPositions?: number[]): Note[] {
         // get index of root note
         const rootIndex = notes.findIndex(note => note.name === root);
         // get scale intervals
-        const intervals = scales[scaleType];
+        const intervals = pattern.pattern;
         // get scale notes
         const scale = intervals.map((interval,index) => {
             const noteIndex = rootIndex + interval;
@@ -64,7 +65,7 @@ export default function scaleManipulator() {
     return {
         reverseScale,
         shuffleScale,
-        getScale,
+        getPattern,
         reorderScale
     };
 }

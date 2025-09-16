@@ -1,11 +1,11 @@
 import { Settings } from "@scalemaestro/shared-types";
 import { computed, reactive, ref, watch } from "vue";
 import { useSessionStorage } from "./composables/useSessionStorage";
-import { guitarScaleStringPatterns } from "./NotesAndScales";
+import { guitarScaleStringPatterns, notePatterns } from "./NotesAndScales";
 import { PlayBackOptions, ScaleConfig, UserSessionObject, WorkoutConfig } from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
 
-const { getScale } = scaleManipulator();
+const { getPattern } = scaleManipulator();
 
 export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>('user', null);
 
@@ -92,7 +92,7 @@ export const currentSettings = computed(() => {
 });
 
 export const scaleConfig = reactive<ScaleConfig>({
-  selectedScale: currentSettings.value.startingScale,
+  selectedPattern: notePatterns[0],
   selectedNote: currentSettings.value.startingRootNote,
   noteOrder: computedNoteOrder.value,
   currentGtrPositions: [],
@@ -103,7 +103,7 @@ export const tempo = ref(120);
 export const selectedPreset = ref<number[]|undefined>();
 
 export const scaleToDisplay =  computed(
-  () => getScale(scaleConfig.selectedNote, scaleConfig.selectedScale, scaleConfig.noteOrder, scaleConfig.currentGtrPositions)
+  () => getPattern(scaleConfig.selectedNote, scaleConfig.selectedPattern, scaleConfig.noteOrder, scaleConfig.currentGtrPositions)
 );
 
 export const validGtrPatternsForCurrentScale = computed(() => {

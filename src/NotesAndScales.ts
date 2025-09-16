@@ -1,4 +1,5 @@
 import { Note, Scales, GuitarPosition, FretBoard } from './types';
+import { NotePattern } from '@scalemaestro/shared-types';
 
 export const notes: Note[] = [];
 const noteNames: string[] = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -43,17 +44,31 @@ for (const octave of octaves) {
         notes.push(note);
     }
 }
-export const scales: Scales = {
-    'Major': [0, 2, 4, 5, 7, 9, 11, 12],
-    'Natural Minor': [0, 2, 3, 5, 7, 8, 10, 12],
-    'Major Arpeggio': [0, 4, 7, 12],
-    'Major (1-5)': [0, 2, 4, 5, 7],
-    'Harmonic Minor': [0, 2, 3, 5, 7, 8, 11, 12],
-    'Minor Pentatonic': [0, 3, 5, 7, 10, 12],
-    'Minor Arpeggio': [0, 3, 7, 12],
-    'Diminished Arpeggio': [0, 3, 6, 12],
-    'Augmented Arpeggio': [0, 4, 8, 12],
-};
+// export const scales: Scales = {
+//     'Major': [0, 2, 4, 5, 7, 9, 11, 12],
+//     'Natural Minor': [0, 2, 3, 5, 7, 8, 10, 12],
+//     'Major Arpeggio': [0, 4, 7, 12],
+//     'Major (1-5)': [0, 2, 4, 5, 7],
+//     'Harmonic Minor': [0, 2, 3, 5, 7, 8, 11, 12],
+//     'Minor Pentatonic': [0, 3, 5, 7, 10, 12],
+//     'Minor Arpeggio': [0, 3, 7, 12],
+//     'Diminished Arpeggio': [0, 3, 6, 12],
+//     'Augmented Arpeggio': [0, 4, 8, 12],
+// };
+export const notePatterns: NotePattern[] = [
+    { name: 'Major', pattern: [0, 2, 4, 5, 7, 9, 11, 12], type: 'scale', isPremium: false },
+    { name: 'Major (1-5)', pattern: [0, 2, 4, 5, 7], type: 'scale', isPremium: false },
+    { name: 'Natural Minor', pattern: [0, 2, 3, 5, 7, 8, 10, 12], type: 'scale', isPremium: false },
+    { name: 'Harmonic Minor', pattern: [0, 2, 3, 5, 7, 8, 11, 12], type: 'scale', isPremium: true },
+    { name: 'Minor Pentatonic', pattern: [0, 3, 5, 7, 10, 12], type: 'scale', isPremium: true },
+    { name: 'Major', pattern: [0, 4, 7, 12], type: 'arpeggio', isPremium: false },
+    { name: 'Minor', pattern: [0, 3, 7, 12], type: 'arpeggio', isPremium: false },
+    { name: 'Diminished', pattern: [0, 3, 6, 12], type: 'arpeggio', isPremium: true },
+    { name: 'Augmented', pattern: [0, 4, 8, 12], type: 'arpeggio', isPremium: true },
+    { name: 'Perfect 5th', pattern: [0, 7], type: 'interval', isPremium: false },
+    { name: 'Major 3rd', pattern: [0, 4], type: 'interval', isPremium: true },
+    { name: 'Minor 3rd', pattern: [0, 3], type: 'interval', isPremium: true },
+];
 
 export const guitarScaleStringPatterns: Record<string, number[][]> = {
     'Major' : [[6,6,5,5,5,4,4,4], [6,6,6,5,5,5,4,4], [5,5,4,4,4,3,3,3], [5,4,4,4,3,3,2,2], [5,5,5,4,4,4,3,3], [4,3,3,3,2,2,1,1], [4,4,3,3,3,2,2,2], [3,3,2,2,2,1,1,1]],

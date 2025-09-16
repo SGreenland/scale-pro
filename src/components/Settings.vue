@@ -162,7 +162,7 @@
 import { LoopGapOption } from "@scalemaestro/shared-types";
 import { ref, onMounted } from "vue";
 import { currentLoggedInUser, currentSettings } from "../GlobalState";
-import { scales } from "../NotesAndScales";
+import { notePatterns } from "../NotesAndScales";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";
 import CustomRadioChips from "./reuseable/CustomRadioChips.vue";

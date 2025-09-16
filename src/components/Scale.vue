@@ -80,7 +80,7 @@
         :style="{
           gridRowStart:
             currentSettings.gridType !== 'Guitar tab'
-              ? gridRows - scales[scaleConfig.selectedScale][note.position]
+              ? gridRows - scaleConfig.selectedPattern.pattern[note.position]
               : note.guitarPositions[note.currentGtrPositionIndex]['string'],
           gridColumnStart: index + 1,
         }"
@@ -177,7 +177,7 @@ import {
   validGtrPatternsForCurrentScale,
   workoutConfig,
 } from "../GlobalState";
-import { notes, scales } from "../NotesAndScales";
+import { notes, notePatterns } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
 import { usePitchTracker } from "../composables/usePitchTracker";
 import useReorderNotes from "../composables/useReorderNotes";

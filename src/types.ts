@@ -1,4 +1,4 @@
-import { Scales, Settings } from "@scalemaestro/shared-types";
+import { NotePattern, Scales, Settings } from "@scalemaestro/shared-types";
 
 interface Note {
   name: string;
@@ -30,7 +30,7 @@ interface GuitarPosition {
 // type LoopGapOption = "None" | "Auto" | "Custom";
 
 interface ScaleConfig {
-  selectedScale: keyof Scales;
+  selectedPattern: NotePattern;
   selectedNote: string;
   noteOrder: number[] | null;
   currentGtrPositions: number[];

@@ -9,10 +9,16 @@ export interface Scales {
     "Diminished Arpeggio": number[];
     "Augmented Arpeggio": number[];
 }
+export interface NotePattern {
+    name: string;
+    pattern: number[];
+    type: 'scale' | 'arpeggio' | 'interval';
+    isPremium: boolean;
+}
 export type LoopGapOption = "None" | "Auto" | "Custom";
 export interface Settings {
     startingRootNote: string;
-    startingScale: keyof Scales;
+    startingScale: NotePattern;
     theme: "auto" | "dark" | "light";
     gridType: "Guitar tab" | "Piano roll";
     loopGap: LoopGapOption;
