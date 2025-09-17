@@ -12,16 +12,8 @@
           ></root-note-selector>
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
-          <label for="startingScale">Starting Scale</label>
-          <select
-            v-model="currentSettings.startingScale"
-            name="startingScale"
-            id="startingScale"
-          >
-            <option v-for="scale in Object.keys(scales)" :value="scale">
-              {{ scale }}
-            </option>
-          </select>
+          <label for="startingScale">Starting Pattern</label>
+           <pattern-selector :show-label="false"></pattern-selector>
         </div>
       </accordion-single>
       <accordion-single
@@ -162,7 +154,7 @@
 import { LoopGapOption } from "@scalemaestro/shared-types";
 import { ref, onMounted } from "vue";
 import { currentLoggedInUser, currentSettings } from "../GlobalState";
-import { notePatterns } from "../NotesAndScales";
+import PatternSelector from "./PatternSelector.vue";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";
 import CustomRadioChips from "./reuseable/CustomRadioChips.vue";
