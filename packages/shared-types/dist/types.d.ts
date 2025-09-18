@@ -18,7 +18,7 @@ export interface NotePattern {
 export type LoopGapOption = "None" | "Auto" | "Custom";
 export interface Settings {
     startingRootNote: string;
-    startingScale: NotePattern;
+    startingPattern: NotePattern;
     theme: "auto" | "dark" | "light";
     gridType: "Guitar tab" | "Piano roll";
     loopGap: LoopGapOption;

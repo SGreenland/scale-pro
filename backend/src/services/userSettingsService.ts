@@ -28,6 +28,7 @@ export async function updateUserSettings(
     throw new Error("Settings are required");
   }
   const settingsJson: JsonValue = JSON.parse(JSON.stringify(settings));
+  console.log(settingsJson);
   if (settingsJson === null) {
     throw new Error("Settings cannot be null");
   }

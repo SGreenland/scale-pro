@@ -4,7 +4,7 @@
       <select
         class="grow"
         id="note-pattern"
-        v-model="scaleConfig.selectedPattern"
+        v-model="model"
       >
         <option
           :value="pattern"
@@ -55,6 +55,9 @@ withDefaults(defineProps<{
   showLabel?: boolean;
 }>(),
 { showLabel: true });
+
+const model = defineModel<NotePattern>();
+
 
 
 const getAvailablePatternsPerUser = (): NotePattern[] => {

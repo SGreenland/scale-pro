@@ -77,7 +77,7 @@ export const workoutNoteOrder = computed({
 //settings
 export const settings = reactive<Settings>({
   startingRootNote: "C3",
-  startingScale: "Major",
+  startingPattern: notePatterns[0],
   theme: 'auto',
   gridType: 'Piano roll',
   loopGap: 'None',

@@ -30,7 +30,7 @@ const handleWelcomeModalClose = () => {
 onMounted(() => {
   if (currentLoggedInUser.value?.userSettings) {
     scaleConfig.selectedNote = currentLoggedInUser.value.userSettings.startingRootNote;
-    scaleConfig.selectedScale = currentLoggedInUser.value.userSettings.startingScale;
+    scaleConfig.selectedPattern = currentLoggedInUser.value.userSettings.startingPattern;
   }
 })
 
