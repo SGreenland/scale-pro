@@ -9,10 +9,12 @@ export interface Scales {
     "Diminished Arpeggio": number[];
     "Augmented Arpeggio": number[];
 }
+
+export type NotePatternCategory = 'scale' | 'arpeggio' | 'interval';
 export interface NotePattern {
     name: string;
     pattern: number[];
-    type: 'scale' | 'arpeggio' | 'interval';
+    type: NotePatternCategory;
     isPremium: boolean;
 }
 export type LoopGapOption = "None" | "Auto" | "Custom";

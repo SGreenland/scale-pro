@@ -98,6 +98,8 @@ export const scaleConfig = reactive<ScaleConfig>({
   currentGtrPositions: [],
 });
 
+export const selectedPatternCategory =  ref(currentLoggedInUser.value?.userSettings?.startingPattern.type || "scale");
+
 export const tempo = ref(120);
 
 export const selectedPreset = ref<number[]|undefined>();

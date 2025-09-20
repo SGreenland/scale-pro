@@ -77,7 +77,7 @@ button {
   transition: all 0.25s;
 }
 
-.dark button {
+.dark button:not(.active-select) {
   background-color: #082f49;
   color: whitesmoke
 }
