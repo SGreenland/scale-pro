@@ -22,11 +22,11 @@
           <button
             v-for="category in (['scale', 'arpeggio', 'interval'] as NotePatternCategory[])"
             :key="category"
-            @click="selectedPatternCategory = category"
+            @click="selectedPatternCategoryRef = category"
             :class="{
-              'active-select bg-indigo-500 text-white': selectedPatternCategory === category,
+              'active-select bg-indigo-500 text-white': selectedPatternCategoryRef === category,
               'hover:bg-indigo-200 dark:hover:bg-indigo-600':
-                selectedPatternCategory !== category,
+                selectedPatternCategoryRef !== category,
             }"
             class="capitalize rounded-md px-2 py-1 text-left"
           >
@@ -42,7 +42,7 @@
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { NotePattern, NotePatternCategory } from "@scalemaestro/shared-types";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import { currentLoggedInUser, scaleConfig, selectedPatternCategory } from "../GlobalState";
 import { notePatterns } from "../NotesAndScales";
 import dropdown from "./reuseable/Dropdown.vue";
@@ -56,6 +56,10 @@ withDefaults(
 
 const model = defineModel<NotePattern>();
 
+const isSettingsPage = window.location.pathname === "/settings";
+
+const selectedPatternCategoryRef = isSettingsPage ? ref(currentLoggedInUser.value?.userSettings?.startingPattern.type) : selectedPatternCategory;
+
 const getAvailablePatternsPerUser = (): NotePattern[] => {
   return currentLoggedInUser.value?.hasPremiumAccess
     ? notePatterns
@@ -67,7 +71,7 @@ const availablePatterns = getAvailablePatternsPerUser();
 const getPatternOptions = computed(() => {
   return availablePatterns.filter(
     (pattern) =>
-      pattern.type === selectedPatternCategory.value
+      pattern.type === selectedPatternCategoryRef.value
   );
 });
 
