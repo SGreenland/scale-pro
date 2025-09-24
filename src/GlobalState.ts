@@ -109,7 +109,7 @@ export const scaleToDisplay =  computed(
 );
 
 export const validGtrPatternsForCurrentScale = computed(() => {
-    return guitarScaleStringPatterns[scaleConfig.selectedScale].filter(pattern => {
+    return guitarScaleStringPatterns[scaleConfig.selectedPattern.name].filter(pattern => {
         return pattern.every((stringNumber, noteIndex) => {
             const note = scaleToDisplay.value[noteIndex];
             return note.guitarPositions.some(pos => pos.string === stringNumber);
@@ -118,7 +118,7 @@ export const validGtrPatternsForCurrentScale = computed(() => {
   });
 
 watch(
-  () => [scaleConfig.selectedScale, scaleConfig.selectedNote],
+  () => [scaleConfig.selectedPattern, scaleConfig.selectedNote],
   () => {
     // Reset current guitar positions when scale or note changes
     scaleConfig.currentGtrPositions = []
