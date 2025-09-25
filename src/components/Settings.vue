@@ -32,7 +32,7 @@
             <option value="dark">Dark</option>
             <option value="light">Light</option>
           </select> -->
-          <toggle-switch show-on-off-text v-model="isDark" :on-off-text="['Dark', 'Light']"></toggle-switch>
+          <toggle-switch :id="'darkToggle'" v-model="isDark" :on-off-text="['Dark', 'Light']"></toggle-switch>
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="grid-type">Grid Type</label>
@@ -76,7 +76,7 @@
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="auto-shuffle">Auto Shuffle </label>
           <toggle-switch
-            id="auto-shuffle"
+            :id="'auto-shuffle'"
             v-model="currentSettings.autoShuffle"
           ></toggle-switch>
         </div>

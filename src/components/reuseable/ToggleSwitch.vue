@@ -1,7 +1,7 @@
 <template>
   <div>
-    <input type="checkbox" id="toggle" class="hidden" v-model="model" />
-    <label for="toggle" class="flex items-center cursor-pointer">
+    <input type="checkbox" :id=id class="hidden" v-model="model" />
+    <label :for=id class="flex items-center cursor-pointer">
       <div class="flex gap-2 items-center">
         <div class="relative">
           <div
@@ -26,14 +26,18 @@
 </template>
 
 <script setup lang="ts">
+import { useId } from 'vue';
+
 withDefaults(
   defineProps<{
+    id?: string;
     showOnOffText?: boolean;
     onOffText?: [string, string];
   }>(),
   {
     showOnOffText: true,
     onOffText: () => ["On", "Off"] as [string, string],
+    id: () => useId(),
   }
 );
 
