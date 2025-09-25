@@ -43,7 +43,7 @@ import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { NotePattern, NotePatternCategory } from "@scalemaestro/shared-types";
 import { computed, watch, ref } from "vue";
-import { currentLoggedInUser, scaleConfig, selectedPatternCategory } from "../GlobalState";
+import { currentLoggedInUser, currentSettings, scaleConfig, selectedPatternCategory } from "../GlobalState";
 import { notePatterns } from "../NotesAndScales";
 import dropdown from "./reuseable/Dropdown.vue";
 
@@ -58,7 +58,7 @@ const model = defineModel<NotePattern>();
 
 const isSettingsPage = window.location.pathname === "/settings";
 
-const selectedPatternCategoryRef = isSettingsPage ? ref(currentLoggedInUser.value?.userSettings?.startingPattern.type) : selectedPatternCategory;
+const selectedPatternCategoryRef = isSettingsPage ? ref(currentSettings.value?.startingPattern.type || 'scale') : selectedPatternCategory;
 
 const getAvailablePatternsPerUser = (): NotePattern[] => {
   return currentLoggedInUser.value?.hasPremiumAccess
@@ -81,6 +81,6 @@ watch(
     if (!newPatterns.includes(scaleConfig.selectedPattern)) {
       model.value = newPatterns[0];
     }
-  }
+  }, { immediate: true }
 );
 </script>
