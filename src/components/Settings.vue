@@ -22,7 +22,7 @@
       >
         <div :class="optionInlineClasses">
           <label for="theme">Theme</label>
-          <select
+          <!-- <select
             v-model="currentSettings.theme"
             name="theme"
             id="theme"
@@ -31,7 +31,8 @@
             <option value="auto">Auto</option>
             <option value="dark">Dark</option>
             <option value="light">Light</option>
-          </select>
+          </select> -->
+          <toggle-switch show-on-off-text v-model="isDark" :on-off-text="['Dark', 'Light']"></toggle-switch>
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="grid-type">Grid Type</label>
@@ -152,8 +153,9 @@
 
 <script setup lang="ts">
 import { LoopGapOption } from "@scalemaestro/shared-types";
-import { ref, onMounted } from "vue";
-import { currentLoggedInUser, currentSettings } from "../GlobalState";
+import axios from "axios";
+import { onMounted, ref } from "vue";
+import { currentLoggedInUser, currentSettings, isDark } from "../GlobalState";
 import PatternSelector from "./PatternSelector.vue";
 import AccordionSingle from "./reuseable/AccordionSingle.vue";
 import CardWrapper from "./reuseable/CardWrapper.vue";
@@ -162,7 +164,6 @@ import NumberInput from "./reuseable/NumberInput.vue";
 import SubmitButton from "./reuseable/SubmitButton.vue";
 import ToggleSwitch from "./reuseable/ToggleSwitch.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
-import axios from "axios";
 
 const isSaving = ref(false);
 const successfullySaved = ref(false);

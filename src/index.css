@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root > html.light {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -86,7 +86,7 @@ button {
   outline-color: whitesmoke;
 }
 
-.inverted-btn {
+.light .inverted-btn {
   background-color: #312e81;
   color: #ffca6b;
   transition: all 0.10s;
@@ -231,7 +231,7 @@ label {
   }
 }
 
-@media (prefers-color-scheme: light) {
+html.light body {
   :root {
     color: #213547;
     background-color: #f6faff;
@@ -239,7 +239,7 @@ label {
   a:hover {
     color: #747bff;
   }
-  button {
+  button:not(.active-select) {
     background-color: #ffca6b;
     color: #312e81;
   }
@@ -247,11 +247,11 @@ label {
     outline-color: inherit;
   }
 }
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   select, input {
     background-color: #3B3B3B;
   }
-}
+} */
 
 @keyframes radar {
   75%, 100% {

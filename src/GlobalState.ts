@@ -2,12 +2,20 @@ import { Settings } from "@scalemaestro/shared-types";
 import { computed, reactive, ref, watch } from "vue";
 import { useSessionStorage } from "./composables/useSessionStorage";
 import { guitarScaleStringPatterns, notePatterns } from "./NotesAndScales";
-import { PlayBackOptions, ScaleConfig, UserSessionObject, WorkoutConfig } from "./types";
+import {
+  PlayBackOptions,
+  ScaleConfig,
+  UserSessionObject,
+  WorkoutConfig,
+} from "./types";
 import scaleManipulator from "./utils/scaleManipulator";
 
 const { getPattern } = scaleManipulator();
 
-export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>('user', null);
+export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>(
+  "user",
+  null
+);
 
 export const hasUserJustSignedUp = ref(false);
 
@@ -44,7 +52,6 @@ export const presetNoteOrders = reactive({
     [1, 3, 4, 2],
     [1, 4, 3, 2],
   ],
-
 });
 
 export const isLoadingAudio = ref(true);
@@ -61,30 +68,36 @@ const computedNoteOrder = computed(() => {
 });
 
 export const practiceNoteOrder = computed({
-  get: () => localStorage.getItem('practiceNoteOrder') ? JSON.parse(localStorage.getItem('practiceNoteOrder')!) : null,
-  set: (value: number[]|null) => {
-    localStorage.setItem('practiceNoteOrder', JSON.stringify(value));
+  get: () =>
+    localStorage.getItem("practiceNoteOrder")
+      ? JSON.parse(localStorage.getItem("practiceNoteOrder")!)
+      : null,
+  set: (value: number[] | null) => {
+    localStorage.setItem("practiceNoteOrder", JSON.stringify(value));
   },
-})
+});
 
 export const workoutNoteOrder = computed({
-  get: () => localStorage.getItem('workoutNoteOrder') ? JSON.parse(localStorage.getItem('workoutNoteOrder')!) : null,
-  set: (value: number[]|null) => {
-    localStorage.setItem('workoutNoteOrder', JSON.stringify(value));
+  get: () =>
+    localStorage.getItem("workoutNoteOrder")
+      ? JSON.parse(localStorage.getItem("workoutNoteOrder")!)
+      : null,
+  set: (value: number[] | null) => {
+    localStorage.setItem("workoutNoteOrder", JSON.stringify(value));
   },
-})
+});
 
 //settings
 export const settings = reactive<Settings>({
   startingRootNote: "C3",
   startingPattern: notePatterns[0],
-  theme: 'auto',
-  gridType: 'Piano roll',
-  loopGap: 'None',
+  theme: "auto",
+  gridType: "Piano roll",
+  loopGap: "None",
   loopGapCustom: 1,
   autoShuffle: false,
-  minDetectionVolume: 'normal',
-  pitchToleranceLevel: 'standard',
+  minDetectionVolume: "normal",
+  pitchToleranceLevel: "standard",
 });
 
 export const currentSettings = computed(() => {
@@ -98,30 +111,39 @@ export const scaleConfig = reactive<ScaleConfig>({
   currentGtrPositions: [],
 });
 
-export const selectedPatternCategory =  ref(currentLoggedInUser.value?.userSettings?.startingPattern.type || "scale");
+export const selectedPatternCategory = ref(
+  currentLoggedInUser.value?.userSettings?.startingPattern.type || "scale"
+);
 
 export const tempo = ref(120);
 
-export const selectedPreset = ref<number[]|undefined>();
+export const selectedPreset = ref<number[] | undefined>();
 
-export const scaleToDisplay =  computed(
-  () => getPattern(scaleConfig.selectedNote, scaleConfig.selectedPattern, scaleConfig.noteOrder, scaleConfig.currentGtrPositions)
+export const scaleToDisplay = computed(() =>
+  getPattern(
+    scaleConfig.selectedNote,
+    scaleConfig.selectedPattern,
+    scaleConfig.noteOrder,
+    scaleConfig.currentGtrPositions
+  )
 );
 
 export const validGtrPatternsForCurrentScale = computed(() => {
-    return guitarScaleStringPatterns[scaleConfig.selectedPattern.name].filter(pattern => {
-        return pattern.every((stringNumber, noteIndex) => {
-            const note = scaleToDisplay.value[noteIndex];
-            return note.guitarPositions.some(pos => pos.string === stringNumber);
-        });
-    });
-  });
+  return guitarScaleStringPatterns[scaleConfig.selectedPattern.name].filter(
+    (pattern) => {
+      return pattern.every((stringNumber, noteIndex) => {
+        const note = scaleToDisplay.value[noteIndex];
+        return note.guitarPositions.some((pos) => pos.string === stringNumber);
+      });
+    }
+  );
+});
 
 watch(
   () => [scaleConfig.selectedPattern, scaleConfig.selectedNote],
   () => {
     // Reset current guitar positions when scale or note changes
-    scaleConfig.currentGtrPositions = []
+    scaleConfig.currentGtrPositions = [];
   }
 );
 
@@ -130,7 +152,7 @@ watch(scaleToDisplay, (newScale, oldScale) => {
     // Reset the note order if the scale length changes
     scaleConfig.noteOrder = null;
   }
-})
+});
 
 export const workoutConfig = reactive<WorkoutConfig>({
   startNote: "C4",
@@ -144,35 +166,46 @@ export const workoutConfig = reactive<WorkoutConfig>({
 export const computedLoopGap = computed(() => {
   // refactor to switch statement
   switch (currentSettings.value.loopGap) {
-    case 'None':
+    case "None":
       return 0;
-    case 'Auto':
+    case "Auto":
       return scaleToDisplay.value.length === 4 ? 2 : 3;
-    case 'Custom':
+    case "Custom":
       return currentSettings.value.loopGapCustom * 2 + 1;
     default:
       return 1;
   }
 });
 
+// export const computedTheme = computed(() => {
+//   return currentSettings.value.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : currentSettings.value.theme;
+// });
 
-
-
-export const computedTheme = computed(() => {
-  return currentSettings.value.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : currentSettings.value.theme;
+export const isDark = computed({
+  get: () =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches ||
+    currentSettings.value.theme === "dark",
+  set: (value: boolean) => {
+    currentSettings.value.theme = value ? "dark" : "light";
+  },
 });
 
-watch(() => currentSettings, () => {
-  const html = document.documentElement;
-
-  if (computedTheme.value === 'dark') {
-    html.classList.add('dark');
-  } else {
-    html.classList.remove('dark');
-  }
-}, { immediate: true, deep: true });
-
-
+watch(
+  () => isDark.value,
+  (newValue) => {
+    const html = document.documentElement;
+    if (newValue) {
+      html.classList.add("dark");
+      html.classList.remove("light");
+    } else {
+      html.classList.remove("dark");
+      html.classList.add("light");
+    }
+    // update currentSettings theme
+    currentSettings.value.theme = newValue ? "dark" : "light";
+  },
+  { immediate: true }
+);
 
 const minDetectionVolumeMap = {
   sensitive: 0.03,
@@ -192,4 +225,3 @@ export const computedMinDetectionVolume = computed(() => {
 export const computedMaxCents = computed(() => {
   return maxCentsMap[currentSettings.value.pitchToleranceLevel];
 });
-

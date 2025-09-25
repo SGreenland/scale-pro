@@ -33,7 +33,9 @@
     </div>
     <div
       class="relative grid max-sm:text-xs w-full m-auto"
-      :class="currentSettings.gridType === 'Guitar tab' ? 'fretboard' : 'piano-roll'"
+      :class="
+        currentSettings.gridType === 'Guitar tab' ? 'fretboard' : 'piano-roll'
+      "
       :style="{
         gridTemplateColumns: `repeat(${scaleToDisplay.length}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${gridRows}, minmax(0, 1.8rem))`,
@@ -101,16 +103,15 @@
       </canvas>
     </div>
     <button
-        v-if="currentSettings.gridType == 'Guitar tab'"
-        :disabled="scaleConfig.noteOrder == null ? false : true"
-        class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full"
-        @click="findAlternateFretPositions"
-      >
-        Find Alt. Frets
-      </button>
+      v-if="currentSettings.gridType == 'Guitar tab'"
+      :disabled="scaleConfig.noteOrder == null ? false : true"
+      class="w-fit h-9 flex items-center justify-center inverted-btn rounded-full"
+      @click="findAlternateFretPositions"
+    >
+      Find Alt. Frets
+    </button>
     <Teleport defer to="#pitch-tracking-template">
       <div class="w-full flex">
-
         <div class="flex w-full items-center justify-between">
           <div class="flex gap-2">
             <button
@@ -137,15 +138,21 @@
               Help
               <FontAwesomeIcon
                 :icon="faQuestionCircle"
-                class="ps-1 text-white"
+                class="ps-1 dark:text-white"
                 size="lg"
               />
             </button>
           </div>
           <div class="flex items-center gap-2">
-              <router-link :to="{ name: 'Settings', query: { section: 'pitch-tracking' } }">
-                <FontAwesomeIcon :icon=faCog size="lg" class="text-black dark:text-white" />
-              </router-link>
+            <router-link
+              :to="{ name: 'Settings', query: { section: 'pitch-tracking' } }"
+            >
+              <FontAwesomeIcon
+                :icon="faCog"
+                size="lg"
+                class="text-black dark:text-white"
+              />
+            </router-link>
           </div>
         </div>
       </div>
@@ -154,7 +161,11 @@
 </template>
 
 <script setup lang="ts">
-import { faQuestionCircle, faRefresh, faCog } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCog,
+  faQuestionCircle,
+  faRefresh,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import DragSelect, { DSInputElement } from "dragselect";
 import {
@@ -168,16 +179,14 @@ import {
 import {
   computedLoopGap,
   computedMaxCents,
+  currentSettings,
   isLoadingAudio,
   playBackOptions,
   scaleConfig,
   scaleToDisplay,
-  currentSettings,
   tempo,
-  validGtrPatternsForCurrentScale,
-  workoutConfig,
+  validGtrPatternsForCurrentScale
 } from "../GlobalState";
-import { notes, notePatterns } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
 import { usePitchTracker } from "../composables/usePitchTracker";
 import useReorderNotes from "../composables/useReorderNotes";
@@ -196,7 +205,7 @@ const ghostNote = ref<{
 function handleTouchStart(event: TouchEvent, noteContent: string) {
   const touch = event.touches[0];
   let target = event.target as HTMLElement;
-  if (target.tagName === 'SPAN') {
+  if (target.tagName === "SPAN") {
     // If the target is a span, get its parent element
     const parent = target.parentElement;
     if (parent) {
@@ -925,19 +934,19 @@ defineExpose({
   background: linear-gradient(90deg, rgb(17 24 39), 1px, transparent 1px);
 }
 
-@media (prefers-color-scheme: dark) {
-  .piano-roll {
-    background: repeating-linear-gradient(
-      180deg,
-      #1a202c,
-      #1a202c 1.8rem,
-      #2d3748 1.8rem,
-      #2d3748 3.6rem
-    );
-  }
-
-  .grid-pattern {
-    background: linear-gradient(90deg, rgb(17 24 39), 1px, transparent 1px);
-  }
+html.dark > .piano-roll {
+  background: repeating-linear-gradient(
+    180deg,
+    #1a202c,
+    #1a202c 1.8rem,
+    #2d3748 1.8rem,
+    #2d3748 3.6rem
+  );
 }
+
+html.dark > .grid-pattern {
+  background: linear-gradient(90deg, rgb(17 24 39), 1px, transparent 1px);
+}
+
+
 </style>
