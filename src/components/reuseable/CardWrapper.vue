@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-col h-fit p-5 md:w-2/3 w-full mt-4 m-auto rounded-lg shadow-md dark:shadow-gray-500 bg-white dark:bg-gray-800/50"
+    class="flex-col h-fit p-5 md:w-3/4 w-[95%] mt-4 m-auto rounded-lg shadow-md dark:shadow-gray-500 bg-white dark:bg-gray-800/50"
     :class="`lg:w-${width} max-w-[${maxWidth}]`"
   >
   <div class="flex relative items-center pb-3">

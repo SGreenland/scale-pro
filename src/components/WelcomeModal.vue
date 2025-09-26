@@ -1,6 +1,6 @@
 <template>
     <modal-wrapper>
-        <h2 class="text-lg font-semibold mb-4">Welcome to Scale Maestro {{ currentLoggedInUser?.userName }}!</h2>
+        <h2 class="text-lg font-semibold mb-4">Welcome to Scale Maestro {{ currentLoggedInUser?.userName.split(' ')[0] }}!</h2>
         <p class="mb-4">To get the most out of your free trial, consider watching our 'Getting Started' video <a href="#">here</a>  </p>
         <p class="mb-4">Otherwise feel free to explore yourself and have fun!</p>
     </modal-wrapper>

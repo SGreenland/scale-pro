@@ -3,7 +3,7 @@
     <font-awesome-icon
       :icon="!isOpen ? faBars : faXmark"
       class="text-2xl cursor-pointer fixed md:top-2 top-2 right-2 max-sm:p-1 p-2 text-indigo-900 dark:text-indigo-200 z-50 rounded-full bg-indigo-100 dark:bg-indigo-800"
-      :class="{'shadow-lg max-sm:opacity-80': !isOpen}"
+      :class="{'shadow dark:shadow-white': !isOpen}"
       @click="isOpen = !isOpen"
     />
     <div
