@@ -30,13 +30,14 @@
 </template>
 
 <script setup lang="ts">
-import CardWrapper from "../components/reuseable/CardWrapper.vue";
 import type { AgChartOptions } from "ag-charts-community";
 import { AgCharts } from "ag-charts-vue3";
 import { colorSchemeDarkBlue, themeQuartz } from "ag-grid-community";
 import { AgGridVue } from "ag-grid-vue3";
 import axios from "axios";
+import { capitalize } from "lodash";
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
+import CardWrapper from "../components/reuseable/CardWrapper.vue";
 import Checkbox from "../components/reuseable/Checkbox.vue";
 
 const shouldHideColumn = ref(false); // Set to true to hide certain columns
@@ -84,6 +85,9 @@ const columnTypes = ref({
   },
   percentage: { valueFormatter: (params: any) => `${params.value}%` },
   cents: { valueFormatter: (params: any) => `${params.value} cents` },
+  capitalize: {
+    valueFormatter: (params: any) => capitalize(params.value),
+  },
 });
 const colDefs = ref([
   {
@@ -121,6 +125,7 @@ const colDefs = ref([
   {
     headerName: "Tolerance",
     field: "toleranceLevel",
+    type: "capitalize",
     sortable: true,
     hide: shouldHideColumn,
     filter: true,
