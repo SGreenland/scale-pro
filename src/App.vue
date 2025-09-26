@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watch } from "vue";
+import { computed, watch } from "vue";
 import Menu from "./components/Menu.vue";
 import WelcomeModal from "./components/WelcomeModal.vue";
 import {
@@ -27,11 +27,9 @@ const handleWelcomeModalClose = () => {
   hasUserJustSignedUp.value = false;
 };
 
-watch(() => currentLoggedInUser.value, (newUser) => {
-  if (newUser?.userSettings) { {
-    scaleConfig.selectedNote = newUser.userSettings.startingRootNote;
-    scaleConfig.selectedPattern = newUser.userSettings.startingPattern;
-  }
+watch(() => currentLoggedInUser.value?.userSettings?.startingPattern, (newStartingPattern) => {
+  if (newStartingPattern) {
+    scaleConfig.selectedPattern = newStartingPattern;
   }
 }, { immediate: true, deep: true });
 

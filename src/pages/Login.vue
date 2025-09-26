@@ -4,7 +4,7 @@
       <h1 class="text-2xl font-bold mb-4">Login</h1>
       <form class="text-left" @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700"
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-100"
             >Email</label
           >
           <input
@@ -19,7 +19,7 @@
           }}</span>
         </div>
         <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700"
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-100"
             >Password</label
           >
           <input
@@ -79,11 +79,6 @@ const handleSubmit = async () => {
         userSettings: response.data.user.userSettings,
         hasPremiumAccess: response.data.hasPremiumAccess,
       };
-      // set scaleconfig defaults
-      if (currentLoggedInUser.value.userSettings && response.data.hasPremiumAccess) {
-        scaleConfig.selectedNote = currentLoggedInUser.value.userSettings.startingRootNote;
-        scaleConfig.selectedScale = currentLoggedInUser.value.userSettings.startingScale;
-      }
       // Redirect to home
       router.push("/");
     } else {

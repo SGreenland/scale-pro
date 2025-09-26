@@ -81,6 +81,6 @@ watch(
     if (!newPatterns.includes(scaleConfig.selectedPattern)) {
       model.value = newPatterns[0];
     }
-  }, { immediate: true }
+  },
 );
 </script>

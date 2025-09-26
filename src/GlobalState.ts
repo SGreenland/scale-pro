@@ -105,7 +105,7 @@ export const currentSettings = computed(() => {
 });
 
 export const scaleConfig = reactive<ScaleConfig>({
-  selectedPattern: notePatterns[0],
+  selectedPattern: currentSettings.value.startingPattern,
   selectedNote: currentSettings.value.startingRootNote,
   noteOrder: computedNoteOrder.value,
   currentGtrPositions: [],

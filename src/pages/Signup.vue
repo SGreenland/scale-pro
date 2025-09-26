@@ -3,7 +3,7 @@
     <modal-wrapper :mask="false" :hasCloseButton="false">
       <div class="text-center mb-6">
         <h1 class="text-2xl font-bold mb-2">Create Your Free Account</h1>
-        <p class="text-gray-700 text-sm">
+        <p class="text-gray-700 dark:text-gray-100 text-sm">
           Sign up to unlock <strong>premium features free for 7 days</strong>.
           <br />
           <em>No credit card required.</em>
@@ -12,7 +12,7 @@
 
       <form class="text-left" @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="username" class="block text-sm font-medium text-gray-700"
+          <label for="username" :class="labelClasses"
             >Username</label
           >
           <input
@@ -26,7 +26,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700"
+          <label for="email" :class="labelClasses"
             >Email</label
           >
           <input
@@ -42,7 +42,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700"
+          <label for="password" :class="labelClasses"
             >Password</label
           >
           <PasswordInput
@@ -59,7 +59,7 @@
         <div class="mb-4">
           <label
             for="confirm-password"
-            class="block text-sm font-medium text-gray-700"
+            :class="labelClasses"
             >Confirm Password</label
           >
           <ConfirmPasswordInput
@@ -80,7 +80,7 @@
         </submit-button>
       </form>
 
-      <p class="text-center text-xs text-gray-500 mt-4">
+      <p class="text-center text-xs text-gray-500 dark:text-gray-100 mt-4">
         Your free trial includes access to all features for 7 days.
       </p>
     </modal-wrapper>
@@ -98,6 +98,8 @@ import SubmitButton from "../components/reuseable/SubmitButton.vue";
 import ConfirmPasswordInput from "../components/reuseable/ConfirmPasswordInput.vue";
 
 const router = useRouter();
+
+const labelClasses: string = "block text-sm font-medium text-gray-700 dark:text-gray-300";
 
 const formData = reactive({
   userName: "",
