@@ -85,7 +85,7 @@ const handleSave = () => {
   if (isSaving.value) return; // Prevent multiple submissions
   isSaving.value = true;
   axios.post("/api/pitch-data", {
-    scale: scaleConfig.selectedNote + ' ' + scaleConfig.selectedScale,
+    scale: scaleConfig.selectedNote + ' ' + scaleConfig.selectedPattern.name,
     averageDeviation: props.averageDeviation,
     percentageInTune: props.inTunePercentage,
     toleranceLevel: currentSettings.value.pitchToleranceLevel,
