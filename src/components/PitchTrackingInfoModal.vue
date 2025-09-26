@@ -12,7 +12,7 @@
           singing or playing accuracy.
         </p>
         <p class="text-lg text-gray-800 dark:text-gray-200 mb-4">
-          Click <strong>Start Pitch Tracking</strong> to begin. (You may need to
+          Click <strong>Start Tracking</strong> to begin. (You may need to
           grant microphone access.)
         </p>
         <div class="bg-yellow text-black rounded-xl p-4 mb-6 text-left">
@@ -23,7 +23,7 @@
           >
         </div>
         <p class="text-lg text-gray-800 dark:text-gray-200 mb-6">
-          When you’re finished, click <strong>Stop Pitch Tracking</strong> to see
+          When you’re finished, click <strong>Stop Tracking</strong> to see
           your feedback.
         </p>
         <!-- FAQ Accordion -->
