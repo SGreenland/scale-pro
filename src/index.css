@@ -78,7 +78,7 @@ button {
 }
 
 .dark button:not(.active-select) {
-  background-color: #082f49;
+  background-color: #03243b;
   color: whitesmoke
 }
 

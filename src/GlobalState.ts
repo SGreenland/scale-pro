@@ -207,7 +207,7 @@ watch(
   { immediate: true }
 );
 
-const minDetectionVolumeMap = {
+export const minDetectionVolumeMap = {
   sensitive: 0.03,
   normal: 0.06,
 };
@@ -217,10 +217,6 @@ const maxCentsMap = {
   standard: 50,
   precise: 25,
 };
-
-export const computedMinDetectionVolume = computed(() => {
-  return minDetectionVolumeMap[currentSettings.value.minDetectionVolume];
-});
 
 export const computedMaxCents = computed(() => {
   return maxCentsMap[currentSettings.value.pitchToleranceLevel];
