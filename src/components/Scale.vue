@@ -543,9 +543,11 @@ function drawPitchCurve() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.beginPath();
   ctx.strokeStyle = "red";
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 1.5;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
+  let prevX = 0;
+  let increment = 0;
   for (const { pitch } of pitchData.value) {
     const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
       Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
@@ -568,10 +570,20 @@ function drawPitchCurve() {
 
     // 3. Calculate Y from semitone offset
     const y = canvas.height - semitoneOffset * rowHeight;
-
     // 4. Calculate X from time as usual (or just position in scale if snapping column-wise)
     const colWidth = canvas.width / scaleToDisplay.value.length;
     const x = colWidth * colIndex + colWidth / 2;
+    // if x hasn't changed, we want to create a vibrato effect by drawing a small sine wave
+    if (x === prevX) {
+      // create a sine wave between prevX - 5 and prevX + 5
+      increment ++;
+      if (increment > 25) increment = 0;
+      const vibratoX = prevX + increment;
+      ctx.lineTo(vibratoX, y);
+      continue;
+
+    }
+    prevX = x;
 
 
     ctx.lineTo(x, y);

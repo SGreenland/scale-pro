@@ -48,7 +48,7 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
       micBuffer,
       audioContext.sampleRate
     );
-    if (clarity > 0.8 && pitch > 85) {
+    if (clarity > 0.9 && pitch > 65) {
       pitchData.value.push({
         pitch,
         clarity,
