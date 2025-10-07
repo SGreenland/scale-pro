@@ -19,7 +19,6 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
   }, { deep: true, immediate: true });
 
   async function startTracking() {
-    console.log(detector);
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const micSource = audioContext.createMediaStreamSource(stream);
 

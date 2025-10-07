@@ -544,6 +544,8 @@ function drawPitchCurve() {
   ctx.beginPath();
   ctx.strokeStyle = "red";
   ctx.lineWidth = 2;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
   for (const { pitch } of pitchData.value) {
     const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
       Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
@@ -570,6 +572,7 @@ function drawPitchCurve() {
     // 4. Calculate X from time as usual (or just position in scale if snapping column-wise)
     const colWidth = canvas.width / scaleToDisplay.value.length;
     const x = colWidth * colIndex + colWidth / 2;
+
 
     ctx.lineTo(x, y);
   }
