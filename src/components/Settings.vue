@@ -167,7 +167,7 @@ import RootNoteSelector from "./RootNoteSelector.vue";
 
 const isSaving = ref(false);
 const successfullySaved = ref(false);
-const sectionHeaderClasses: string = `bg-gradient-to-r from-sky-100 to-indigo-300 dark:from-sky-400/50 dark:to-indigo-600/50 shadow-indigo-400 rounded mb-1`;
+const sectionHeaderClasses: string = `bg-custom-gradient shadow-indigo-400 rounded mb-1`;
 const optionInlineClasses: string =
   "flex flex-wrap items-center justify-between py-3 px-2 border-b";
 const optionClasses: string = "grid gap-2 p-3 border-b";

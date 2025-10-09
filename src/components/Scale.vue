@@ -50,7 +50,7 @@
       ></div>
       <div
         v-if="ghostNote"
-        class="fixed pointer-events-none z-50 rounded-2xl px-3 py-2 bg-sky-200 border border-indigo-500 shadow-lg text-black dark:bg-fuchsia-800 dark:text-white opacity-80"
+        class="fixed pointer-events-none z-50 rounded-2xl px-3 py-2 bg-sky-200 border border-indigo-500 shadow-lg text-black dark:bg-sky-600 dark:text-white opacity-80"
         :style="{
           top: ghostNote.y + 'px',
           left: ghostNote.x + 'px',
@@ -74,7 +74,7 @@
         @touchend="handleDragOrTouchEnd"
         @click="playNote(index, 0)"
         :id="index.toString()"
-        class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-fuchsia-800 dark:text-white"
+        class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-sky-600 dark:text-white"
         :class="{
           'relative bottom-4 w-1/2 h-5/6 m-auto z-50':
             currentSettings.gridType === 'Guitar tab',
@@ -575,7 +575,7 @@ function drawPitchCurve() {
     const x = colWidth * colIndex + colWidth / 2;
     // if x hasn't changed, we want to create a vibrato effect by drawing a small sine wave
     if (x === prevX) {
-      // create a sine wave between prevX - 5 and prevX + 5
+      // create a sine wave effect
       increment ++;
       if (increment >= colWidth / 3) increment = 0;
       const vibratoX = prevX + increment;
