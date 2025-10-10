@@ -1,6 +1,15 @@
 <template>
   <div>
     <modal-wrapper :mask="false" :hasCloseButton="false">
+      <div
+        class="h-40 rounded-t-xl bg-custom-gradient relative left-[-1rem] top-[-1rem] w-[calc(100%+2rem)] mb-2"
+      >
+        <img
+          class="h-full scale-[1.5] m-auto dark:brightness-[0.5]"
+          src="/assets/images/scale maestro.png"
+          alt=""
+        />
+      </div>
       <div class="text-center mb-6">
         <h1 class="text-2xl font-bold mb-2">Create Your Free Account</h1>
         <p class="text-gray-700 dark:text-gray-100 text-sm">
@@ -12,9 +21,7 @@
 
       <form class="text-left" @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="username" :class="labelClasses"
-            >Username</label
-          >
+          <label for="username" :class="labelClasses">Username</label>
           <input
             maxlength="20"
             v-model="formData.userName"
@@ -26,9 +33,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="email" :class="labelClasses"
-            >Email</label
-          >
+          <label for="email" :class="labelClasses">Email</label>
           <input
             v-model="formData.email"
             type="email"
@@ -42,9 +47,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="password" :class="labelClasses"
-            >Password</label
-          >
+          <label for="password" :class="labelClasses">Password</label>
           <PasswordInput
             v-model="formData.password"
             type="password"
@@ -57,9 +60,7 @@
         </div>
 
         <div class="mb-4">
-          <label
-            for="confirm-password"
-            :class="labelClasses"
+          <label for="confirm-password" :class="labelClasses"
             >Confirm Password</label
           >
           <ConfirmPasswordInput
@@ -99,7 +100,8 @@ import ConfirmPasswordInput from "../components/reuseable/ConfirmPasswordInput.v
 
 const router = useRouter();
 
-const labelClasses: string = "block text-sm font-medium text-gray-700 dark:text-gray-300";
+const labelClasses: string =
+  "block text-sm font-medium text-gray-700 dark:text-gray-300";
 
 const formData = reactive({
   userName: "",
