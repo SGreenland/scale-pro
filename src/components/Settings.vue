@@ -13,7 +13,7 @@
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="startingScale">Starting Pattern</label>
-           <pattern-selector v-model="currentSettings.startingPattern" :show-label="false"></pattern-selector>
+           <pattern-selector v-model="currentSettings.startingPattern" :show-label="false" align-tooltip-left></pattern-selector>
         </div>
       </accordion-single>
       <accordion-single

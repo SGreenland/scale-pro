@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed inset-0 flex items-center justify-center"
+    class="fixed inset-0 flex items-center justify-center overflow-auto"
     :class="{'bg-black bg-opacity-70 z-[1000]': mask, 'z-2': !mask}"
   >
     <div

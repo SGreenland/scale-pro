@@ -1,15 +1,21 @@
 <template>
-  <label class="capitalize" v-if="showLabel" for="note-pattern">{{
-    selectedPatternCategory + "s"
-  }}</label>
+  <div class="flex gap-1">
+    <label class="capitalize" v-if="showLabel" for="note-pattern">{{
+      selectedPatternCategory + "s"
+    }}</label>
+    <info-tooltip :alignLeft="alignTooltipLeft">
+      Click the three vertical dots to select different categories of patterns (scales, arpeggios, intervals). To gain access to more patterns <a href="/signup">sign up</a> to a premium account. Some patterns are locked and can be unlocked by achieving certain milestones in the app!
+    </info-tooltip>
+  </div>
   <div class="flex w-full gap-2">
     <select class="grow" id="note-pattern" v-model="model">
       <option
         :value="pattern"
+        :disabled="lockedPatterns.includes(pattern.name as keyof NotePattern)"
         v-for="(pattern, index) in getPatternOptions"
         :key="index"
       >
-        {{ pattern.name }}
+        {{ pattern.name }} <font-awesome-icon v-if="lockedPatterns.includes(pattern.name as keyof NotePattern)" :icon="faLock"  class="text-end" />
       </option>
     </select>
     <dropdown class="self-center" :closeContentOnClick="true">
@@ -39,17 +45,19 @@
 </template>
 
 <script setup lang="ts">
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { NotePattern, NotePatternCategory } from "@scalemaestro/shared-types";
 import { computed, watch, ref } from "vue";
 import { currentLoggedInUser, currentSettings, scaleConfig, selectedPatternCategory } from "../GlobalState";
-import { notePatterns } from "../NotesAndScales";
+import { notePatterns, lockedPatterns } from "../NotesAndScales";
 import dropdown from "./reuseable/Dropdown.vue";
+import InfoTooltip from "./reuseable/InfoTooltip.vue";
 
 withDefaults(
   defineProps<{
     showLabel?: boolean;
+    alignTooltipLeft?: boolean;
   }>(),
   { showLabel: true }
 );
