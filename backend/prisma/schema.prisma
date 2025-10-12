@@ -37,6 +37,7 @@ model User {
   updatedAt       DateTime? @updatedAt
   subscription    Subscription?
   pitchData       PitchData[]
+  unlockedPatterns UserUnlockedPattern[]
 }
 
 
@@ -59,6 +60,27 @@ model Subscription {
   status       SubscriptionStatus
   startedAt    DateTime @default(now())
   expiresAt    DateTime?
+}
+
+model NotePattern {
+  id    Int    @id @default(autoincrement())
+  name      String @unique
+  pattern   Json[]
+  type      String
+  isPremium Boolean
+  isLocked  Boolean @default(false)
+  usersUnlocked UserUnlockedPattern[]
+}
+
+model UserUnlockedPattern {
+  id    Int    @id @default(autoincrement())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  notePatternId Int
+  notePattern   NotePattern @relation(fields: [notePatternId], references: [id])
+  unlockedAt    DateTime @default(now())
+
+  @@unique([userId, notePatternId])
 }
 
 
