@@ -1,4 +1,4 @@
-import { Settings } from "@scalemaestro/shared-types";
+import { NotePattern, Settings } from "@scalemaestro/shared-types";
 import { computed, reactive, ref, watch } from "vue";
 import { useSessionStorage } from "./composables/useSessionStorage";
 import { guitarScaleStringPatterns, notePatterns } from "./NotesAndScales";
@@ -16,6 +16,10 @@ export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>(
   "user",
   null
 );
+
+export const availablePatterns = ref<NotePattern[]>([]);
+
+export const userUnlockedPatterns = ref<number[]>([]);
 
 export const hasUserJustSignedUp = ref(false);
 

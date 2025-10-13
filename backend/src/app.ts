@@ -8,6 +8,7 @@ import settingsRoutes from "./routes/settings";
 import stripeRoutes from "./routes/stripe";
 import userRoutes from "./routes/user";
 import pitchDataRoutes from "./routes/pitchData";
+import notePatternRoutes from "./routes/patterns";
 import { stripeWebhook } from "./controllers/stripeController";
 
 dotenv.config();
@@ -45,6 +46,7 @@ app.use("/api", authRoutes);
 app.use("/api", settingsRoutes);
 app.use("/api", userRoutes);
 app.use("/api", pitchDataRoutes);
+app.use("/api", notePatternRoutes);
 app.use("/api/stripe", stripeRoutes);
 
 

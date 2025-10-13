@@ -12,10 +12,12 @@ export interface Scales {
 
 export type NotePatternCategory = 'scale' | 'arpeggio' | 'interval';
 export interface NotePattern {
+    id: number;
     name: string;
     pattern: number[];
     type: NotePatternCategory;
     isPremium: boolean;
+    isLocked?: boolean;
 }
 export type LoopGapOption = "None" | "Auto" | "Custom";
 export interface Settings {

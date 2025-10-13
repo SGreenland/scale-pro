@@ -30,6 +30,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { currentLoggedInUser } from "../GlobalState";
+import axios from "axios";
 
 const router = useRouter();
 
@@ -39,10 +40,12 @@ const isUserLoggedIn = computed(() => {
 
 const handleLogout = () => {
   sessionStorage.clear(); // Clear session storage
-  // Clear the cookie
-  document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-
-  window.location.href = '/login'; // Redirect to login page with full reload to reset state
+  // post to logout endpoint to clear cookie
+  axios.post("/api/logout").then(() => {
+    currentLoggedInUser.value = null;
+    isOpen.value = false;
+    router.push("/login");
+  });
 }
 
 

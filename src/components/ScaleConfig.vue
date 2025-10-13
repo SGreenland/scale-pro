@@ -102,12 +102,12 @@ import {
   scaleToDisplay
 } from "../GlobalState";
 import { PresetNoteOrders } from "../types";
+import PatternSelector from "./PatternSelector.vue";
 import QuickTranspose from "./QuickTranspose.vue";
 import DropdownButton from "./reuseable/DropdownButton.vue";
 import InfoTooltip from "./reuseable/InfoTooltip.vue";
 import Tabs from "./reuseable/Tabs.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
-import PatternSelector from "./PatternSelector.vue";
 
 const tabs = ref<InstanceType<typeof Tabs> | null>(null);
 
