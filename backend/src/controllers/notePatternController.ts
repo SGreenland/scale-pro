@@ -29,7 +29,7 @@ export async function get(req: Request, res: Response) {
 
   const user = await prisma.user.findUnique({
     where: { id: req.user?.id },
-    include: { subscription: true, unlockedPatterns: true },d
+    include: { subscription: true, unlockedPatterns: true },
   });
 
   // invalid user, or no premium access, return only free patterns

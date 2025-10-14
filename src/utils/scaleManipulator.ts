@@ -1,6 +1,6 @@
 
 import { NotePattern } from '@scalemaestro/shared-types';
-import { notes, notePatterns} from '../NotesAndScales';
+import { notes } from '../NotesAndScales';
 import { Note, IntervalMap, IntervalSymbol } from '../types';
 
 

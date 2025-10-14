@@ -91,9 +91,6 @@ const getPatternOptions = computed(() => {
 });
 
 function isLockedForUser(patternId: number) {
-  // check if user has unlocked this pattern
-  console.log("Checking if pattern is locked for user:", patternId);
-  console.log("User unlocked patterns:", userUnlockedPatterns.value);
   return !userUnlockedPatterns.value.some((id) => id === patternId);
 }
 

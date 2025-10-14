@@ -1,7 +1,7 @@
-import { NotePattern, Settings } from "@scalemaestro/shared-types";
+import { NotePattern, NotePatternCategory, Settings } from "@scalemaestro/shared-types";
 import { computed, reactive, ref, watch } from "vue";
 import { useSessionStorage } from "./composables/useSessionStorage";
-import { guitarScaleStringPatterns, notePatterns } from "./NotesAndScales";
+import { guitarScaleStringPatterns } from "./NotesAndScales";
 import {
   PlayBackOptions,
   ScaleConfig,
@@ -98,10 +98,18 @@ export const workoutNoteOrder = computed({
   },
 });
 
+const defaultPattern: NotePattern = {
+  id: 0,
+  name: "Major",
+  pattern: [0, 2, 4, 5, 7, 9, 11, 12],
+  type: "scale",
+  isPremium: false,
+};
+
 //settings
 export const settings = reactive<Settings>({
   startingRootNote: "C3",
-  startingPattern: notePatterns[0],
+  startingPattern: defaultPattern,
   theme: "auto",
   gridType: "Piano roll",
   loopGap: "None",
@@ -122,9 +130,7 @@ export const scaleConfig = reactive<ScaleConfig>({
   currentGtrPositions: [],
 });
 
-export const selectedPatternCategory = ref(
-  currentLoggedInUser.value?.userSettings?.startingPattern.type || "scale"
-);
+export const selectedPatternCategory = ref<NotePatternCategory>("scale");
 
 export const tempo = ref(120);
 

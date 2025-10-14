@@ -81,6 +81,7 @@ const feedbackMessage = computed(() => {
   if (percent >= 25) return "💪 Decent effort! Practice will help.";
   return "🎯 Keep practicing — you're on the right track!";
 });
+
 const handleSave = () => {
   if (isSaving.value) return; // Prevent multiple submissions
   isSaving.value = true;
