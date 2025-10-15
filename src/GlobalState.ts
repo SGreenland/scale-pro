@@ -19,7 +19,7 @@ export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>(
 
 export const availablePatterns = ref<NotePattern[]>([]);
 
-export const userUnlockedPatterns = ref<number[]>([]);
+export const userUnlockedPatternIds = ref<number[]>([]);
 
 export const hasUserJustSignedUp = ref(false);
 

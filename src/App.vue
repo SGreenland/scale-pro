@@ -20,7 +20,7 @@ import {
   hasUserJustSignedUp,
   scaleConfig,
   selectedPatternCategory,
-  userUnlockedPatterns
+  userUnlockedPatternIds
 } from "./GlobalState";
 
 const shouldShowWelcomeModal = computed(() => {
@@ -46,7 +46,7 @@ watch(() => currentLoggedInUser.value, () => {
           scaleConfig.selectedNote = 'C3';
           selectedPatternCategory.value = 'scale';
         }
-        userUnlockedPatterns.value = response.data.unlockedPatterns || [];
+        userUnlockedPatternIds.value = response.data.unlockedPatterns || [];
       })
       .catch((error) => {
         console.error("Error fetching note patterns:", error);

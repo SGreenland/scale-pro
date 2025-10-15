@@ -577,9 +577,11 @@ function drawPitchCurve() {
     if (x === prevX) {
       // create a sine wave effect
       increment ++;
-      if (increment >= colWidth / 3) increment = 0;
+      if (increment >= colWidth / 3) {
+        increment = -1
+      }
       const vibratoX = prevX + increment;
-      ctx.lineTo(vibratoX, y);
+      if(increment >= 0) ctx.lineTo(vibratoX, y);
       continue;
 
     }

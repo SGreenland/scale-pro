@@ -49,6 +49,7 @@ export async function get(req: Request, res: Response) {
 }
 
 export async function unlock(req: Request, res: Response) {
+
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }

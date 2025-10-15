@@ -63,7 +63,7 @@ import {
   currentSettings,
   scaleConfig,
   selectedPatternCategory,
-  userUnlockedPatterns,
+  userUnlockedPatternIds,
 } from "../GlobalState";
 import dropdown from "./reuseable/Dropdown.vue";
 import InfoTooltip from "./reuseable/InfoTooltip.vue";
@@ -91,7 +91,7 @@ const getPatternOptions = computed(() => {
 });
 
 function isLockedForUser(patternId: number) {
-  return !userUnlockedPatterns.value.some((id) => id === patternId);
+  return !userUnlockedPatternIds.value.some((id) => id === patternId);
 }
 
 watch(

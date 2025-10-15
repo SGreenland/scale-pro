@@ -50,7 +50,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
-import { currentLoggedInUser, scaleConfig } from "../GlobalState";
+import { currentLoggedInUser } from "../GlobalState";
 
 
 const router = useRouter();

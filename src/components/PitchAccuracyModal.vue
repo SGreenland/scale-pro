@@ -14,6 +14,9 @@
         <p class="text-base italic text-gray-600 dark:text-gray-300 mb-6">
           {{ feedbackMessage }}
         </p>
+        <div v-if="unlockedAlertText" class="mb-4 p-4 bg-green-100 text-green-800 rounded">
+          {{ unlockedAlertText }}
+        </div>
         <div v-if="currentLoggedInUser?.hasPremiumAccess" class="flex gap-2 justify-end border-t pt-4">
         <button class="inverted-btn">Screenshot</button>
         <submit-button width-class="w-20":is-submitting="isSaving" @click="handleSave">Save</submit-button>
@@ -59,11 +62,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import ModalWrapper from "./reuseable/ModalWrapper.vue";
 import axios from "axios";
-import { currentSettings, scaleConfig, currentLoggedInUser} from "../GlobalState";
+import { currentSettings, scaleConfig, currentLoggedInUser, availablePatterns} from "../GlobalState";
 import SubmitButton from "./reuseable/SubmitButton.vue";
+import { NotePattern } from "packages/shared-types/dist";
 const props = defineProps<{
   averageDeviation: number;
   inTunePercentage: number;
@@ -72,6 +76,7 @@ const props = defineProps<{
 
 const isSaving = ref(false);
 const dataSaved = ref(false);
+const unlockedAlertText = ref("");
 
 const feedbackMessage = computed(() => {
   const percent = props.inTunePercentage;
@@ -81,6 +86,34 @@ const feedbackMessage = computed(() => {
   if (percent >= 25) return "💪 Decent effort! Practice will help.";
   return "🎯 Keep practicing — you're on the right track!";
 });
+
+type ChallengePattern = {
+  patternName: string;
+  inTuneThreshold: number;
+  patternToUnlock: string;
+}
+
+const challengePatterns: ChallengePattern[] = [
+  { patternName: 'Natural Minor', inTuneThreshold: 65, patternToUnlock:  'Diminished' },
+];
+
+onMounted(() => {
+  if (currentLoggedInUser.value?.hasPremiumAccess) {
+    const currentPattern = scaleConfig.selectedPattern as NotePattern;
+    const challenge = challengePatterns.find(c => c.patternName === currentPattern.name);
+    if (challenge && !props.isNoData &&  props.inTunePercentage >= challenge.inTuneThreshold) {
+      axios.post('/api/note-patterns/unlock', {
+        patternId: availablePatterns.value.find(p => p.name === challenge.patternToUnlock)?.id,
+      })
+      .then(() => {
+        unlockedAlertText.value = `🎉 Congrats! You've unlocked the ${challenge.patternToUnlock} by achieving ${challenge.inTuneThreshold}% in tune on the ${challenge.patternName}!`;
+      })
+      .catch((error) => {
+        console.error("Error unlocking pattern:", error);
+      });
+    }
+  }
+})
 
 const handleSave = () => {
   if (isSaving.value) return; // Prevent multiple submissions
