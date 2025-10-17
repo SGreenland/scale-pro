@@ -46,9 +46,9 @@ watch(() => currentLoggedInUser.value, () => {
       .get("api/note-patterns")
       .then((response) => {
         availablePatterns.value = response.data.notePatterns;
-        if(currentLoggedInUser.value?.userSettings){
-          scaleConfig.selectedPattern = availablePatterns.value.find(p => p.id === currentLoggedInUser.value?.userSettings?.startingPattern.id) || availablePatterns.value[0];
-          scaleConfig.selectedNote = currentLoggedInUser.value?.userSettings?.startingRootNote || 'C3';
+        if(currentLoggedInUser.value?.settings){
+          scaleConfig.selectedPattern = availablePatterns.value.find(p => p.id === currentLoggedInUser.value?.settings?.startingPattern.id) || availablePatterns.value[0];
+          scaleConfig.selectedNote = currentLoggedInUser.value?.settings?.startingRootNote || 'C3';
           selectedPatternCategory.value = scaleConfig.selectedPattern.type;
         } else {
           scaleConfig.selectedPattern = availablePatterns.value[0];

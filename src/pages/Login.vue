@@ -78,7 +78,7 @@ const handleSubmit = async () => {
         email: response.data.user.email,
         trialExpiresAt: response.data.user.trialExpiresAt,
         subscriptionId: response.data.user.subscriptionId,
-        userSettings: response.data.user.userSettings,
+        settings: response.data.user.settings,
         hasPremiumAccess: response.data.hasPremiumAccess,
       };
       // Redirect to home

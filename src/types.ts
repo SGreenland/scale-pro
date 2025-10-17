@@ -84,7 +84,7 @@ interface UserSessionObject {
   email: string;
   trialExpiresAt?: Date | null;
   subscriptionId?: string | null; // Optional, only if user has a subscription
-  userSettings?: Settings | null; // Optional, only if user has settings
+  settings?: Settings | null; // Optional, only if user has settings
   hasPremiumAccess: boolean;
 }
 

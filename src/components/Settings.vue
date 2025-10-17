@@ -204,7 +204,7 @@ async function saveSettings() {
     );
 
     if (response.data.settings) {
-      currentLoggedInUser.value!.userSettings = response.data.settings;
+      currentLoggedInUser.value!.settings = response.data.settings;
     }
     isSaving.value = false;
     successfullySaved.value = true;

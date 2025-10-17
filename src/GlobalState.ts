@@ -120,7 +120,7 @@ export const settings = reactive<Settings>({
 });
 
 export const currentSettings = computed(() => {
-  return currentLoggedInUser.value?.userSettings || settings;
+  return currentLoggedInUser.value?.settings || settings;
 });
 
 export const scaleConfig = reactive<ScaleConfig>({
