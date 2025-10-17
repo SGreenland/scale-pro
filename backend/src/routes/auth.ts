@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signup, login } from "../controllers/authController";
+import { signup, login, checkTokenAndGetUser } from "../controllers/authController";
 
 const router = Router();
 
@@ -11,5 +11,7 @@ router.post("/logout", (req, res) => {
   });
   res.status(200).json({ message: "Logged out successfully" });
 });
+
+router.post("/persist-login", checkTokenAndGetUser);
 
 export default router;

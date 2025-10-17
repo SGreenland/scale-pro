@@ -74,7 +74,6 @@ const handleSubmit = async () => {
     if (response.data.user) {
       // Set the current logged-in user
       currentLoggedInUser.value = {
-        id: response.data.user.id,
         userName: response.data.user.userName,
         email: response.data.user.email,
         trialExpiresAt: response.data.user.trialExpiresAt,

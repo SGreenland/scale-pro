@@ -80,7 +80,6 @@ interface FretBoard {
 }
 
 interface UserSessionObject {
-  id: string;
   userName: string;
   email: string;
   trialExpiresAt?: Date | null;

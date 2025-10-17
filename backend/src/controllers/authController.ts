@@ -1,9 +1,13 @@
 // src/controllers/authController.ts
 import { Request, Response } from "express";
-import { loginUser, persistUserSession, registerUser } from "../services/authService";
+import {
+  getUserSessionFields,
+  loginUser,
+  registerUser,
+} from "../services/authService";
 import { SignupRequestBody } from "../types";
+import { checkPremiumAccess, validateToken } from "../validators/helpers/auth";
 import { validateSignupRequest } from "../validators/register";
-import { validateToken } from "src/validators/helpers/auth";
 
 export async function signup(req: Request<SignupRequestBody>, res: Response) {
   const errors = validateSignupRequest(req.body);
@@ -38,7 +42,6 @@ export async function login(req: Request, res: Response) {
     });
     res.status(200).json({
       user: {
-        id: user.id,
         userName: user.userName,
         email: user.email,
         trialExpiresAt: !user.subscription && user.trialExpiresAt,
@@ -59,11 +62,20 @@ export async function checkTokenAndGetUser(req: Request, res: Response) {
   }
   try {
     const userId = validateToken(token);
+    console.log("Validated userId:", userId);
     if (!userId) {
       return res.status(401).json({ error: "Invalid token" });
     }
-    const user = persistUserSession(userId);
-    return res.status(200).json({ user });
+    const userSessionFields = await getUserSessionFields(userId);
+    console.log("User session fields:", userSessionFields);
+    if (!userSessionFields) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+    const userWithAccess = {
+      ...userSessionFields,
+      hasPremiumAccess: checkPremiumAccess(userSessionFields),
+    };
+    return res.status(200).json({ user: userWithAccess });
   } catch (err: any) {
     return res.status(401).json({ error: "Invalid token" });
   }

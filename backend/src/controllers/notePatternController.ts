@@ -20,7 +20,14 @@ export async function get(req: Request, res: Response) {
   const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
     userId: string;
     userName: string;
+    exp: number;
   };
+
+  if (decoded.exp * 1000 < Date.now()) {
+    return res
+      .status(200)
+      .json({ notePatterns: notePatterns.filter((np) => !np.isPremium) });
+  }
 
   req.user = {
     id: decoded.userId,

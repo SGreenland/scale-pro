@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { UserWithSubscription } from "src/types";
+import { UserSessionFields, UserWithSubscription } from "src/types";
 
 export function validateEmail(email: string): boolean {
   const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -26,7 +26,7 @@ export function validateToken(token: string): string|null {
   }
 }
 
-export function checkPremiumAccess(user: UserWithSubscription): boolean {
+export function checkPremiumAccess(user: UserSessionFields|UserWithSubscription): boolean {
   const isAdmin = process.env.ADMIN_EMAILS?.split(",").includes(user.email);
   const isTrialActive =
     user.trialExpiresAt && user.trialExpiresAt > new Date();

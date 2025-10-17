@@ -42,3 +42,14 @@ export type UserWithSubscription = Prisma.UserGetPayload<{
   };
 }>;
 
+export interface UserSessionFields {
+  userName: string;
+  email: string;
+  trialExpiresAt?: Date | null;
+  subscription?: {
+    id: string;
+    status: string;
+  } | null;
+  settings?: Settings | null;
+}
+

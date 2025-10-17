@@ -2,9 +2,9 @@
 import { prisma } from "../prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { LoginErrors, UserWithSubscription } from "../types";
+import { LoginErrors, UserSessionFields, UserWithSubscription } from "../types";
 import { stripe } from "../app";
-import { validateToken } from "src/validators/helpers/auth";
+import { checkPremiumAccess, validateToken } from "../validators/helpers/auth";
 
 export async function registerUser(
   userName: string,
@@ -36,7 +36,7 @@ export async function registerUser(
       },
     });
 
-    const token = createUserToken(user)
+    const token = createUserToken(user);
 
     return { user, token };
   } catch (error) {
@@ -46,7 +46,8 @@ export async function registerUser(
 }
 
 export async function loginUser(email: string, password: string) {
-  const user = await prisma.user.findUnique({ where: { email },
+  const user = await prisma.user.findUnique({
+    where: { email },
     include: {
       subscription: true,
     },
@@ -61,22 +62,14 @@ export async function loginUser(email: string, password: string) {
     errors.password = "Invalid password";
     throw new Error(JSON.stringify(errors));
   }
-  const isAdmin = process.env.ADMIN_EMAILS?.split(",").includes(user.email);
-  const isTrialActive =
-    user.trialExpiresAt && user.trialExpiresAt > new Date();
-  const hasActiveSubscription =
-    user.subscription?.status === "active";
-
-  const hasPremiumAccess = isAdmin || isTrialActive || hasActiveSubscription;
+  const hasPremiumAccess = checkPremiumAccess(user);
 
   const token = createUserToken(user);
 
   return { user, token, hasPremiumAccess };
 }
 
-
 function createUserToken(user: UserWithSubscription): string {
-
   return jwt.sign(
     {
       userId: user.id,
@@ -89,15 +82,21 @@ function createUserToken(user: UserWithSubscription): string {
   );
 }
 
-async function persistUserSession(token: string): Promise<UserWithSubscription | undefined> {
-  const userId = validateToken(token);
-  if (!userId) {
-    return;
-  }
-  const user = await prisma.user.findUnique({ where: { id: userId }, include: {
-    subscription: true,
-  } });
+export async function getUserSessionFields(
+  userId: string
+): Promise<UserSessionFields | undefined> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      userName: true,
+      email: true,
+      trialExpiresAt: true,
+      subscription: {
+        select: { id: true, status: true },
+      },
+      settings: true,
+    },
+  });
   if (!user) return;
-  return user as unknown as UserWithSubscription;
-
+  return user as UserSessionFields;
 }

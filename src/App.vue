@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { computed, watch } from "vue";
+import { computed, onBeforeMount, watch } from "vue";
 import Menu from "./components/Menu.vue";
 import WelcomeModal from "./components/WelcomeModal.vue";
 import {
@@ -31,6 +31,16 @@ const shouldShowWelcomeModal = computed(() => {
 const handleWelcomeModalClose = () => {
   hasUserJustSignedUp.value = false;
 };
+
+onBeforeMount(() => {
+  //check for existing session token
+  axios.post("/api/persist-login").then((response) => {
+    console.log(response.data);
+    if (response.data.user) {
+      currentLoggedInUser.value = response.data.user;
+    }
+  });
+});
 
 watch(() => currentLoggedInUser.value, () => {
    axios
