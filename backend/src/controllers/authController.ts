@@ -62,12 +62,12 @@ export async function checkTokenAndGetUser(req: Request, res: Response) {
   }
   try {
     const userId = validateToken(token);
-    console.log("Validated userId:", userId);
+
     if (!userId) {
       return res.status(401).json({ error: "Invalid token" });
     }
     const userSessionFields = await getUserSessionFields(userId);
-    console.log("User session fields:", userSessionFields);
+
     if (!userSessionFields) {
       return res.status(401).json({ error: "Invalid token" });
     }

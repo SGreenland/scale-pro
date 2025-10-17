@@ -35,7 +35,6 @@ const handleWelcomeModalClose = () => {
 onBeforeMount(() => {
   //check for existing session token
   axios.post("/api/persist-login").then((response) => {
-    console.log(response.data);
     if (response.data.user) {
       currentLoggedInUser.value = response.data.user;
     }
