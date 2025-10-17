@@ -13,12 +13,16 @@ export function validatePassword(password: string): boolean {
   return re.test(password);
 }
 
-export function validateToken(token: string): boolean {
+// returns userId if valid, null otherwise
+export function validateToken(token: string): string|null {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    return typeof decoded === "object" && "userId" in decoded;
+    if (typeof decoded === "object" && "userId" in decoded) {
+      return decoded.userId as string;
+    }
+    return null;
   } catch (error) {
-    return false;
+    return null;
   }
 }
 

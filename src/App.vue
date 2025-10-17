@@ -41,7 +41,7 @@ watch(() => currentLoggedInUser.value, () => {
           scaleConfig.selectedPattern = availablePatterns.value.find(p => p.id === currentLoggedInUser.value?.userSettings?.startingPattern.id) || availablePatterns.value[0];
           scaleConfig.selectedNote = currentLoggedInUser.value?.userSettings?.startingRootNote || 'C3';
           selectedPatternCategory.value = scaleConfig.selectedPattern.type;
-        } else if(availablePatterns.value.length > 0) {
+        } else {
           scaleConfig.selectedPattern = availablePatterns.value[0];
           scaleConfig.selectedNote = 'C3';
           selectedPatternCategory.value = 'scale';

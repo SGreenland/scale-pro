@@ -65,9 +65,10 @@
 import { computed, ref, onMounted } from "vue";
 import ModalWrapper from "./reuseable/ModalWrapper.vue";
 import axios from "axios";
-import { currentSettings, scaleConfig, currentLoggedInUser, availablePatterns} from "../GlobalState";
+import { currentSettings, scaleConfig, currentLoggedInUser, availablePatterns, userUnlockedPatternIds} from "../GlobalState";
 import SubmitButton from "./reuseable/SubmitButton.vue";
 import { NotePattern } from "packages/shared-types/dist";
+import { response } from "express";
 const props = defineProps<{
   averageDeviation: number;
   inTunePercentage: number;
@@ -94,7 +95,14 @@ type ChallengePattern = {
 }
 
 const challengePatterns: ChallengePattern[] = [
-  { patternName: 'Natural Minor', inTuneThreshold: 65, patternToUnlock:  'Diminished' },
+  { patternName: 'Natural Minor', inTuneThreshold: 70, patternToUnlock:  'Diminished' },
+  { patternName: 'Harmonic Minor', inTuneThreshold: 70, patternToUnlock:  'Locrian' },
+  { patternName: 'Minor Pentatonic', inTuneThreshold: 70, patternToUnlock:  'Blues Scale' },
+  { patternName: 'Major Scale', inTuneThreshold: 75, patternToUnlock:  'Major Pentatonic' },
+  { patternName: 'Major Pentatonic', inTuneThreshold: 75, patternToUnlock:  'Mixolydian' },
+  { patternName: 'Diminished', inTuneThreshold: 80, patternToUnlock:  'Whole Tone' },
+  { patternName: 'Perfect 5th', inTuneThreshold: 80, patternToUnlock:  'Diminished 5th' },
+  { patternName: 'Perfect 4th', inTuneThreshold: 80, patternToUnlock:  'Augmented 5th' },
 ];
 
 onMounted(() => {
@@ -105,8 +113,12 @@ onMounted(() => {
       axios.post('/api/note-patterns/unlock', {
         patternId: availablePatterns.value.find(p => p.name === challenge.patternToUnlock)?.id,
       })
-      .then(() => {
+      .then((response) => {
         unlockedAlertText.value = `🎉 Congrats! You've unlocked the ${challenge.patternToUnlock} by achieving ${challenge.inTuneThreshold}% in tune on the ${challenge.patternName}!`;
+        //update user's unlocked patterns in global state
+        if (response.data.unlockedPatterns){
+           userUnlockedPatternIds.value = response.data.unlockedPatterns;
+        }
       })
       .catch((error) => {
         console.error("Error unlocking pattern:", error);

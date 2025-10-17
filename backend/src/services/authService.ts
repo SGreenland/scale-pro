@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { LoginErrors, UserWithSubscription } from "../types";
 import { stripe } from "../app";
+import { validateToken } from "src/validators/helpers/auth";
 
 export async function registerUser(
   userName: string,
@@ -86,4 +87,17 @@ function createUserToken(user: UserWithSubscription): string {
       expiresIn: "7d",
     }
   );
+}
+
+async function persistUserSession(token: string): Promise<UserWithSubscription | undefined> {
+  const userId = validateToken(token);
+  if (!userId) {
+    return;
+  }
+  const user = await prisma.user.findUnique({ where: { id: userId }, include: {
+    subscription: true,
+  } });
+  if (!user) return;
+  return user as unknown as UserWithSubscription;
+
 }

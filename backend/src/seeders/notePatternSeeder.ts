@@ -1,12 +1,12 @@
 import { prisma } from "../prisma";
-import { NotePattern } from '@scalemaestro/shared-types';
 
-const notePatterns: NotePattern[] = [
+const notePatterns: any[] = [
     { name: 'Major', pattern: [0, 2, 4, 5, 7, 9, 11, 12], type: 'scale', isPremium: false },
     { name: 'Major (1-5)', pattern: [0, 2, 4, 5, 7], type: 'scale', isPremium: false },
     { name: 'Natural Minor', pattern: [0, 2, 3, 5, 7, 8, 10, 12], type: 'scale', isPremium: false },
     { name: 'Harmonic Minor', pattern: [0, 2, 3, 5, 7, 8, 11, 12], type: 'scale', isPremium: true },
     { name: 'Minor Pentatonic', pattern: [0, 3, 5, 7, 10, 12], type: 'scale', isPremium: true },
+    { name: 'Major Pentatonic', pattern: [0, 2, 4, 7, 9, 12], type: 'scale', isPremium: true },
     { name: 'Whole Tone', pattern: [0, 2, 4, 6, 8, 10, 12], type: 'scale', isPremium: true },
     { name: 'Diminished', pattern: [0, 2, 3, 5, 6, 8, 9, 11, 12], type: 'scale', isPremium: true },
     { name: 'Blues Scale', pattern: [0, 3, 5, 6, 7, 10, 12], type: 'scale', isPremium: true },
@@ -34,7 +34,7 @@ const notePatterns: NotePattern[] = [
     { name: 'Augmented 5th', pattern: [0, 8], type: 'interval', isPremium: true },
 ];
 
-const lockedPatterns: string[] = ['Whole Tone', 'Diminished', 'Blues Scale', 'Phrygian', 'Lydian', 'Mixolydian', 'Locrian', 'Diminished 5th', 'Augmented 5th'];
+const lockedPatterns: string[] = ['Whole Tone', 'Diminished', 'Major Pentatonic', 'Blues Scale', 'Phrygian', 'Lydian', 'Mixolydian', 'Locrian', 'Diminished 5th', 'Augmented 5th'];
 
 async function main() {
     for (const np of notePatterns) {

@@ -79,5 +79,5 @@ export async function unlock(req: Request, res: Response) {
       },
     });
   }
-  return res.status(200).json({ message: "Pattern unlocked" });
+  return res.status(200).json({ unlockedPatterns: [...user.unlockedPatterns.map((p) => p.notePatternId), patternId] });
 }

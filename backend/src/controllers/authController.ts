@@ -1,8 +1,9 @@
 // src/controllers/authController.ts
 import { Request, Response } from "express";
-import { loginUser, registerUser } from "../services/authService";
+import { loginUser, persistUserSession, registerUser } from "../services/authService";
 import { SignupRequestBody } from "../types";
 import { validateSignupRequest } from "../validators/register";
+import { validateToken } from "src/validators/helpers/auth";
 
 export async function signup(req: Request<SignupRequestBody>, res: Response) {
   const errors = validateSignupRequest(req.body);
@@ -48,5 +49,22 @@ export async function login(req: Request, res: Response) {
     });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
+  }
+}
+
+export async function checkTokenAndGetUser(req: Request, res: Response) {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+  try {
+    const userId = validateToken(token);
+    if (!userId) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+    const user = persistUserSession(userId);
+    return res.status(200).json({ user });
+  } catch (err: any) {
+    return res.status(401).json({ error: "Invalid token" });
   }
 }
