@@ -46,7 +46,7 @@ export async function login(req: Request, res: Response) {
         email: user.email,
         trialExpiresAt: !user.subscription && user.trialExpiresAt,
         subscriptionId: user.subscription ? user.subscription.id : null,
-        userSettings: user.settings || null,
+        settings: user.settings || null,
       },
       hasPremiumAccess: hasPremiumAccess,
     });
