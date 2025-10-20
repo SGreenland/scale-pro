@@ -5,9 +5,15 @@
     }}</label>
     <info-tooltip :alignLeft="alignTooltipLeft">
       Click the three vertical dots to select different categories of patterns
-      (scales, arpeggios, intervals). To gain access to more patterns
-      <a href="/signup">sign up</a> to a premium account. Some patterns are
-      locked and can be unlocked by achieving certain milestones in the app!
+      (scales, arpeggios, intervals).
+      <span v-if="!currentLoggedInUser"
+        >To gain access to more patterns <a href="/signup">sign up</a> to a
+        premium account.</span
+      >
+      <span v-else
+        >Some patterns are locked and can be unlocked by achieving certain
+        milestones in the app!</span
+      >
     </info-tooltip>
   </div>
   <div class="flex w-full gap-2">
@@ -60,6 +66,7 @@ import { NotePattern, NotePatternCategory } from "@scalemaestro/shared-types";
 import { computed, ref, watch } from "vue";
 import {
   availablePatterns,
+  currentLoggedInUser,
   currentSettings,
   scaleConfig,
   selectedPatternCategory,

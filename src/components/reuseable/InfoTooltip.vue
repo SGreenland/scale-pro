@@ -9,7 +9,7 @@
     <div
       v-if="showTooltip"
       @mouseleave="showTooltip = false"
-      class="tooltip absolute top-5 w-48 bg-white border border-black dark:bg-gray-700 dark:text-white text-sm p-2 rounded shadow-lg z-[10000]"
+      class="tooltip absolute top-5 w-48 max-w-[40vw] bg-white border border-black dark:bg-gray-700 dark:text-white text-sm p-2 rounded shadow-lg z-[10000]"
       :class="alignLeft && 'left-[-12rem]'"
     >
       <p class="text-sm">
