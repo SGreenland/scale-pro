@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { LoginErrors, UserSessionFields, UserWithSubscription } from "../types";
 import { stripe } from "../app";
 import { checkPremiumAccess, validateToken } from "../validators/helpers/auth";
+import { sendVerificationEmail } from "./emailService";
 
 export async function registerUser(
   userName: string,
@@ -38,6 +39,12 @@ export async function registerUser(
 
     const token = createUserToken(user);
 
+    //send verification email
+    await sendVerificationEmail(
+      email,
+      `${process.env.FRONTEND_URL}/verify-email?token=${token}`
+    );
+
     return { user, token };
   } catch (error) {
     console.error("Error creating user:", error);
@@ -69,7 +76,7 @@ export async function loginUser(email: string, password: string) {
   return { user, token, hasPremiumAccess };
 }
 
-function createUserToken(user: UserWithSubscription): string {
+export function createUserToken(user: UserWithSubscription, expiry?: number): string {
   return jwt.sign(
     {
       userId: user.id,
@@ -77,7 +84,7 @@ function createUserToken(user: UserWithSubscription): string {
     },
     process.env.JWT_SECRET as string,
     {
-      expiresIn: "7d",
+      expiresIn: expiry || "7d",
     }
   );
 }

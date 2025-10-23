@@ -92,7 +92,7 @@
 import axios from "axios";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { currentLoggedInUser, hasUserJustSignedUp } from "../GlobalState";
+import { showVerifyEmailModal, emailToVerify } from "../GlobalState";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import PasswordInput from "../components/reuseable/PasswordInput.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
@@ -122,12 +122,8 @@ const handleSubmit = () => {
   axios
     .post("/api/signup", formData)
     .then((response) => {
-      // Set read-only cookie with token
-      document.cookie = `token=${response.data.token}; path=/; secure; samesite=strict`;
-      // Set the current logged-in user
-      currentLoggedInUser.value = response.data.user;
-      // Set flag to indicate user just signed up
-      hasUserJustSignedUp.value = true;
+      showVerifyEmailModal.value = true;
+      emailToVerify.value = formData.email;
       //redirect to home
       router.push("/");
     })

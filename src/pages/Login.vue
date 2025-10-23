@@ -50,7 +50,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import ModalWrapper from "../components/reuseable/ModalWrapper.vue";
 import SubmitButton from "../components/reuseable/SubmitButton.vue";
-import { currentLoggedInUser } from "../GlobalState";
+import { currentLoggedInUser, showVerifyEmailModal, emailToVerify } from "../GlobalState";
 
 
 const router = useRouter();
@@ -85,7 +85,14 @@ const handleSubmit = async () => {
       router.push("/");
     } else {
       isSubmitting.value = false;
-      console.error("Login failed:", response.data.message);
+      if(response.data.verified === false) {
+        emailToVerify.value = formData.email;
+        router.push("/");
+        showVerifyEmailModal.value = true;
+      }
+      else {
+        errors.email = "An unexpected error occurred. Please try again.";
+      }
     }
   } catch (error: any) {
     const errorData = JSON.parse(error.response?.data?.error) || {};

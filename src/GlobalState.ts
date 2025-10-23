@@ -16,6 +16,8 @@ export const currentLoggedInUser = useSessionStorage<UserSessionObject | null>(
   "user",
   null
 );
+export const showVerifyEmailModal = ref(false);
+export const emailToVerify = ref("");
 
 export const availablePatterns = ref<NotePattern[]>([]);
 

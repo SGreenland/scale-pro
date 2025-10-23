@@ -4,10 +4,13 @@ import {
   getUserSessionFields,
   loginUser,
   registerUser,
+  createUserToken,
 } from "../services/authService";
-import { SignupRequestBody } from "../types";
+import { SignupRequestBody} from "../types";
 import { checkPremiumAccess, validateToken } from "../validators/helpers/auth";
 import { validateSignupRequest } from "../validators/register";
+import { prisma } from "../prisma";
+import { sendVerificationEmail } from "../services/emailService";
 
 export async function signup(req: Request<SignupRequestBody>, res: Response) {
   const errors = validateSignupRequest(req.body);
@@ -22,7 +25,7 @@ export async function signup(req: Request<SignupRequestBody>, res: Response) {
     const { user, token } = await registerUser(userName, email, password);
     return res.status(201).json({
       token,
-      user: { id: user.id, userName: user.userName, email: user.email },
+      user: user,
     });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
@@ -34,6 +37,9 @@ export async function login(req: Request, res: Response) {
 
   try {
     const { user, token, hasPremiumAccess } = await loginUser(email, password);
+    if(user.verifiedAt === null) {
+      return res.status(200).json({ message: "Email not verified", verified: false });
+    }
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
@@ -78,5 +84,57 @@ export async function checkTokenAndGetUser(req: Request, res: Response) {
     return res.status(200).json({ user: userWithAccess });
   } catch (err: any) {
     return res.status(401).json({ error: "Invalid token" });
+  }
+}
+
+export async function markUserEmailAsVerified(req: Request, res: Response) {
+  const token = req.query.token as string;
+  if (!token) {
+    return res.status(400).json({ error: "No token provided" });
+  }
+  try {
+    const userId = validateToken(token);
+    if (!userId) {
+      return res.status(400).json({ error: "Invalid token" });
+    }
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { verifiedAt: new Date() },
+      include: { subscription: true },
+    });
+    //set token cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return res.status(200).json({ user: user, message: "Email verified successfully" });
+  }
+  catch (err: any) {
+    return res.status(400).json({ error: "Invalid token" });
+  }
+}
+
+export async function resendVerificationEmail(req: Request, res: Response) {
+  const email = req.body.email as string;
+  if (!email) {
+    return res.status(400).json({ error: "No email provided" });
+  }
+  try {
+    const user = await prisma.user.findUnique({ where: { email }, include: { subscription: true } });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+    if (user.verifiedAt) {
+      return res.status(400).json({ error: "Email already verified" });
+    }
+    const token = createUserToken(user, 15 * 60); // 15 minutes expiry
+    const url = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    await sendVerificationEmail(user.email, url);
+    return res.status(200).json({ message: "Verification email resent successfully" });
+  }
+  catch (err: any) {
+    return res.status(500).json({ error: "Failed to resend verification email" });
   }
 }

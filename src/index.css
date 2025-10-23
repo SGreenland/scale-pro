@@ -245,7 +245,7 @@ html.light body {
   a:hover {
     color: #747bff;
   }
-  button:not(.active-select) {
+  button:not(.active-select, .inverted-btn) {
     background-color: #ffca6b;
     color: #312e81;
   }

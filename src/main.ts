@@ -36,6 +36,20 @@ const routes = [
     {path: '/my-pitch-data', component: UserPitchData, name: 'My Pitch Data'},
     {path: '/upgrade', component: GetProLandingPage, name: 'Upgrade'},
     {path: '/my-account', component: UserAccountPage, name: 'My Account'},
+    {path: '/verify-email', component: Login, name: 'Verify Email', beforeEnter: (to: any, from: any, next: any) => {
+         if (to.path == '/verify-email' && to.query.token) {
+        const token = to.query.token as string;
+        console.log(token);
+        // send token to backend to verify email
+        axios.get(`api/verify-email?token=${token}`).then(response => {
+            next({name: 'Home', query: { verified: 'true' } });
+        }).catch(error => {
+            next({name: 'Login', query: { verified: 'false' } });
+        });
+    } else {
+        next();
+    }
+    }}, //reuse login component for email verification redirection
 ];
 
 
@@ -44,6 +58,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
 
 const app = createApp(App).use(router);
 

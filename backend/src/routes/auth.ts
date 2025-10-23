@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signup, login, checkTokenAndGetUser } from "../controllers/authController";
+import { signup, login, checkTokenAndGetUser, resendVerificationEmail, markUserEmailAsVerified } from "../controllers/authController";
 
 const router = Router();
 
@@ -13,5 +13,9 @@ router.post("/logout", (req, res) => {
 });
 
 router.post("/persist-login", checkTokenAndGetUser);
+
+router.get("/verify-email", markUserEmailAsVerified);
+
+router.post("/resend-verification-email", resendVerificationEmail);
 
 export default router;

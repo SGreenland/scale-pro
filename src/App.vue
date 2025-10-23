@@ -5,6 +5,11 @@
       v-if="shouldShowWelcomeModal"
       @close="handleWelcomeModalClose"
     />
+    <EmailVerificationModal
+      v-if="showVerifyEmailModal"
+      :userEmail="emailToVerify"
+      @close="showVerifyEmailModal = false"
+    />
     <router-view> </router-view>
   </div>
 </template>
@@ -13,6 +18,7 @@
 import axios from "axios";
 import { computed, onBeforeMount, watch } from "vue";
 import Menu from "./components/Menu.vue";
+import EmailVerificationModal from "./components/VerifyEmailModal.vue";
 import WelcomeModal from "./components/WelcomeModal.vue";
 import {
   availablePatterns,
@@ -20,7 +26,9 @@ import {
   hasUserJustSignedUp,
   scaleConfig,
   selectedPatternCategory,
+  showVerifyEmailModal,
   userUnlockedPatternIds,
+  emailToVerify,
 } from "./GlobalState";
 
 const shouldShowWelcomeModal = computed(() => {
