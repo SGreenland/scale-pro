@@ -23,6 +23,7 @@
     "express": "^5.1.0",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",
+    "mailtrap": "^4.3.0",
     "pitchy": "^4.1.0",
     "vue": "^3.4.29",
     "vue-router": "^4.5.1"
