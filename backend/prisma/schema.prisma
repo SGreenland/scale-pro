@@ -35,6 +35,7 @@ model User {
   settings        Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime? @updatedAt
+  verifiedAt      DateTime?
   subscription    Subscription?
   pitchData       PitchData[]
   unlockedPatterns UserUnlockedPattern[]
