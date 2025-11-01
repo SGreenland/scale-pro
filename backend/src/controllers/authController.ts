@@ -5,12 +5,13 @@ import {
   loginUser,
   registerUser,
   createUserToken,
+  resetUserPassword,
 } from "../services/authService";
 import { SignupRequestBody} from "../types";
 import { checkPremiumAccess, validateToken } from "../validators/helpers/auth";
 import { validateSignupRequest } from "../validators/register";
 import { prisma } from "../prisma";
-import { sendVerificationEmail } from "../services/emailService";
+import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
 
 export async function signup(req: Request<SignupRequestBody>, res: Response) {
   const errors = validateSignupRequest(req.body);
@@ -136,5 +137,40 @@ export async function resendVerificationEmail(req: Request, res: Response) {
   }
   catch (err: any) {
     return res.status(500).json({ error: "Failed to resend verification email" });
+  }
+}
+
+export async function resetPasswordEmail(req: Request, res: Response) {
+  const email = req.body.email as string;
+  if (!email) {
+    return res.status(400).json({ error: "No email provided" });
+  }
+  try {
+    const user = await prisma.user.findUnique({ where: { email }, include: { subscription: true } });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+    const token = createUserToken(user, 15 * 60); // 15 minutes expiry
+    const url = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    // Send password reset email
+    await sendResetPasswordEmail(user.email, url);
+    return res.status(200).json({ message: "Password reset email sent successfully" });
+  }
+  catch (err: any) {
+    return res.status(500).json({ error: "Failed to send password reset email" });
+  }
+}
+
+export async function resetPassword(req: Request, res: Response) {
+  const userId = req.user?.id;
+  const newPassword = req.body.newPassword as string;
+  if (!newPassword) {
+    return res.status(400).json({ error: "No new password provided" });
+  }
+  try {
+    await resetUserPassword(userId!, newPassword);
+    return res.status(200).json({ message: "Password reset successfully" });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Failed to reset password" });
   }
 }

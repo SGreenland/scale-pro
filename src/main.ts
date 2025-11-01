@@ -16,6 +16,8 @@ import {
 import vClickAway from './directives/vClickAway';
 
 import axios from "axios";
+import ForgotPassword from './pages/ForgotPassword.vue'
+import ResetPassword from './pages/ResetPassword.vue'
 
 import.meta.env.PROD && (axios.defaults.baseURL = import.meta.env.VITE_API_URL || "http://localhost:4000");
 
@@ -39,7 +41,6 @@ const routes = [
     {path: '/verify-email', component: Login, name: 'Verify Email', beforeEnter: (to: any, from: any, next: any) => {
          if (to.path == '/verify-email' && to.query.token) {
         const token = to.query.token as string;
-        console.log(token);
         // send token to backend to verify email
         axios.get(`api/verify-email?token=${token}`).then(response => {
             next({name: 'Home', query: { verified: 'true' } });
@@ -49,7 +50,9 @@ const routes = [
     } else {
         next();
     }
-    }}, //reuse login component for email verification redirection
+    }},
+    {path: '/forgot-password', component: ForgotPassword, name: 'Forgot Password'},
+    {path: '/reset-password', component: ResetPassword, name: 'Reset Password'}
 ];
 
 

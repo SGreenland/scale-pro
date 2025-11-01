@@ -40,6 +40,10 @@
           >Login</submit-button
         >
       </form>
+      <router-link to="/signup" class="text-sm text-blue-600 hover:underline mt-4 block"
+        >Don't have an account? Sign up</router-link>
+      <router-link to="/forgot-password" class="text-sm text-blue-600 hover:underline mt-2 block"
+        >Forgot your password?</router-link>
     </modal-wrapper>
   </div>
 </template>

@@ -12,7 +12,8 @@ export function checkToken(required = true) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       const token =
-        req.headers.authorization?.split(" ")[1] || req.cookies?.token;
+        req.headers.authorization?.split(" ")[1] || req.cookies?.token || req.body.token;
+
 
       if (!token) {
         if (!required) return next();

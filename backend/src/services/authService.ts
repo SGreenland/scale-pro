@@ -107,3 +107,13 @@ export async function getUserSessionFields(
   if (!user) return;
   return user as UserSessionFields;
 }
+
+export async function resetUserPassword(
+  userId: string,
+  newPassword: string) {
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await prisma.user.update({
+    where: { id: userId },
+    data: { password: hashedPassword },
+  });
+}
