@@ -2,7 +2,7 @@
   <div>
     <modal-wrapper :mask="false" :hasCloseButton="false">
     <div class="h-40 rounded-t-xl bg-custom-gradient relative left-[-1rem] top-[-1rem] w-[calc(100%+2rem)] mb-2">
-      <img class="h-full scale-[1.5] m-auto dark:brightness-[0.5]" src="/assets/images/scale maestro.png" alt="">
+      <img class="h-full scale-[1.5] m-auto dark:brightness-[0.5]" src="/assets/images/scale-maestro.png" alt="">
     </div>
       <!-- <h1 class="text-lg font-bold my-4">Sign in</h1> -->
       <form class="text-left" @submit.prevent="handleSubmit">

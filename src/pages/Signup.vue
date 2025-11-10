@@ -6,7 +6,7 @@
       >
         <img
           class="h-full scale-[1.5] m-auto dark:brightness-[0.5]"
-          src="/assets/images/scale maestro.png"
+          src="/assets/images/scale-maestro.png"
           alt=""
         />
       </div>

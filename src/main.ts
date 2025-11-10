@@ -38,7 +38,7 @@ const routes = [
     {path: '/my-pitch-data', component: UserPitchData, name: 'My Pitch Data'},
     {path: '/upgrade', component: GetProLandingPage, name: 'Upgrade'},
     {path: '/my-account', component: UserAccountPage, name: 'My Account'},
-    {path: '/verify-email', component: Login, name: 'Verify Email', beforeEnter: (to: any, from: any, next: any) => {
+    {path: '/verify-email', component: Login, name: 'Verify Email', meta: {excludeFromNav: true}, beforeEnter: (to: any, from: any, next: any) => {
          if (to.path == '/verify-email' && to.query.token) {
         const token = to.query.token as string;
         // send token to backend to verify email
@@ -51,8 +51,8 @@ const routes = [
         next();
     }
     }},
-    {path: '/forgot-password', component: ForgotPassword, name: 'Forgot Password'},
-    {path: '/reset-password', component: ResetPassword, name: 'Reset Password'}
+    {path: '/forgot-password', component: ForgotPassword, name: 'Forgot Password', meta: {excludeFromNav: true}},
+    {path: '/reset-password', component: ResetPassword, name: 'Reset Password', meta: {excludeFromNav: true}}
 ];
 
 

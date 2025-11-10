@@ -1,4 +1,5 @@
 import { Mail, MailtrapClient } from "mailtrap";
+import { htmlEmailWrapper } from "../helpers/htmlEmailWrapper";
 
 const mailtrap = new MailtrapClient({
   token: process.env.MAILTRAP_API_TOKEN || "",
@@ -15,7 +16,7 @@ export async function sendVerificationEmail(
     to: [{email: toEmail}],
     subject: "Verify your Scale Maestro account",
     text: `Please verify your account by clicking the following link: ${verificationLink}`,
-    html: `<p>Please verify your account by clicking the following link:</p><p><a href="${verificationLink}">Verify Account</a></p>`,
+    html: htmlEmailWrapper(`<p>Please verify your account by clicking the following link:</p><p><a href="${verificationLink}">Verify Account</a></p>`),
   };
 
     try {
@@ -36,7 +37,7 @@ export async function sendResetPasswordEmail(
     to: [{email: toEmail}],
     subject: "Reset your Scale Maestro password",
     text: `You can reset your password by clicking the following link: ${resetLink}`,
-    html: `<p>You can reset your password by clicking the following link:</p><p><a href="${resetLink}">Reset Password</a></p>`,
+    html: htmlEmailWrapper(`<p>You can reset your password by clicking the following link:</p><p><a href="${resetLink}">Reset Password</a></p>`),
   };
     try {
     await mailtrap.send(message);

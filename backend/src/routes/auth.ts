@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { signup, login, checkTokenAndGetUser, resendVerificationEmail, markUserEmailAsVerified, resetPassword, resetPasswordEmail } from "../controllers/authController";
 import { checkToken } from "../middleware/checkToken";
+import ipEmailLimiter from "../middleware/ipEmailLimiter";
 
 const router = Router();
 
@@ -15,8 +16,8 @@ router.post("/logout", (req, res) => {
 
 router.post("/persist-login", checkTokenAndGetUser);
 router.get("/verify-email", markUserEmailAsVerified);
-router.post("/resend-verification-email", resendVerificationEmail);
-router.post("/forgot-password", resetPasswordEmail);
+router.post("/resend-verification-email", ipEmailLimiter, resendVerificationEmail);
+router.post("/forgot-password", ipEmailLimiter, resetPasswordEmail);
 router.post("/reset-password", checkToken(true), resetPassword);
 
 export default router;

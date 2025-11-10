@@ -60,7 +60,7 @@ const filteredMenuLinks = computed(() => {
     if(link.name === 'Upgrade') {
       return isUserLoggedIn.value && (currentLoggedInUser.value?.trialExpiresAt || !currentLoggedInUser.value?.hasPremiumAccess);
     }
-    if(link.name === 'Verify Email') {
+    if(link.meta.excludeFromNav) {
       return false; // Hide Verify Email link for now
     }
     return true;

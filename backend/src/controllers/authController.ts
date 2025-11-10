@@ -12,6 +12,7 @@ import { checkPremiumAccess, validateToken } from "../validators/helpers/auth";
 import { validateSignupRequest } from "../validators/register";
 import { prisma } from "../prisma";
 import { sendVerificationEmail, sendResetPasswordEmail } from "../services/emailService";
+import { enforceEmailCooldown } from "../helpers/enforceEmailCooldown";
 
 export async function signup(req: Request<SignupRequestBody>, res: Response) {
   const errors = validateSignupRequest(req.body);
@@ -132,7 +133,14 @@ export async function resendVerificationEmail(req: Request, res: Response) {
     }
     const token = createUserToken(user, 15 * 60); // 15 minutes expiry
     const url = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    // check lastEmailSentAt to limit email frequency
+    enforceEmailCooldown(user);
     await sendVerificationEmail(user.email, url);
+    // update lastEmailSentAt
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastEmailSentAt: new Date() },
+    });
     return res.status(200).json({ message: "Verification email resent successfully" });
   }
   catch (err: any) {
@@ -152,8 +160,14 @@ export async function resetPasswordEmail(req: Request, res: Response) {
     }
     const token = createUserToken(user, 15 * 60); // 15 minutes expiry
     const url = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    enforceEmailCooldown(user);
     // Send password reset email
     await sendResetPasswordEmail(user.email, url);
+    // update lastEmailSentAt
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastEmailSentAt: new Date() },
+    });
     return res.status(200).json({ message: "Password reset email sent successfully" });
   }
   catch (err: any) {
