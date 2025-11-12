@@ -8,7 +8,7 @@
             class="block w-14 h-8 rounded-full"
             :class="{
               'bg-gray-300 dark:bg-gray-500': !model,
-              'bg-indigo-900': model,
+              'bg-indigo-900 dark:shadow dark:shadow-white': model,
             }"
           ></div>
           <div

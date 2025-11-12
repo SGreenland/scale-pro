@@ -11,9 +11,9 @@
           class="cursor-pointer ps-1"
           :icon="faArrowLeft"
         ></font-awesome-icon>
-        <h1 class="text-2xl absolute w-fit left-0 right-0 m-auto">{{ title }}</h1>
+        <h1 class="text-2xl w-fit left-0 right-0 mx-auto" :class="{'mb-4' : !titleRule}">{{ title }}</h1>
       </div>
-      <hr />
+      <hr v-if="titleRule"/>
     <slot></slot>
   </div>
 </template>
@@ -33,12 +33,14 @@ withDefaults(
     withBackArrow?: boolean;
     width?: '1/2' | '2/3' | '3/4' | 'full';
     maxWidth?: string;
+    titleRule?: boolean;
   }>(),
   {
     title: '',
     withBackArrow: false,
     width: '1/2',
     maxWidth: '900px',
+    titleRule: true,
   }
 );
 </script>

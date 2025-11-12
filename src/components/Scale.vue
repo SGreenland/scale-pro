@@ -192,6 +192,7 @@ import { usePitchTracker } from "../composables/usePitchTracker";
 import useReorderNotes from "../composables/useReorderNotes";
 import { Note } from "../types";
 import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
+import { notes } from "../NotesAndScales";
 
 const draggedNoteId = ref<string | null>(null);
 const ghostNote = ref<{
@@ -665,8 +666,7 @@ const scheduleNotes = (startTime: number) => {
           : 0;
         setTimeout(
           () =>
-            currentSettings.value.autoShuffle &&
-            (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)),
+            handleAutoActions(),
           computedLoopGap.value * animationInterval.value * 1000
         );
       } else {
@@ -694,8 +694,7 @@ const scheduleNotes = (startTime: number) => {
           : 0;
         setTimeout(
           () =>
-            currentSettings.value.autoShuffle &&
-            (scaleConfig.noteOrder = shuffle(scaleToDisplay.value)),
+            handleAutoActions(),
           computedLoopGap.value * animationInterval.value * 1000
         );
       } else {
@@ -712,6 +711,18 @@ const scheduleNotes = (startTime: number) => {
     animationFrameId = requestAnimationFrame(() => scheduleNotes(currentTime));
   }
 };
+
+function handleAutoActions() {
+  if (currentSettings.value.autoShuffle) {
+    scaleConfig.noteOrder = shuffle(scaleToDisplay.value);
+  }
+  if (currentSettings.value.autoIncrementPitch){
+    scaleConfig.selectedNote = notes[
+      (notes.findIndex((n) => n.name === scaleConfig.selectedNote) + 1) %
+        notes.length
+    ].name;
+  }
+}
 
 const toggleAudio = async () => {
   if (!audioIsPlaying.value) {

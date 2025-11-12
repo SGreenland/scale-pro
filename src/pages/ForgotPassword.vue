@@ -1,7 +1,6 @@
 <template>
-    <card-wrapper max-width="500px">
+    <card-wrapper title="Forgot Password" :title-rule="false" max-width="500px">
         <div v-if="!formIsSent">
-            <h2 class="text-2xl font-semibold mb-4 text-center">Forgot Password</h2>
             <p class="mb-4">
                 Enter your email address below, and we'll send you a link to reset your password.
             </p>

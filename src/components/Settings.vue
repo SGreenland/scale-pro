@@ -1,5 +1,5 @@
 <template>
-  <card-wrapper title="Settings" :withBackArrow="true">
+  <card-wrapper :title-rule="false" class="settings-card" title="Settings" :withBackArrow="true">
     <div class="w-full text-start">
       <accordion-single
         title="General"
@@ -13,7 +13,11 @@
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="startingScale">Starting Pattern</label>
-           <pattern-selector v-model="currentSettings.startingPattern" :show-label="false" align-tooltip-left></pattern-selector>
+          <pattern-selector
+            v-model="currentSettings.startingPattern"
+            :show-label="false"
+            align-tooltip-left
+          ></pattern-selector>
         </div>
       </accordion-single>
       <accordion-single
@@ -22,17 +26,11 @@
       >
         <div :class="optionInlineClasses">
           <label for="theme">Theme</label>
-          <!-- <select
-            v-model="currentSettings.theme"
-            name="theme"
-            id="theme"
-            class="w-fit px-1 h-[42px]"
-          >
-            <option value="auto">Auto</option>
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-          </select> -->
-          <toggle-switch :id="'darkToggle'" v-model="isDark" :on-off-text="['Dark', 'Light']"></toggle-switch>
+          <toggle-switch
+            :id="'darkToggle'"
+            v-model="isDark"
+            :on-off-text="['Dark', 'Light']"
+          ></toggle-switch>
         </div>
         <div :class="optionInlineClasses" class="border-b-0">
           <label for="grid-type">Grid Type</label>
@@ -45,6 +43,7 @@
       </accordion-single>
 
       <accordion-single
+        id="loopingAccordion"
         title="Looping"
         :extra-summary-classes="sectionHeaderClasses"
       >
@@ -80,10 +79,17 @@
             v-model="currentSettings.autoShuffle"
           ></toggle-switch>
         </div>
+        <div :class="optionInlineClasses" class="border-b-0">
+          <label for="auto-shuffle">Auto Increment Pitch </label>
+          <toggle-switch
+            :id="'auto-increment-pitch'"
+            v-model="currentSettings.autoIncrementPitch"
+          ></toggle-switch>
+        </div>
       </accordion-single>
       <!--pitch settings-->
       <accordion-single
-        ref="pitchTrackingAccordion"
+        id="pitchTrackingAccordion"
         title="Pitch Tracking"
         :extra-summary-classes="sectionHeaderClasses"
       >
@@ -109,7 +115,7 @@
               </div>
             </div>
           </div>
-          <div :class="optionClasses" class="border-b-0">
+          <div :class="optionClasses">
             <label>Pitch Tolerance</label>
             <div class="flex justify-between items-center mx-2">
               <div class="flex items-center gap-2">
@@ -137,6 +143,13 @@
                 🎼 Precise
               </div>
             </div>
+          </div>
+          <div :class="optionInlineClasses" class="border-b-0">
+            <label for="auto-shuffle">Auto Stop Pitch Tracking </label>
+            <toggle-switch
+              :id="'auto-stop-pitch-tracking'"
+              v-model="currentSettings.autoStopPitchTracking"
+            ></toggle-switch>
           </div>
         </div>
       </accordion-single>
@@ -169,25 +182,31 @@ const isSaving = ref(false);
 const successfullySaved = ref(false);
 const sectionHeaderClasses: string = `bg-custom-gradient shadow-indigo-400 rounded mb-1`;
 const optionInlineClasses: string =
-  "flex flex-wrap items-center justify-between py-3 px-2 border-b";
-const optionClasses: string = "grid gap-2 p-3 border-b";
+  "flex flex-wrap items-center justify-between py-3 px-2 border-b option";
+const optionClasses: string = "grid gap-2 p-3 border-b option";
 const LoopGapOptions: LoopGapOption[] = ["Auto", "None", "Custom"];
-const pitchTrackingAccordion = ref<InstanceType<typeof AccordionSingle> | null>(
-  null
-);
+// const pitchTrackingAccordion = ref<InstanceType<typeof AccordionSingle> | null>(
+//   null
+// );
 
 onMounted(() => {
   const queryParams = new URLSearchParams(window.location.search);
 
-  if (
-    queryParams.get("section") === "pitch-tracking" &&
-    pitchTrackingAccordion.value
-  ) {
-    const accordionElement = pitchTrackingAccordion.value?.$el as HTMLElement;
-    if (accordionElement) {
-      accordionElement.setAttribute("open", "true");
-      accordionElement.scrollIntoView({ behavior: "smooth" });
-    }
+  switch (queryParams.get("section")) {
+    case "looping":
+      const loopingAccordion = document.getElementById("loopingAccordion");
+      if (loopingAccordion) {
+        (loopingAccordion as HTMLDetailsElement).open = true;
+      }
+      break;
+    case "pitch-tracking":
+      const pitchTrackingAccordion = document.getElementById(
+        "pitchTrackingAccordion"
+      );
+      if (pitchTrackingAccordion) {
+        (pitchTrackingAccordion as HTMLDetailsElement).open = true;
+      }
+      break;
   }
 });
 
@@ -198,10 +217,9 @@ function getButtonText() {
 async function saveSettings() {
   isSaving.value = true;
   try {
-    const response = await axios.post(
-      "/api/settings",
-      { settings: currentSettings.value }
-    );
+    const response = await axios.post("/api/settings", {
+      settings: currentSettings.value,
+    });
 
     if (response.data.settings) {
       currentLoggedInUser.value!.settings = response.data.settings;
@@ -238,5 +256,9 @@ hr {
   hr {
     border-color: rgba(255, 255, 255, 0.2);
   }
+}
+
+.dark .settings-card .option {
+  border-color: dimgray !important;
 }
 </style>

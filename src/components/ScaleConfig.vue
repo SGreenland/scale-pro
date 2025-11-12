@@ -10,7 +10,9 @@
             ><!--info icon with tooltip-->
             <info-tooltip>
               Click the arrows to transpose the scale up or down by a semitone.
-              Shift-click to transpose by an octave. (Press and hold on mobile)
+              Shift-click to transpose by an octave. (Press and hold on mobile).
+              You can configure this to auto increment in <a href="/settings?section=looping"
+                >Settings</a>.
             </info-tooltip>
           </div>
           <quick-transpose
