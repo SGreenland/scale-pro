@@ -68,7 +68,6 @@ import axios from "axios";
 import { currentSettings, scaleConfig, currentLoggedInUser, availablePatterns, userUnlockedPatternIds} from "../GlobalState";
 import SubmitButton from "./reuseable/SubmitButton.vue";
 import { NotePattern } from "packages/shared-types/dist";
-import { response } from "express";
 const props = defineProps<{
   averageDeviation: number;
   inTunePercentage: number;

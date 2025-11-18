@@ -1,6 +1,7 @@
 import { PitchDetector } from "pitchy";
 import { ref, watch } from "vue";
 import { currentSettings, minDetectionVolumeMap } from "../GlobalState";
+import { last } from "lodash";
 
 export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
   const pitchData = ref<
@@ -10,7 +11,10 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
   detector.minVolumeAbsolute = 0.06;
   const micBuffer = new Float32Array(bufferSize);
   let analyser: AnalyserNode | null = null;
-  let animationId: number | null = null;
+  const animationId: { value: number | null } = ref(null);
+
+  const lastUpdated = ref<number | null>(null);
+  const isTracking = ref(false);
 
   watch(() => currentSettings.value.minDetectionVolume, (newValue) => {
     if (detector && newValue) {
@@ -19,6 +23,7 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
   }, { deep: true, immediate: true });
 
   async function startTracking() {
+    isTracking.value = true;
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const micSource = audioContext.createMediaStreamSource(stream);
 
@@ -26,11 +31,12 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
     analyser.fftSize = bufferSize;
     micSource.connect(analyser);
 
-    animationId = requestAnimationFrame(update);
+    animationId.value = requestAnimationFrame(update);
   }
 
   function stopTracking() {
-    if (animationId) cancelAnimationFrame(animationId);
+    isTracking.value = false;
+    if (animationId) cancelAnimationFrame(animationId.value!);
   }
 
   function update() {
@@ -49,6 +55,7 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
       audioContext.sampleRate
     );
     if (clarity > 0.9 && pitch > 65) {
+      lastUpdated.value = audioContext.currentTime;
       pitchData.value.push({
         pitch,
         clarity,
@@ -61,16 +68,28 @@ export function usePitchTracker(audioContext: AudioContext, bufferSize = 2048) {
       }
     }
 
-    animationId = requestAnimationFrame(update);
+    animationId.value = requestAnimationFrame(update);
   }
 
-  // onBeforeUnmount(() => {
-  //   stopTracking();
-  // });
+  // watch pitch data to auto stop if setting is enabled
+  watch(() => animationId.value, () => {
+    if (!currentSettings.value.autoStopPitchTracking) return;
+    if (animationId.value !== null) {
+      const lastPoint = last(pitchData.value);
+      if (lastPoint && lastUpdated.value) {
+        const timeSinceLastUpdate = audioContext.currentTime - lastUpdated.value;
+        if (timeSinceLastUpdate > 1.5) {
+          stopTracking();
+        }
+      }
+    }
+  });
+
 
   return {
     pitchData,
     startTracking,
     stopTracking,
+    isTracking
   };
 }

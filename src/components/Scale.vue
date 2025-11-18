@@ -115,21 +115,21 @@
         <div class="flex w-full items-center justify-between">
           <div class="flex gap-2">
             <button
-              :disabled="!isPitchTracking && pitchData.length > 0"
+              :disabled="!isTracking && pitchData.length > 0"
               class="flex items-center gap-2 dark:shadow-sm dark:shadow-indigo-200"
               @click="togglePitchTracking"
             >
               <div
                 class="bg-red-500 size-4 rounded-full"
                 :class="{
-                  'animate-[radar_1s_ease-in-out_infinite]': isPitchTracking,
+                  'animate-[radar_1s_ease-in-out_infinite]': isTracking,
                 }"
               ></div>
-              {{ (isPitchTracking ? "Stop " : "Start ") + " Tracking" }}
+              {{ (isTracking ? "Stop " : "Start ") + " Tracking" }}
             </button>
             <button
               class="inverted-btn"
-              :disabled="!isPitchTracking && pitchData.length === 0"
+              :disabled="!isTracking && pitchData.length === 0"
               @click="clearPitchData"
             >
               <FontAwesomeIcon :icon="faRefresh" size="lg" />
@@ -303,7 +303,7 @@ function handleDragOrTouchEnd(event: DragEvent | TouchEvent) {
 }
 
 const audioContext = new window.AudioContext();
-const { pitchData, startTracking, stopTracking } =
+const { pitchData, startTracking, stopTracking, isTracking } =
   usePitchTracker(audioContext);
 const { shuffle } = useReorderNotes();
 
@@ -428,7 +428,6 @@ const playNote = (index: number, time: number) => {
 };
 
 const startTime = ref<number | null>(null);
-const isPitchTracking = ref(false);
 const showPitchModal = ref(false);
 const pitchStats = ref({ averageDeviation: 0, inTunePercentage: 0 });
 
@@ -437,17 +436,19 @@ function togglePitchTracking() {
     audioContext.resume();
   }
 
-  isPitchTracking.value = !isPitchTracking.value;
-
   if (startTime.value === null) {
     startTrackingWithAnchor();
   } else {
     stopTracking();
     startTime.value = null;
 
-    // Define time and cents thresholds
-    // const sampleDuration = 0.06;
-    const maxCents: number = computedMaxCents.value;
+    mapPitchDataToStats();
+
+  }
+}
+
+function mapPitchDataToStats() {
+  const maxCents: number = computedMaxCents.value;
 
     const noteBuckets = new Map<
       string,
@@ -515,7 +516,6 @@ function togglePitchTracking() {
 
     showPitchModal.value = true;
   }
-}
 
 function startTrackingWithAnchor() {
   audioContext.resume();
@@ -595,9 +595,14 @@ function drawPitchCurve() {
 }
 
 watch(
-  () => pitchData.value,
+  () => [pitchData.value, isTracking.value],
   () => {
     drawPitchCurve();
+    if(!isTracking.value && pitchData.value.length > 0 && currentSettings.value.autoStopPitchTracking){
+      stopTracking();
+      mapPitchDataToStats();
+      startTime.value = null;
+    }
   },
   { deep: true }
 );

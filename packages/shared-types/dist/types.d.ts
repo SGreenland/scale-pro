@@ -29,6 +29,7 @@ export interface Settings {
     loopGapCustom: number;
     autoShuffle: boolean;
     autoIncrementPitch?: boolean;
+    autoStopPitchTracking?: boolean;
     minDetectionVolume: "sensitive" | "normal";
     pitchToleranceLevel: "loose" | "standard" | "precise";
 }
