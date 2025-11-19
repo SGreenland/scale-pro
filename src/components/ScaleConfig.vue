@@ -31,7 +31,7 @@
           class="flex flex-col size-full items-start justify-end md:min-w-[175px] min-w-none"
         >
           <!--pattern selector-->
-          <pattern-selector v-model="scaleConfig.selectedPattern"></pattern-selector>
+          <pattern-selector v-model="scaleConfig.selectedPattern" tooltip-alignment="center"></pattern-selector>
         </div>
       </div>
       <!--note order-->

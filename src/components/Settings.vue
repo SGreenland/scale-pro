@@ -16,7 +16,7 @@
           <pattern-selector
             v-model="currentSettings.startingPattern"
             :show-label="false"
-            align-tooltip-left
+            tooltip-alignment="right"
           ></pattern-selector>
         </div>
       </accordion-single>

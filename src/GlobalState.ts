@@ -117,8 +117,10 @@ export const settings = reactive<Settings>({
   loopGap: "None",
   loopGapCustom: 1,
   autoShuffle: false,
+  autoIncrementPitch: false,
   minDetectionVolume: "normal",
   pitchToleranceLevel: "standard",
+  autoStopPitchTracking: true,
 });
 
 export const currentSettings = computed(() => {

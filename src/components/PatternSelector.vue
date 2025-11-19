@@ -3,7 +3,7 @@
     <label class="capitalize" v-if="showLabel" for="note-pattern">{{
       selectedPatternCategory + "s"
     }}</label>
-    <info-tooltip :alignLeft="alignTooltipLeft">
+    <info-tooltip :alignment="tooltipAlignment">
       Click the three vertical dots to select different categories of patterns
       (scales, arpeggios or intervals).
       <span v-if="!currentLoggedInUser"
@@ -78,7 +78,7 @@ import InfoTooltip from "./reuseable/InfoTooltip.vue";
 withDefaults(
   defineProps<{
     showLabel?: boolean;
-    alignTooltipLeft?: boolean;
+    tooltipAlignment?: "left" | "right" | "center";
   }>(),
   { showLabel: true }
 );
