@@ -23,8 +23,8 @@
           >
         </div>
         <p class="text-lg text-gray-800 dark:text-gray-200 mb-6">
-          When you’re finished, click <strong>Stop Tracking</strong> to see
-          your feedback.
+          By default, after a short period of silence, the tracking will stop
+          automatically (This can be switched off in settings if desired) and your feedback will be displayed.
         </p>
         <!-- FAQ Accordion -->
         <div class="text-left space-y-3">

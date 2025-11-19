@@ -5,7 +5,7 @@
     }}</label>
     <info-tooltip :alignLeft="alignTooltipLeft">
       Click the three vertical dots to select different categories of patterns
-      (scales, arpeggios, intervals).
+      (scales, arpeggios or intervals).
       <span v-if="!currentLoggedInUser"
         >To gain access to more patterns <a href="/signup">sign up</a> to a
         premium account.</span
