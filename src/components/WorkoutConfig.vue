@@ -24,12 +24,12 @@
     <div :class="inputClasses + ' z-50 grow'">
       <label class="text-left" for="scaleType">Scale(s)</label>
       <div class="flex gap-2 items-center">
-          <MultiSelectInput
+          <!-- <MultiSelectInput
             class="grow"
             :workout-in-progress="props.workoutInProgress"
             :items="Object.keys(scales)"
             v-model="workoutConfig.scales"
-          />
+          /> -->
           <dropdown>
             <template #trigger>
               <font-awesome-icon
@@ -53,13 +53,13 @@
 </template>
 
 <script setup lang="ts">
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { computed, watch } from "vue";
 import { workoutConfig } from "../GlobalState";
 import { notes } from "../NotesAndScales";
-import { computed, watch } from "vue";
-import MultiSelectInput from "./reuseable/MultiSelectInput.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import Dropdown from "./reuseable/Dropdown.vue";
+import MultiSelectInput from "./reuseable/MultiSelectInput.vue";
 
 const props = defineProps<{
   workoutInProgress: boolean;

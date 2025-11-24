@@ -5,7 +5,7 @@
         <div class="grid w-full grid-cols-4 gap-1">
           <div
             class="relative flex justify-between rounded-lg w-full px-2 bg-cyan-400 text-black max-sm:text-sm"
-            :class="{'bg-cyan-600 text-gray-50' : selectedItem === scaleConfig.selectedScale && workoutInProgress}"
+            :class="{'bg-cyan-600 text-gray-50' : selectedItem === scaleConfig.selectedPattern && workoutInProgress}"
             v-for="selectedItem in model?.filter((_, index) => index <= 2)"
           >
             <span class="truncate">{{ selectedItem }}</span>
