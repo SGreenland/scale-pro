@@ -5,6 +5,7 @@ export default {
   schema: 'prisma/schema.prisma',
   migrations: {
     path: 'prisma/migrations',
+    seed: 'src/notePatternSeeder.ts'
   },
   engine: "classic",
   datasource: {
