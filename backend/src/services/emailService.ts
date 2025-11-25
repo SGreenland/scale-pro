@@ -1,10 +1,12 @@
 import { Mail, MailtrapClient } from "mailtrap";
 import { htmlEmailWrapper } from "../helpers/htmlEmailWrapper";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const mailtrap = new MailtrapClient({
   token: process.env.MAILTRAP_API_TOKEN || "",
-  sandbox: process.env.NODE_ENV !== "production",
-  testInboxId: parseInt(process.env.MAILTRAP_INBOX_ID || "0", 10),
+  ...(!isProduction && {sandbox: true}),
+  ...(!isProduction && {testInboxId: parseInt(process.env.MAILTRAP_TEST_INBOX_ID || "0", 10)}),
 });
 
 export async function sendVerificationEmail(
