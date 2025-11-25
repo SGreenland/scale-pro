@@ -9,20 +9,31 @@ export async function get(req: Request, res: Response) {
   });
 
   const token = req.cookies?.token;
-  // not logged in, return only free patterns
+
+  // not logged in
   if (!token) {
     return res
       .status(200)
       .json({ notePatterns: notePatterns.filter((np) => !np.isPremium) });
   }
 
-  // decode token from cookie
-  const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-    userId: string;
-    userName: string;
-    exp: number;
-  };
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET as string, {
+      ignoreExpiration: true,
+    }) as {
+      userId: string;
+      userName: string;
+      exp: number;
+    };
+  } catch (err) {
+    // token is invalid, signature bad, etc → treat like logged out
+    return res
+      .status(200)
+      .json({ notePatterns: notePatterns.filter((np) => !np.isPremium) });
+  }
 
+  // token expired → treat like logged out
   if (decoded.exp * 1000 < Date.now()) {
     return res
       .status(200)
@@ -39,7 +50,7 @@ export async function get(req: Request, res: Response) {
     include: { subscription: true, unlockedPatterns: true },
   });
 
-  // invalid user, or no premium access, return only free patterns
+  // invalid user or no premium access
   if (!user || !checkPremiumAccess(user)) {
     return res
       .status(200)
@@ -47,13 +58,12 @@ export async function get(req: Request, res: Response) {
   }
 
   // return all patterns and unlocked pattern ids
-  return res
-    .status(200)
-    .json({
-      notePatterns: notePatterns,
-      unlockedPatterns: user.unlockedPatterns.map((p) => p.notePatternId),
-    });
+  return res.status(200).json({
+    notePatterns: notePatterns,
+    unlockedPatterns: user.unlockedPatterns.map((p) => p.notePatternId),
+  });
 }
+
 
 export async function unlock(req: Request, res: Response) {
 
