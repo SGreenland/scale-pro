@@ -107,12 +107,10 @@ watch(
     if (
       !newPatterns.some(
         (pattern) => pattern.name === scaleConfig.selectedPattern.name
-      )
+      ) || currentLoggedInUser.value === null
     ) {
-      console.log("Pattern not found, defaulting to:", newPatterns[0]);
       model.value = newPatterns[0];
     }
-    // else model.value = availablePatterns.value.find(pattern => pattern.name === scaleConfig.selectedPattern.name);
-  }
+  }, { immediate: true }
 );
 </script>

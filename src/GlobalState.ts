@@ -114,7 +114,7 @@ export const settings = reactive<Settings>({
   startingPattern: defaultPattern,
   theme: "auto",
   gridType: "Piano roll",
-  loopGap: "None",
+  loopGap: "Auto",
   loopGapCustom: 1,
   autoShuffle: false,
   autoIncrementPitch: false,
