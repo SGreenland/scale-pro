@@ -204,7 +204,7 @@ export const computedLoopGap = computed(() => {
 
 export const isDark = computed({
   get: () =>
-    window.matchMedia("(prefers-color-scheme: dark)").matches ||
+    window.matchMedia("(prefers-color-scheme: dark)").matches && currentSettings.value.theme !== 'light' ||
     currentSettings.value.theme === "dark",
   set: (value: boolean) => {
     currentSettings.value.theme = value ? "dark" : "light";
