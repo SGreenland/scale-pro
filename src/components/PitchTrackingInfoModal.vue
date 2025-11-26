@@ -12,8 +12,11 @@
           singing or playing accuracy.
         </p>
         <p class="text-lg text-gray-800 dark:text-gray-200 mb-4">
-          Click <strong>Start Tracking</strong> to begin. (You may need to
-          grant microphone access.)
+          Click <strong>Start Tracking</strong> to begin. <small>
+            (You may need to
+            grant microphone access - If you are not prompted, you may need to
+            enable microphone permissions in your browser/phone settings).
+          </small>
         </p>
         <div class="bg-yellow text-black rounded-xl p-4 mb-6 text-left">
           <b>Tip: </b>
