@@ -623,6 +623,7 @@ watch(
     preloadAudio();
     ds.value?.clearSelection();
     nextTick(() => {
+      if(!noteElements.value || noteElements.value.length === 0) return;
       cellWidth.value =
         currentSettings.value.gridType !== "Guitar tab"
           ? noteElements.value![0].getBoundingClientRect().width

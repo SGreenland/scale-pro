@@ -63,7 +63,7 @@
 import { faEllipsisV, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { NotePattern, NotePatternCategory } from "@scalemaestro/shared-types";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import {
   availablePatterns,
   currentLoggedInUser,
@@ -86,6 +86,15 @@ withDefaults(
 const model = defineModel<NotePattern>();
 
 const isSettingsPage = window.location.pathname === "/settings";
+
+onMounted(() => {
+  if (isSettingsPage) {
+    model.value = availablePatterns.value.find(
+      (pattern) =>
+        pattern.name === currentSettings.value?.startingPattern.name
+    )!;
+  }
+});
 
 const selectedPatternCategoryRef = isSettingsPage
   ? ref(currentSettings.value?.startingPattern.type || "scale")
@@ -111,6 +120,6 @@ watch(
     ) {
       model.value = newPatterns[0];
     }
-  }, { immediate: true }
+  }
 );
 </script>

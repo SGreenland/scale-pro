@@ -77,7 +77,7 @@ watch(
         console.error("Error fetching note patterns:", error);
       });
   },
-  { immediate: true, deep: true }
+  { immediate: true}
 );
 </script>
 
