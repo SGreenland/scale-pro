@@ -4,7 +4,7 @@
     :class="{'bg-black bg-opacity-70 z-[1000]': mask, 'z-2': !mask}"
   >
     <div
-      class="relative bg-white dark:bg-gradient-to-br from-gray-900 to-indigo-900 p-4 rounded-2xl shadow-lg text-center w-[95%] max-w-[500px]"
+      class="relative bg-white dark:bg-gradient-to-br from-gray-900 to-indigo-900 lg:p-4 p-2 rounded-2xl shadow-lg text-center w-[95%] max-w-[500px]"
     >
       <FontAwesomeIcon
         v-if="hasCloseButton"
