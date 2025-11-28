@@ -85,11 +85,16 @@
                 <div
                   role="button"
                   @click="dragNotesEnabled = !dragNotesEnabled"
-                  class="lg:size-[42px] dark:text-black size-10 border border-black rounded-lg center-xy"
+                  class="lg:h-[42px] w-14 dark:text-black size-10 border border-black rounded-lg center-xy"
                   :class="{ 'bg-emerald-300' : dragNotesEnabled, 'bg-gray-50/70' : !dragNotesEnabled }"
                 >
                   <font-awesome-icon
                     :icon="faArrowsUpDownLeftRight"
+                    size="sm"
+                    class="relative bottom-1"
+                  ></font-awesome-icon>
+                  <font-awesome-icon
+                    :icon="dragNotesEnabled ? faLockOpen : faLock"
                     size="lg"
                   ></font-awesome-icon>
                 </div>
@@ -119,6 +124,8 @@
 <script setup lang="ts">
 import {
   faArrowsUpDownLeftRight,
+  faLock,
+  faLockOpen,
   faRightLeft,
   faRotateRight,
   faShuffle,

@@ -194,7 +194,7 @@ import { Note } from "../types";
 import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
 import { notes } from "../NotesAndScales";
 
-defineProps<{
+const props = defineProps<{
   dragNotesEnabled: boolean;
 }>();
 
@@ -208,6 +208,7 @@ const ghostNote = ref<{
 } | null>(null);
 
 function handleTouchStart(event: TouchEvent, noteContent: string) {
+  if (!props.dragNotesEnabled) return;
   const touch = event.touches[0];
   let target = event.target as HTMLElement;
   if (target.tagName === "SPAN") {
