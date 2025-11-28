@@ -4,6 +4,7 @@
       @click="toggleContent($event)"
       class="flex relative w-full items-center justify-between"
       :class="buttonClass"
+      :disabled="disabled"
     >
       <!-- <div class="absolute left-3">
         <slot name="left-icon" />
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<{
   buttonClass?: string;
   dropUp?: boolean;
   closeOnClick?: boolean;
+  disabled?: boolean;
 }>(),{
   dropUp: false,
   closeOnClick: true,

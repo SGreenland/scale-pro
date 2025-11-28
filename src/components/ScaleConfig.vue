@@ -99,7 +99,7 @@
                   ></font-awesome-icon>
                 </div>
               </div>
-              <dropdown-button class="w-28" button-text="Presets">
+              <dropdown-button :disabled="!presets?.length" class="w-28" button-text="Presets">
                 <div class="grid space-y-2 p-2 mt-2 max-h-40 overflow-auto">
                   <button
                     v-for="(preset, index) in presets"
