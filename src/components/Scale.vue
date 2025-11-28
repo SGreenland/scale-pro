@@ -68,7 +68,7 @@
         v-for="(note, index) in scaleToDisplay"
         :key="index"
         ref="noteElements"
-        draggable="true"
+        :draggable="dragNotesEnabled"
         @dragend="handleDragOrTouchEnd"
         @touchstart="handleTouchStart($event, note.name)"
         @touchend="handleDragOrTouchEnd"
@@ -193,6 +193,10 @@ import useReorderNotes from "../composables/useReorderNotes";
 import { Note } from "../types";
 import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
 import { notes } from "../NotesAndScales";
+
+defineProps<{
+  dragNotesEnabled: boolean;
+}>();
 
 const draggedNoteId = ref<string | null>(null);
 const ghostNote = ref<{

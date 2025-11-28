@@ -11,8 +11,8 @@
             <info-tooltip>
               Click the arrows to transpose the scale up or down by a semitone.
               Shift-click to transpose by an octave. (Press and hold on mobile).
-              You can configure this to auto increment in <a href="/settings?section=looping"
-                >Settings</a>.
+              You can configure this to auto increment in
+              <a href="/settings?section=looping">Settings</a>.
             </info-tooltip>
           </div>
           <quick-transpose
@@ -31,7 +31,10 @@
           class="flex flex-col size-full items-start justify-end md:min-w-[175px] min-w-none"
         >
           <!--pattern selector-->
-          <pattern-selector v-model="scaleConfig.selectedPattern" tooltip-alignment="center"></pattern-selector>
+          <pattern-selector
+            v-model="scaleConfig.selectedPattern"
+            tooltip-alignment="center"
+          ></pattern-selector>
         </div>
       </div>
       <!--note order-->
@@ -47,22 +50,51 @@
           <div
             :class="{ hidden: tabs?.currentTab !== 'pitch-tracking' }"
             id="pitch-tracking-template"
+            class="lg:h-[42px] h-10"
           ></div>
           <template #note-order>
-            <div class="flex w-full justify-evenly items-center gap-2">
-              <button
-                :class="btnClass"
-                @click="scaleConfig.noteOrder = reverse(scaleToDisplay)"
-              >
-                Reverse
-              </button>
-              <button
-                :class="btnClass"
-                @click="scaleConfig.noteOrder = shuffle(scaleToDisplay)"
-              >
-                Shuffle
-              </button>
-              <dropdown-button :class="btnClass" button-text="Presets">
+            <div
+              class="flex w-full justify-between items-center gap-2 lg:h-[42px] h-10"
+            >
+              <div class="flex gap-2">
+                <button
+                  @click="scaleConfig.noteOrder = reverse(scaleToDisplay)"
+                >
+                  <font-awesome-icon
+                    size="lg"
+                    :icon="faRightLeft"
+                  ></font-awesome-icon>
+                </button>
+                <button
+                  @click="scaleConfig.noteOrder = shuffle(scaleToDisplay)"
+                >
+                  <font-awesome-icon
+                    size="lg"
+                    :icon="faShuffle"
+                  ></font-awesome-icon>
+                </button>
+                <button
+                  class="inverted-btn"
+                  @click="scaleConfig.noteOrder = null"
+                >
+                  <font-awesome-icon
+                    size="lg"
+                    :icon="faRotateRight"
+                  ></font-awesome-icon>
+                </button>
+                <div
+                  role="button"
+                  @click="dragNotesEnabled = !dragNotesEnabled"
+                  class="lg:size-[42px] dark:text-black size-10 border border-black rounded-lg center-xy"
+                  :class="{ 'bg-emerald-300' : dragNotesEnabled, 'bg-gray-50/70' : !dragNotesEnabled }"
+                >
+                  <font-awesome-icon
+                    :icon="faArrowsUpDownLeftRight"
+                    size="lg"
+                  ></font-awesome-icon>
+                </div>
+              </div>
+              <dropdown-button class="w-28" button-text="Presets">
                 <div class="grid space-y-2 p-2 mt-2 max-h-40 overflow-auto">
                   <button
                     v-for="(preset, index) in presets"
@@ -76,15 +108,6 @@
                   </button>
                 </div>
               </dropdown-button>
-              <button
-                class="flex size-10 center-xy inverted-btn text-[0.8rem] px-2"
-                @click="scaleConfig.noteOrder = null"
-              >
-                <font-awesome-icon
-                  size="xl"
-                  :icon="faRefresh"
-                ></font-awesome-icon>
-              </button>
             </div>
           </template>
         </tabs>
@@ -94,15 +117,16 @@
 </template>
 
 <script setup lang="ts">
-import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsUpDownLeftRight,
+  faRightLeft,
+  faRotateRight,
+  faShuffle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed, ref } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
-import {
-  presetNoteOrders,
-  scaleConfig,
-  scaleToDisplay
-} from "../GlobalState";
+import { presetNoteOrders, scaleConfig, scaleToDisplay } from "../GlobalState";
 import { PresetNoteOrders } from "../types";
 import PatternSelector from "./PatternSelector.vue";
 import QuickTranspose from "./QuickTranspose.vue";
@@ -112,6 +136,7 @@ import Tabs from "./reuseable/Tabs.vue";
 import RootNoteSelector from "./RootNoteSelector.vue";
 
 const tabs = ref<InstanceType<typeof Tabs> | null>(null);
+const dragNotesEnabled = ref(false);
 
 const { shuffle, reverse } = useReorderNotes();
 
@@ -130,8 +155,6 @@ const presets = computed(() => {
     `presets${scaleToDisplay.value.length.toString()}` as keyof PresetNoteOrders;
   return presetNoteOrders[presetsKey];
 });
-
-
 
 // watch(
 //   () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],
@@ -175,5 +198,6 @@ const presets = computed(() => {
 
 defineExpose({
   scaleToDisplay,
+  dragNotesEnabled,
 });
 </script>

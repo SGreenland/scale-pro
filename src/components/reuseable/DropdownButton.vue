@@ -2,14 +2,14 @@
   <div id="dropdown-btn" ref="dropdown" width="full">
     <button
       @click="toggleContent($event)"
-      class="flex relative w-full items-center justify-center"
+      class="flex relative w-full items-center justify-between"
       :class="buttonClass"
     >
-      <div class="absolute left-3">
+      <!-- <div class="absolute left-3">
         <slot name="left-icon" />
-      </div>
-      <span class="px-2">{{ buttonText }}</span>
-      <FontAwesomeIcon class="absolute right-2" :class="{ 'rotate-180': open }" :icon="!dropUp ? faChevronDown : faChevronUp" />
+      </div> -->
+        <span>{{ buttonText }}</span>
+        <FontAwesomeIcon :class="{ 'rotate-180': open }" :icon="!dropUp ? faChevronDown : faChevronUp" />
       <div id="dropdown-content" class="absolute min-w-full right-0 p-2 z-[100] bg-white dark:bg-indigo-900 rounded-xl shadow border" :class="{'bottom-full mb-2': dropUp, 'top-full mt-2' : !dropUp}" v-show="open">
         <slot />
       </div>

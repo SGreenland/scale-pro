@@ -54,6 +54,7 @@ watch(() => tabsComponent.value.currentTab, () => {
     />
     <scale
       ref="scaleComponent"
+      :drag-notes-enabled="scaleConfigComponent?.dragNotesEnabled || false"
       :workoutMode="tabsComponent.currentTab === 'workout'"
     />
     <div class="flex flex-col gap-3">

@@ -5,8 +5,8 @@
         <div
           @click="mode === 'practice' ? playBackOptions.shouldLoop = !playBackOptions.shouldLoop : null"
           role="button"
-          class="flex center-xy py-1 px-2 size-10 rounded-lg border-2 border-teal-300"
-          :class="{ 'bg-teal-200 dark:bg-teal-400 dark:text-black': playBackOptions.shouldLoop, 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : mode === 'workout' }"
+          class="flex center-xy py-1 px-2 size-10 rounded-lg border-2 border-emerald-400"
+          :class="{ 'bg-emerald-300 dark:text-black': playBackOptions.shouldLoop, 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : mode === 'workout' }"
         >
           <font-awesome-icon :icon="faRepeat" size="lg" />
         </div>
@@ -23,8 +23,8 @@
       <div class="flex flex-col gap-1 justify-evenly items-center">
         <div
           @click="playBackOptions.isRoundTrip = !playBackOptions.isRoundTrip"
-          class="flex center-xy flex-col py-1 px-2 size-10 rounded-lg cursor-pointer border-2 border-teal-300"
-          :class="{ 'bg-teal-200 dark:bg-teal-400 dark:text-black': playBackOptions.isRoundTrip }"
+          class="flex center-xy flex-col py-1 px-2 size-10 rounded-lg cursor-pointer border-2 border-emerald-400"
+          :class="{ 'bg-emerald-300 dark:text-black': playBackOptions.isRoundTrip }"
         >
           <font-awesome-icon :icon="faArrowsLeftRight" />
         </div>
