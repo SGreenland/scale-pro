@@ -1,5 +1,13 @@
 import { Router } from "express";
-import { signup, login, checkTokenAndGetUser, resendVerificationEmail, markUserEmailAsVerified, resetPassword, resetPasswordEmail } from "../controllers/authController";
+import {
+  signup,
+  login,
+  checkTokenAndGetUser,
+  resendVerificationEmail,
+  markUserEmailAsVerified,
+  resetPassword,
+  resetPasswordEmail,
+} from "../controllers/authController";
 import { checkToken } from "../middleware/checkToken";
 import ipEmailLimiter from "../middleware/ipEmailLimiter";
 
@@ -10,13 +18,20 @@ router.post("/login", login);
 router.post("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   res.status(200).json({ message: "Logged out successfully" });
 });
 
 router.post("/persist-login", checkTokenAndGetUser);
 router.get("/verify-email", markUserEmailAsVerified);
-router.post("/resend-verification-email", ipEmailLimiter, resendVerificationEmail);
+router.post(
+  "/resend-verification-email",
+  ipEmailLimiter,
+  resendVerificationEmail
+);
 router.post("/forgot-password", ipEmailLimiter, resetPasswordEmail);
 router.post("/reset-password", checkToken(true), resetPassword);
 
