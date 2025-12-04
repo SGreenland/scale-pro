@@ -132,7 +132,7 @@
               :disabled="!isTracking && pitchData.length === 0"
               @click="clearPitchData"
             >
-              <FontAwesomeIcon :icon="faRefresh" size="lg" />
+              <FontAwesomeIcon :icon="faRotateRight" size="lg" />
             </button>
             <button @click="showInfoModal = true" class="inverted-btn">
               Help
@@ -164,7 +164,7 @@
 import {
   faCog,
   faQuestionCircle,
-  faRefresh,
+  faRotateRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import DragSelect, { DSInputElement } from "dragselect";
