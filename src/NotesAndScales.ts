@@ -2,7 +2,7 @@ import { FretBoard, GuitarPosition, Note } from './types';
 
 export const notes: Note[] = [];
 const noteNames: string[] = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-const octaves: number[] = [2, 3, 4, 5, 6, 7];
+const octaves: number[] = [2, 3, 4, 5, 6];
 
 const fretboard: FretBoard = {
     6: [ "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3" ],

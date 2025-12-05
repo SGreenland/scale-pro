@@ -171,10 +171,10 @@ import DragSelect, { DSInputElement } from "dragselect";
 import {
   computed,
   nextTick,
+  onBeforeMount,
   onBeforeUnmount,
-  onMounted,
   ref,
-  watch,
+  watch
 } from "vue";
 import {
   computedLoopGap,
@@ -185,14 +185,14 @@ import {
   scaleConfig,
   scaleToDisplay,
   tempo,
-  validGtrPatternsForCurrentScale
+  validGtrPatternsForCurrentScale,
 } from "../GlobalState";
+import { notes } from "../NotesAndScales";
 import PitchAccuracyModal from "../components/PitchAccuracyModal.vue";
 import { usePitchTracker } from "../composables/usePitchTracker";
 import useReorderNotes from "../composables/useReorderNotes";
 import { Note } from "../types";
 import PitchTrackingInfoModal from "./PitchTrackingInfoModal.vue";
-import { notes } from "../NotesAndScales";
 
 const props = defineProps<{
   dragNotesEnabled: boolean;
@@ -335,6 +335,7 @@ const dragSelectArea = ref<HTMLElement | undefined>();
 const cellWidth = ref<number>(0);
 const workoutInProgress = ref(false);
 const showInfoModal = ref(false);
+const loadedAudio = ref<{ name: string; audio: AudioBuffer }[]>([]);
 
 function getNoteName(note: string) {
   if (note.includes("sharp")) {
@@ -394,16 +395,15 @@ const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
   return await audioContext.decodeAudioData(arrayBuffer);
 };
 
-const preloadAudio = async () => {
+const preloadAudio = () => {
   isLoadingAudio.value = true;
-  const loadedAudios = await Promise.all(
-    scaleToDisplay.value.map((note) => loadAudioBuffer(note.audioSrc))
-  );
-
-  // todo: if workout mode, load all notes from scales in workout.
-
-  audioBuffers.value = loadedAudios;
-
+  audioBuffers.value = loadedAudio.value
+    .filter((audioItem) =>
+      scaleToDisplay.value.some((note) => note.name === audioItem.name)
+    )
+    .map((audioItem) => {
+      return audioItem.audio;
+    });
   // warm up audioContext by playing a silent buffer
   const buffer = audioContext.createBuffer(1, 1, 22050);
   const source = audioContext.createBufferSource();
@@ -448,79 +448,78 @@ function togglePitchTracking() {
     startTime.value = null;
 
     mapPitchDataToStats();
-
   }
 }
 
 function mapPitchDataToStats() {
   const maxCents: number = computedMaxCents.value;
 
-    const noteBuckets = new Map<
-      string,
-      { accuracySum: number; duration: number; count: number }
-    >();
+  const noteBuckets = new Map<
+    string,
+    { accuracySum: number; duration: number; count: number }
+  >();
 
-    for (const data of pitchData.value) {
-      const pitch = data.pitch;
-      const volume = data.volume ?? 1;
+  for (const data of pitchData.value) {
+    const pitch = data.pitch;
+    const volume = data.volume ?? 1;
 
-      const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
-        Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
-          ? curr
-          : prev
-      );
-
-      const centsOff = 1200 * Math.log2(pitch / closestNote.frequency);
-      const absCents = Math.abs(centsOff);
-      const accuracy = Math.max(0, 1 - absCents / maxCents);
-      const weight = volume;
-
-      if (!noteBuckets.has(closestNote.name)) {
-        noteBuckets.set(closestNote.name, {
-          accuracySum: 0,
-          duration: 0,
-          count: 0,
-        });
-      }
-
-      const entry = noteBuckets.get(closestNote.name)!;
-      entry.accuracySum += accuracy * weight;
-      entry.duration += weight;
-      entry.count += 1;
-    }
-
-    if (noteBuckets.size === 0) {
-      showPitchModal.value = true;
-      return;
-    }
-
-    const perNote = Array.from(noteBuckets.entries()).map(
-      ([note, { accuracySum, duration }]) => ({
-        note,
-        avgAccuracy: accuracySum / duration,
-        duration,
-      })
+    const closestNote = scaleToDisplay.value.reduce((prev, curr) =>
+      Math.abs(curr.frequency - pitch) < Math.abs(prev.frequency - pitch)
+        ? curr
+        : prev
     );
 
-    const totalDuration = perNote.reduce((sum, n) => sum + n.duration, 0);
-    const weightedAccuracy =
-      perNote.reduce((sum, n) => sum + n.avgAccuracy * n.duration, 0) /
-      totalDuration;
+    const centsOff = 1200 * Math.log2(pitch / closestNote.frequency);
+    const absCents = Math.abs(centsOff);
+    const accuracy = Math.max(0, 1 - absCents / maxCents);
+    const weight = volume;
 
-    const noteCoverage = (perNote.length / scaleToDisplay.value.length) * 100;
+    if (!noteBuckets.has(closestNote.name)) {
+      noteBuckets.set(closestNote.name, {
+        accuracySum: 0,
+        duration: 0,
+        count: 0,
+      });
+    }
 
-    const finalInTuneScore = Math.round(
-      (weightedAccuracy * 0.7 + (noteCoverage / 100) * 0.3) * 100
-    );
-
-    // Use this for a simple visual modal now
-    pitchStats.value = {
-      averageDeviation: Math.round((1 - weightedAccuracy) * maxCents),
-      inTunePercentage: finalInTuneScore,
-    };
-
-    showPitchModal.value = true;
+    const entry = noteBuckets.get(closestNote.name)!;
+    entry.accuracySum += accuracy * weight;
+    entry.duration += weight;
+    entry.count += 1;
   }
+
+  if (noteBuckets.size === 0) {
+    showPitchModal.value = true;
+    return;
+  }
+
+  const perNote = Array.from(noteBuckets.entries()).map(
+    ([note, { accuracySum, duration }]) => ({
+      note,
+      avgAccuracy: accuracySum / duration,
+      duration,
+    })
+  );
+
+  const totalDuration = perNote.reduce((sum, n) => sum + n.duration, 0);
+  const weightedAccuracy =
+    perNote.reduce((sum, n) => sum + n.avgAccuracy * n.duration, 0) /
+    totalDuration;
+
+  const noteCoverage = (perNote.length / scaleToDisplay.value.length) * 100;
+
+  const finalInTuneScore = Math.round(
+    (weightedAccuracy * 0.7 + (noteCoverage / 100) * 0.3) * 100
+  );
+
+  // Use this for a simple visual modal now
+  pitchStats.value = {
+    averageDeviation: Math.round((1 - weightedAccuracy) * maxCents),
+    inTunePercentage: finalInTuneScore,
+  };
+
+  showPitchModal.value = true;
+}
 
 function startTrackingWithAnchor() {
   audioContext.resume();
@@ -582,17 +581,15 @@ function drawPitchCurve() {
     // if x hasn't changed, we want to create a vibrato effect by drawing a small sine wave
     if (x === prevX) {
       // create a sine wave effect
-      increment ++;
+      increment++;
       if (increment >= colWidth / 3) {
-        increment = -1
+        increment = -1;
       }
       const vibratoX = prevX + increment;
-      if(increment >= 0) ctx.lineTo(vibratoX, y);
+      if (increment >= 0) ctx.lineTo(vibratoX, y);
       continue;
-
     }
     prevX = x;
-
 
     ctx.lineTo(x, y);
   }
@@ -603,7 +600,11 @@ watch(
   () => [pitchData.value, isTracking.value],
   () => {
     drawPitchCurve();
-    if(!isTracking.value && pitchData.value.length > 0 && currentSettings.value.autoStopPitchTracking){
+    if (
+      !isTracking.value &&
+      pitchData.value.length > 0 &&
+      currentSettings.value.autoStopPitchTracking
+    ) {
       stopTracking();
       mapPitchDataToStats();
       startTime.value = null;
@@ -623,12 +624,16 @@ function clearPitchData() {
 }
 
 watch(
-  () => [scaleToDisplay.value, currentSettings.value.gridType],
+  () => [
+    scaleToDisplay.value,
+    currentSettings.value.gridType,
+    loadedAudio.value,
+  ],
   () => {
     preloadAudio();
     ds.value?.clearSelection();
     nextTick(() => {
-      if(!noteElements.value || noteElements.value.length === 0) return;
+      if (!noteElements.value || noteElements.value.length === 0) return;
       cellWidth.value =
         currentSettings.value.gridType !== "Guitar tab"
           ? noteElements.value![0].getBoundingClientRect().width
@@ -676,8 +681,7 @@ const scheduleNotes = (startTime: number) => {
           ? scaleToDisplay.value.indexOf(noteSelection.value[0])
           : 0;
         setTimeout(
-          () =>
-            handleAutoActions(),
+          () => handleAutoActions(),
           computedLoopGap.value * animationInterval.value * 1000
         );
       } else {
@@ -704,8 +708,7 @@ const scheduleNotes = (startTime: number) => {
           ? 1
           : 0;
         setTimeout(
-          () =>
-            handleAutoActions(),
+          () => handleAutoActions(),
           computedLoopGap.value * animationInterval.value * 1000
         );
       } else {
@@ -727,11 +730,12 @@ function handleAutoActions() {
   if (currentSettings.value.autoShuffle) {
     scaleConfig.noteOrder = shuffle(scaleToDisplay.value);
   }
-  if (currentSettings.value.autoIncrementPitch){
-    scaleConfig.selectedNote = notes[
-      (notes.findIndex((n) => n.name === scaleConfig.selectedNote) + 1) %
-        notes.length
-    ].name;
+  if (currentSettings.value.autoIncrementPitch) {
+    scaleConfig.selectedNote =
+      notes[
+        (notes.findIndex((n) => n.name === scaleConfig.selectedNote) + 1) %
+          notes.length
+      ].name;
   }
 }
 
@@ -754,7 +758,16 @@ const toggleAudio = async () => {
   }
 };
 
-onMounted(() => {
+onBeforeMount(async () => {
+  //load all audio
+  const entries = await Promise.all(
+    notes.map(async (note) => {
+      const buffer = await loadAudioBuffer(note.audioSrc);
+      return { name: note.name, audio: buffer };
+    })
+  );
+
+  loadedAudio.value = entries;
   window.addEventListener("visibilitychange", preloadAudio);
   window.addEventListener("resize", () => {
     cellWidth.value = noteElements.value![0]?.getBoundingClientRect().width;
@@ -986,6 +999,4 @@ html.dark > .piano-roll {
 html.dark > .grid-pattern {
   background: linear-gradient(90deg, rgb(17 24 39), 1px, transparent 1px);
 }
-
-
 </style>
