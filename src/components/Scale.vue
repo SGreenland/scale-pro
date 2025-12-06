@@ -395,15 +395,12 @@ const loadAudioBuffer = async (url: string): Promise<AudioBuffer> => {
   return await audioContext.decodeAudioData(arrayBuffer);
 };
 
-const preloadAudio = () => {
+const setBuffers = () => {
   isLoadingAudio.value = true;
-  audioBuffers.value = loadedAudio.value
-    .filter((audioItem) =>
-      scaleToDisplay.value.some((note) => note.name === audioItem.name)
-    )
-    .map((audioItem) => {
-      return audioItem.audio;
-    });
+  audioBuffers.value = scaleToDisplay.value.map((note) => {
+    const loaded = loadedAudio.value.find((a) => a.name === note.name);
+    return loaded ? loaded.audio : null;
+  }) as AudioBuffer[];
   // warm up audioContext by playing a silent buffer
   const buffer = audioContext.createBuffer(1, 1, 22050);
   const source = audioContext.createBufferSource();
@@ -630,7 +627,7 @@ watch(
     loadedAudio.value,
   ],
   () => {
-    preloadAudio();
+    setBuffers();
     ds.value?.clearSelection();
     nextTick(() => {
       if (!noteElements.value || noteElements.value.length === 0) return;
@@ -768,7 +765,7 @@ onBeforeMount(async () => {
   );
 
   loadedAudio.value = entries;
-  window.addEventListener("visibilitychange", preloadAudio);
+  window.addEventListener("visibilitychange", setBuffers);
   window.addEventListener("resize", () => {
     cellWidth.value = noteElements.value![0]?.getBoundingClientRect().width;
   });
@@ -932,7 +929,7 @@ onBeforeUnmount(() => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
-  window.removeEventListener("visibilitychange", preloadAudio);
+  window.removeEventListener("visibilitychange", setBuffers);
   // not sure if this unsubscribes but hopefully?
   ds.value?.stop();
 });
