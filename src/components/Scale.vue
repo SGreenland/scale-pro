@@ -575,17 +575,16 @@ function drawPitchCurve() {
     // 4. Calculate X from time as usual (or just position in scale if snapping column-wise)
     const colWidth = canvas.width / scaleToDisplay.value.length;
     const x = colWidth * colIndex + colWidth / 2;
+    const maxVibX = colWidth / 4;
     // if x hasn't changed, we want to create a vibrato effect by drawing a small sine wave
     if (x === prevX) {
       // create a sine wave effect
       increment++;
-      if (increment >= colWidth / 3) {
-        increment = -1;
-      }
       const vibratoX = prevX + increment;
-      if (increment >= 0) ctx.lineTo(vibratoX, y);
+      if (increment < maxVibX) ctx.lineTo(vibratoX, y);
       continue;
     }
+    increment = 0;
     prevX = x;
 
     ctx.lineTo(x, y);
