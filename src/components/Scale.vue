@@ -86,7 +86,7 @@
         :id="index.toString()"
         class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-sky-600 dark:text-white"
         :class="{
-          'relative bottom-4 w-1/2 h-5/6 m-auto z-50 border-0 bg-transparent shadow-none':
+          'relative bottom-4 w-1/2 h-5/6 m-auto z-50 border-0 bg-transparent dark:border-0 dark:bg-transparent shadow-none':
             currentSettings.gridType === 'Guitar tab',
         }"
         :style="{
