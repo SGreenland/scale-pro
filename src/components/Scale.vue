@@ -25,11 +25,21 @@
       v-if="currentSettings.gridType === 'Guitar tab'"
     >
       <div
-        class="border-t border-t-gray-600 h-[1.8rem]"
+        class="border-t border-t-gray-600 h-[1.8rem] relative"
         :class="{ 'border-b border-b-gray-600': index === gridRows - 1 }"
         v-for="index in gridRows - 1"
         :key="index"
-      ></div>
+      >
+      <div class="absolute left-0 top-4 font-semibold">
+        <div v-if="index !== 1">{{  getStringName(index) }}</div>
+        <div class="grid relative bottom-[1.75rem] gap-1" v-else>
+          <div>E</div>
+          <div>B</div>
+        </div>
+      </div>
+      <!-- need extra one for high E-->
+    </div>
+
     </div>
     <div
       class="relative grid max-sm:text-xs w-full m-auto"
@@ -76,7 +86,7 @@
         :id="index.toString()"
         class="bg-sky-200 border border-indigo-500 shadow rounded-2xl size-full flex items-center justify-center cursor-pointer dark:bg-sky-600 dark:text-white"
         :class="{
-          'relative bottom-4 w-1/2 h-5/6 m-auto z-50':
+          'relative bottom-4 w-1/2 h-5/6 m-auto z-50 border-0 bg-transparent shadow-none':
             currentSettings.gridType === 'Guitar tab',
         }"
         :style="{
@@ -315,6 +325,11 @@ const { shuffle } = useReorderNotes();
 // const props = defineProps<{
 //   workoutMode: boolean;
 // }>();
+
+function getStringName(stringNumber: number) {
+  const stringNames = ["E", "B", "G", "D", "A", "E"];
+  return stringNames[stringNumber] || "";
+}
 
 const gridRows = computed(() => {
   return currentSettings.value.gridType !== "Guitar tab" ? 13 : 6;
