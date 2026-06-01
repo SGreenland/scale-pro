@@ -6,6 +6,7 @@ import ScaleConfig from "../components/ScaleConfig.vue";
 import TempoSelect from "../components/TempoSelect.vue";
 import WorkoutConfig from "../components/WorkoutConfig.vue";
 import Tabs from "../components/reuseable/Tabs.vue";
+import WelcomeWizard from "../components/WelcomeWizard.vue";
 
 import { ref, watch } from "vue";
 
@@ -34,6 +35,7 @@ watch(() => tabsComponent.value.currentTab, () => {
 </script>
 
 <template>
+  <welcome-wizard></welcome-wizard>
   <div class="xl:w-2/3 lg:w-5/6 m-auto flex flex-col gap-3 w-full max-sm:text-[0.9rem]">
     <tabs
       v-show="false"

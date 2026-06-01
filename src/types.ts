@@ -88,6 +88,8 @@ interface UserSessionObject {
   hasPremiumAccess: boolean;
 }
 
+type VoiceType = "Soprano" | "Mezzo-Soprano" | "Alto" | "Tenor" | "Baritone" | "Bass" | "Not sure";
+
 export type {
   Note,
   Scales,
@@ -100,4 +102,5 @@ export type {
   GuitarPosition,
   FretBoard,
   UserSessionObject,
+  VoiceType,
 };

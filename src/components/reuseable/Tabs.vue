@@ -27,7 +27,18 @@
 import { ref, computed } from "vue";
 
 const tabIndex = ref(0);
-const currentTab = computed(() => props.tabs[tabIndex.value]);
+const currentTab = computed({
+  get() {
+    return props.tabs[tabIndex.value];
+  },
+  set(value: string) {
+    console.log("setting tab to ", value);
+    const index = props.tabs.indexOf(value);
+    if (index !== -1) {
+      tabIndex.value = index;
+    }
+  },
+});
 
 const props = defineProps<{
   tabs: string[];

@@ -22,7 +22,6 @@
 <script setup lang="ts">
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { defineEmits } from "vue";
 
 const props = withDefaults(defineProps<{
   mask?: boolean;

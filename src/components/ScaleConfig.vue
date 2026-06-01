@@ -131,9 +131,9 @@ import {
   faShuffle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import useReorderNotes from "../composables/useReorderNotes";
-import { presetNoteOrders, scaleConfig, scaleToDisplay } from "../GlobalState";
+import { currentSettings, presetNoteOrders, scaleConfig, scaleToDisplay } from "../GlobalState";
 import { PresetNoteOrders } from "../types";
 import PatternSelector from "./PatternSelector.vue";
 import QuickTranspose from "./QuickTranspose.vue";
@@ -162,6 +162,13 @@ const presets = computed(() => {
     `presets${scaleToDisplay.value.length.toString()}` as keyof PresetNoteOrders;
   return presetNoteOrders[presetsKey];
 });
+
+// watch(() => currentSettings.value.gridType, async (newGridType: 'Guitar tab' | 'Piano roll') => {
+//   if (newGridType === "Guitar tab") {
+//     await nextTick();
+//     tabs.value ? tabs.value.currentTab = "note-order" : "pitch-tracking";
+//   }
+// }, { immediate: true });
 
 // watch(
 //   () => [workoutConfig.startNote, workoutConfig.scales, props.workoutMode],
