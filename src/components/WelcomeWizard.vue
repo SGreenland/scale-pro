@@ -25,6 +25,9 @@
         <button v-if="currentStep > 0 && currentStep < 5" @click="nextStep">
           Next
         </button>
+        <button v-if="currentStep === 5" @click="closeModal">
+          Finish
+        </button>
       </div>
       <div v-else class="flex gap-2 justify-end">
         <button @click="closeModal" class="inverted-btn">Dismiss</button>
@@ -46,6 +49,8 @@ const currentStepComponent = computed(() => {
     defineAsyncComponent(() => import("./wizardSteps/WizardStep1.vue")),
     defineAsyncComponent(() => import("./wizardSteps/WizardStep2.vue")),
     defineAsyncComponent(() => import("./wizardSteps/WizardStep3.vue")),
+    defineAsyncComponent(() => import("./wizardSteps/WizardStep4.vue")),
+    defineAsyncComponent(() => import("./wizardSteps/WizardStep5.vue")),
   ];
 
   return stepComponent[currentStep.value - 1] || null;

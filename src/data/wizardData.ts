@@ -25,6 +25,12 @@ export const instrumentStartNoteMap: Record<MusicalInstrument, string> = {
   "Guitar": "G3"
 };
 
+export const experienceScaleMap: Record<string, string> = {
+    "Beginner": "Major (1-5)",
+    "Intermediate": "Major",
+    "Advanced": "Natural Minor"
+};
+
 // export const instrumentFamilyStartNoteMap: Record<string, string> = {
 //     "High Woodwinds": "G4",
 //     "Low Woodwinds": "G3",

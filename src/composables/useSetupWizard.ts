@@ -4,6 +4,7 @@ import { ref } from 'vue';
 // dynamic values persisted across wizard steps
 const voiceOrInstrument = ref<'vocalist'| 'instrumentalist'>('vocalist');
 const voiceType = ref<VoiceType|null>(null);
+const experienceLevel = ref<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
 
 
 export default function useSetupWizard() {
@@ -39,6 +40,7 @@ export default function useSetupWizard() {
         prevStep,
         voiceOrInstrument,
         voiceType,
+        experienceLevel,
     };
 }
 
