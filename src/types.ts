@@ -90,6 +90,8 @@ interface UserSessionObject {
 
 type VoiceType = "Soprano" | "Mezzo-Soprano" | "Alto" | "Tenor" | "Baritone" | "Bass" | "Not sure";
 
+type MusicalInstrument = "Piano" | "Violin" | "Viola" | "Cello" | "Flute" | "Clarinet" | "Saxophone" | "Trumpet" | "Trombone" | "Guitar";
+
 export type {
   Note,
   Scales,
@@ -103,4 +105,5 @@ export type {
   FretBoard,
   UserSessionObject,
   VoiceType,
+  MusicalInstrument
 };
