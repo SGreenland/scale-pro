@@ -1,7 +1,7 @@
 <template>
     <div class="grid place-items-center">
         <div class="mb-2">
-           The Setup Wizard is now complete, enjoy exploring the app!
+           🎉 The Setup Wizard is now complete, enjoy exploring the app!
         </div>
         <div>
             We'd advise reading the <a role="button" @click="showPitchTrackingInfo = true">help section</a> for pitch tracking to get the most out of the app.
