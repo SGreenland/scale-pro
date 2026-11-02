@@ -25,10 +25,26 @@ export const instrumentStartNoteMap: Record<MusicalInstrument, string> = {
   "Guitar": "G3"
 };
 
+export const vocalRangeNoteMap: Record<VoiceType, string> = {
+  "Soprano": "C4-C6",
+  "Mezzo-Soprano": "A3-A5",
+  "Alto": "F3-F5",
+  "Tenor": "C3-C5",
+  "Baritone": "G2-G4",
+  "Bass": "E2-E4",
+  "Not sure": "C3-C5"
+};
+
 export const experienceScaleMap: Record<string, string> = {
     "Beginner": "Major (1-5)",
     "Intermediate": "Major",
     "Advanced": "Natural Minor"
+};
+
+export const experiencePitchToleranceMap: Record<string, "loose" | "standard" | "precise"> = {
+    "Beginner": "loose",
+    "Intermediate": "standard",
+    "Advanced": "precise"
 };
 
 // export const instrumentFamilyStartNoteMap: Record<string, string> = {

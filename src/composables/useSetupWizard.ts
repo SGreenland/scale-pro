@@ -5,6 +5,7 @@ import { ref } from 'vue';
 const voiceOrInstrument = ref<'vocalist'| 'instrumentalist'>('vocalist');
 const voiceType = ref<VoiceType|null>(null);
 const experienceLevel = ref<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
+const disableNext = ref(false);
 
 
 export default function useSetupWizard() {
@@ -41,6 +42,7 @@ export default function useSetupWizard() {
         voiceOrInstrument,
         voiceType,
         experienceLevel,
+        disableNext,
     };
 }
 

@@ -43,6 +43,20 @@ for (const octave of octaves) {
         notes.push(note);
     }
 }
+
+export const noteToFrequency = (noteName: string): number => {
+    const noteRegex = /^([A-Ga-g])(#|b)?(\d+)$/;
+    const match = noteName.match(noteRegex);
+    if (!match) throw new Error(`Invalid note format: ${noteName}`);
+    const [, pitchClass, accidental, octaveStr] = match;
+    const octave = parseInt(octaveStr, 10);
+    const semitoneMap: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+    let semitone = semitoneMap[pitchClass.toUpperCase()];
+    if (accidental === "#") semitone += 1;
+    if (accidental === "b") semitone -= 1;
+    const midiNumber = (octave + 1) * 12 + semitone;
+    return 440 * Math.pow(2, (midiNumber - 69) / 12);
+};
 // export const scales: Scales = {
 //     'Major': [0, 2, 4, 5, 7, 9, 11, 12],
 //     'Natural Minor': [0, 2, 3, 5, 7, 8, 10, 12],

@@ -1,7 +1,7 @@
 <template>
   <ModalWrapper v-if="shouldShowWizard" @close="closeModal">
-    <div class="w-full p-2 m-auto h-[260px] flex flex-col justify-between">
-      <div class="h-[180px] relative">
+    <div class="w-full p-2 m-auto h-[300px] flex flex-col justify-between">
+      <div class="h-[200px] relative">
         <div class="flex flex-col h-full justify-between" v-if="!currentStep">
           <div>
             <h2 class="text-lg font-semibold mb-3">Setup Wizard</h2>
@@ -14,7 +14,7 @@
             </p>
           </div>
         </div>
-        <Transition class="absolute w-[95%] m-auto h-[180px]" v-else>
+        <Transition class="absolute w-[95%] m-auto h-[200px]" v-else>
           <component :is="currentStepComponent" class="mt-4" />
         </Transition>
       </div>
@@ -22,7 +22,7 @@
         <button v-if="currentStep > 1" @click="prevStep" class="inverted-btn">
           Back
         </button>
-        <button v-if="currentStep > 0 && currentStep < 5" @click="nextStep">
+        <button v-if="currentStep > 0 && currentStep < 5" @click="nextStep" :disabled="disableNext">
           Next
         </button>
         <button v-if="currentStep === 5" @click="closeModal">
@@ -42,7 +42,7 @@ import ModalWrapper from "./reuseable/ModalWrapper.vue";
 import { ref, onMounted, defineAsyncComponent, computed, watch } from "vue";
 import useSetupWizard from "../composables/useSetupWizard";
 
-const { shouldShowWizard, currentStep, nextStep, prevStep, checkFirstVisit } =
+const { shouldShowWizard, currentStep, nextStep, prevStep, checkFirstVisit, disableNext } =
   useSetupWizard();
 const currentStepComponent = computed(() => {
   const stepComponent = [
