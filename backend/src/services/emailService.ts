@@ -2,6 +2,7 @@ import { Mail, MailtrapClient } from "mailtrap";
 import { htmlEmailWrapper } from "../helpers/htmlEmailWrapper";
 
 const isProduction = process.env.NODE_ENV === "production";
+const fromEmail = "info@scalemaestro.online";
 
 const mailtrap = new MailtrapClient({
   token: process.env.MAILTRAP_API_TOKEN || "",
@@ -14,7 +15,7 @@ export async function sendVerificationEmail(
   verificationLink: string
 ) {
   const message: Mail = {
-    from: {name: 'ScaleMaestro', email: "info@scalemaestro.app"},
+    from: {name: 'ScaleMaestro', email: fromEmail},
     to: [{email: toEmail}],
     subject: "Verify your Scale Maestro account",
     text: `Please verify your account by clicking the following link: ${verificationLink}`,
@@ -35,7 +36,7 @@ export async function sendResetPasswordEmail(
   resetLink: string
 ) {
   const message: Mail = {
-    from: {name: 'ScaleMaestro', email: "info@scalemaestro.app"},
+    from: {name: 'ScaleMaestro', email: fromEmail},
     to: [{email: toEmail}],
     subject: "Reset your Scale Maestro password",
     text: `You can reset your password by clicking the following link: ${resetLink}`,
