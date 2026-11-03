@@ -10,11 +10,11 @@ import CustomRadioChips from '../reuseable/CustomRadioChips.vue';
 import { ref, watch } from 'vue';
 import useSetupWizard from '../../composables/useSetupWizard';
 
-const { voiceOrInstrument } = useSetupWizard();
+const { voiceOrInstrument, disableNext } = useSetupWizard();
 
 watch(voiceOrInstrument, (newValue) => {
-    console.log('User selected:', newValue);
-});
+    disableNext.value = !newValue;
+}, { immediate: true });
 </script>
 
 <style scoped>

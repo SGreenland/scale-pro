@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper v-if="shouldShowWizard" @close="closeModal">
-    <div class="w-full p-2 m-auto h-[300px] flex flex-col justify-between">
+    <div class="w-full p-2 pb-0 m-auto h-[320px] flex flex-col justify-between">
       <div class="h-[200px] relative">
         <div class="flex flex-col h-full justify-between" v-if="!currentStep">
           <div>
@@ -19,13 +19,13 @@
         </Transition>
       </div>
       <div v-if="currentStep" class="flex gap-2 justify-end mt-4">
-        <button v-if="currentStep > 1" @click="prevStep" class="inverted-btn">
+        <button v-if="currentStep > 1" @click="prevStep" class="inverted-btn flex items-center h-8">
           Back
         </button>
-        <button v-if="currentStep > 0 && currentStep < 5" @click="nextStep" :disabled="disableNext">
+        <button v-if="currentStep > 0 && currentStep < 5" @click="nextStep" :disabled="disableNext" class="flex items-center h-8">
           Next
         </button>
-        <button v-if="currentStep === 5" @click="closeModal">
+        <button v-if="currentStep === 5" @click="closeModal" class="flex items-center h-8">
           Finish
         </button>
       </div>

@@ -18,12 +18,12 @@
       <div class="grid gap-2" v-if="voiceType === 'Not sure'">
         Choose an option below:
         <div class="flex gap-2">
-            <button @click="selectedPath = notSurePathOptions[0]" class="unset bg-sky-100" :class="{'shadow-xl scale-[1.02] bg-sky-300': selectedPath === 'default starting note'}">I'll just use the default starting note</button>
-            <button @click="selectedPath = notSurePathOptions[1]" class="unset bg-sky-100 relative" :class="{'shadow-xl scale-[1.02] bg-sky-300': selectedPath === 'find out by singing'}">Sing a comfortable note to find out</button>
+            <button @click="selectedPath = notSurePathOptions[0]" class="unset bg-sky-100 text-sm" :class="{'shadow-xl scale-[1.02] bg-sky-300': selectedPath === 'default starting note'}">I'll use the default starting note</button>
+            <button @click="selectedPath = notSurePathOptions[1]" class="unset bg-sky-100 relative text-sm" :class="{'shadow-xl scale-[1.02] bg-sky-300': selectedPath === 'find out by singing'}">Sing a note to find out</button>
         </div>
       </div>
       <div v-if="selectedPath === notSurePathOptions[1]">
-        <span class="text-sm text-gray-500">{{ !finishedListeningMessage ? "Please sing a comfortable note to determine your voice type (you may need to enable your microphone)" : finishedListeningMessage }}</span>
+        <span class="text-sm text-gray-500">{{ !finishedListeningMessage ? "Sing a comfortable note to determine your voice type (you may need to enable your microphone). For best results sing clearly and close to your device." : finishedListeningMessage }}</span>
       </div>
     </div>
     <div class="flex flex-col gap-2 justify-center" v-else>

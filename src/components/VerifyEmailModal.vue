@@ -1,6 +1,6 @@
 <template>
   <modal-wrapper @close="$emit('close')">
-    <div v-if="!emailSent" class="p-6">
+    <div v-if="!emailSent" class="p-3">
       <h2 class="text-xl font-semibold mb-4">Verify Your Email</h2>
       <p class="mb-4">
         A verification email has been sent to your email address. Please check your inbox and click on the verification link to activate your account. If you did not receive the email, you can click the "Resend" button to send another verification email.
