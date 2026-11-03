@@ -2,7 +2,7 @@ import { Mail, MailtrapClient } from "mailtrap";
 import { htmlEmailWrapper } from "../helpers/htmlEmailWrapper";
 
 const isProduction = process.env.NODE_ENV === "production";
-const fromEmail = "info@scalemaestro.online";
+const fromEmail = process.env.FROM_EMAIL || "samgreenland7@gmail.com";
 
 const mailtrap = new MailtrapClient({
   token: process.env.MAILTRAP_API_TOKEN || "",
