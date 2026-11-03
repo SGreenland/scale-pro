@@ -11,7 +11,7 @@
         />
       </div>
       <div class="text-center mb-6">
-        <h1 class="text-2xl font-bold mb-2">Create Your Free Account</h1>
+        <h1 class="text-xl font-bold mb-2">Create Your Free Account</h1>
         <p class="text-gray-700 dark:text-gray-100 text-sm">
           Sign up to unlock <strong>premium features free for 7 days</strong>.
           <br />
@@ -19,9 +19,9 @@
         </p>
       </div>
 
-      <form class="text-left" @submit.prevent="handleSubmit">
+      <form autocomplete="on" class="text-left" @submit.prevent="handleSubmit">
         <div class="mb-4">
-          <label for="username" :class="labelClasses">Username</label>
+          <label for="username" :class="labelClasses">Name</label>
           <input
             maxlength="20"
             v-model="formData.userName"
@@ -50,9 +50,6 @@
           <label for="password" :class="labelClasses">Password</label>
           <PasswordInput
             v-model="formData.password"
-            type="password"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            required
           />
           <span v-if="errors.password" class="text-red-500 text-sm">{{
             errors.password
@@ -66,10 +63,6 @@
           <ConfirmPasswordInput
             :password-to-match="formData.password"
             v-model="formData.confirmPassword"
-            type="password"
-            id="confirm-password"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            required
           />
           <span v-if="errors.confirmPassword" class="text-red-500 text-sm">{{
             errors.confirmPassword

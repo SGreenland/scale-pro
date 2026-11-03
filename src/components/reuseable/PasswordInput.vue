@@ -1,16 +1,39 @@
 <template>
   <div>
-    <input required :placeholder="placeholder" class="w-full mb-2" type="password" id="password" v-model="model" />
+    <input
+      autocomplete="new-password"
+      required
+      :placeholder="placeholder"
+      class="w-full mb-2 mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+      type="password"
+      id="password"
+      v-model="model"
+    />
     <ul v-if="model.length" class="text-sm">
-        <li :class="{'text-red-500': !model || model.length < 8, 'text-green-500 plus-tick': model && model.length >= 8}">
-            {{ validationErrors?.minLength }}
-        </li>
-        <li :class="{'text-red-500': !model || !/\d/.test(model), 'text-green-500 plus-tick': model && /\d/.test(model)}">
-            {{ validationErrors?.containsNumber }}
-        </li>
-        <li :class="{'text-red-500': !model || !/[A-Z]/.test(model), 'text-green-500 plus-tick': model && /[A-Z]/.test(model)}">
-            {{ validationErrors?.containsUppercase }}
-        </li>
+      <li
+        :class="{
+          'text-red-500': !model || model.length < 8,
+          'text-green-500 plus-tick': model && model.length >= 8,
+        }"
+      >
+        {{ validationErrors?.minLength }}
+      </li>
+      <li
+        :class="{
+          'text-red-500': !model || !/\d/.test(model),
+          'text-green-500 plus-tick': model && /\d/.test(model),
+        }"
+      >
+        {{ validationErrors?.containsNumber }}
+      </li>
+      <li
+        :class="{
+          'text-red-500': !model || !/[A-Z]/.test(model),
+          'text-green-500 plus-tick': model && /[A-Z]/.test(model),
+        }"
+      >
+        {{ validationErrors?.containsUppercase }}
+      </li>
     </ul>
   </div>
 </template>
@@ -21,18 +44,20 @@ const model = defineModel<string>({
   default: "",
 });
 
-withDefaults(defineProps<{
-  placeholder?: string;
-}>(), {
-  placeholder: "Enter password",
-});
+withDefaults(
+  defineProps<{
+    placeholder?: string;
+  }>(),
+  {
+    placeholder: "Enter password",
+  },
+);
 
 interface ValidationErrors {
   minLength: string;
   containsNumber: string;
   containsUppercase: string;
 }
-
 
 const validationErrors = reactive<ValidationErrors>({
   minLength: "Password must be at least 8 characters long",
