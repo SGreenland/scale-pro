@@ -234,9 +234,9 @@ export const minDetectionVolumeMap = {
 };
 
 const maxCentsMap = {
-  loose: 75,
-  standard: 50,
-  precise: 25,
+  loose: 80,
+  standard: 60,
+  precise: 40,
 };
 
 export const computedMaxCents = computed(() => {
